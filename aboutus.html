@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>店舗について｜SAKANAYA JAPON</title>
-  <link rel="icon" href="logo.jpg">
+  <link rel="icon" href="assets/images/logo.jpg">
   <meta name="description" content="SAKANAYA JAPON の想い・サービス内容・会社情報。カンボジア・プノンペンで、日本の鮮度管理による鮮魚と刺身をお届けしています。">
 
   <!-- ヘッダー・フッター・言語切替は common.css / common.js が担当する。
@@ -104,7 +104,7 @@
 <header class="site-header">
   <div class="header-inner">
     <a class="brand" href="index.html">
-      <img src="logo.jpg" alt="">
+      <img src="assets/images/logo.jpg" alt="">
       <span class="brand-name">SAKANAYA JAPON</span>
     </a>
     <div class="header-right">
@@ -139,7 +139,7 @@
   <p>そんなささやかな奇跡を、今日も皆さまのご家庭へお届けしたいと考えています。</p>
 　<div class="cta-container">
   <p style="margin-top:0;">旬の魚介やお得なセットをチェック！</p>
-  <a href="https://miniapp.line.me/2006469733-lgZj9vJ4" class="cta-button">
+  <a href="https://miniapp.line.me/2006469733-lgZj9vJ4" data-info-href="order.lineMiniApp" class="cta-button">
     メニューを見て注文する
     <span class="cta-note">日時等を選択するとメニューが出てきます。</span>
   </a>
@@ -170,12 +170,12 @@
   <h2>会社情報</h2>
   <ul>
     <li><strong>社名：</strong>SAKANAYA JAPON</li>
-    <li><strong>設立：</strong>2024年12月19日</li>
-    <li><strong>住所：</strong>#72BE0, Street 174, Phum 11, Sangkat Phsar Thmey 3, Khan Daun Penh, Phnom Penh, Cambodia</li>
-    <li><strong>電話番号：</strong>016-881-370（+855 16 881 370）</li>
-    <li><strong>営業時間：</strong>毎日 10:00〜19:30（国民の休日を除く）</li>
-    <li><strong>ご注文・お問い合わせ：</strong>LINE / Telegram / <a href="https://www.facebook.com/fishstorejapan" target="_blank">Facebook Messenger</a></li>
-    <li><strong>Email：</strong>fishstorejapan@gmail.com</li>
+    <li><strong>設立：</strong><span data-info="company.established">2024年12月19日</span></li>
+    <li><strong>住所：</strong><span data-info="company.address">#72BE0, Street 174, Phum 11, Sangkat Phsar Thmey 3, Khan Daun Penh, Phnom Penh, Cambodia</span></li>
+    <li><strong>電話番号：</strong><span data-info="company.phoneLocal">016-881-370</span>（<span data-info="company.phone">+855 16 881 370</span>）</li>
+    <li><strong>営業時間：</strong><span data-info="hours">毎日 10:00〜19:30（国民の休日を除く）</span></li>
+    <li><strong>ご注文・お問い合わせ：</strong>LINE / Telegram / <a href="https://www.facebook.com/fishstorejapan" data-info-href="social.facebook">Facebook Messenger</a></li>
+    <li><strong>Email：</strong><span data-info="company.email">fishstorejapan@gmail.com</span></li>
   </ul>
 
   <h2>活動内容</h2>
@@ -196,7 +196,7 @@
     <p><strong>We want to bring “a life with seafood” back to Cambodia, and help your table shine with joy.</strong></p>
 　　<div class="cta-container">
   <p style="margin-top:0;">Check out our seasonal seafood & special sets!</p>
-  <a href="https://t.me/fishstoreJapon" class="cta-button">
+  <a href="https://t.me/fishstoreJapon" data-info-href="social.telegramChannel" class="cta-button">
     Order via menu
     <span class="cta-note">You can check daily menu.</span>
   </a>
@@ -212,12 +212,12 @@
     <h2>Company Info</h2>
     <ul>
       <li><strong>Name:</strong> SAKANAYA JAPON</li>
-      <li><strong>Established:</strong> December 19, 2024</li>
-      <li><strong>Address:</strong> #72BE0, Street 174, Phum 11, Sangkat Phsar Thmey 3, Khan Daun Penh, Phnom Penh, Cambodia</li>
-      <li><strong>Phone:</strong> +855 16 881 370</li>
-      <li><strong>Hours:</strong> Daily 10:00am–7:30pm (Closed on public holidays)</li>
-      <li><strong>Order / Contact:</strong> LINE / Telegram / <a href="https://www.facebook.com/fishstorejapan" target="_blank">Facebook Messenger</a></li>
-      <li><strong>Email:</strong> fishstorejapan@gmail.com</li>
+      <li><strong>Established:</strong> <span data-info="company.established">December 19, 2024</span></li>
+      <li><strong>Address:</strong> <span data-info="company.address">#72BE0, Street 174, Phum 11, Sangkat Phsar Thmey 3, Khan Daun Penh, Phnom Penh, Cambodia</span></li>
+      <li><strong>Phone:</strong> <span data-info="company.phone">+855 16 881 370</span></li>
+      <li><strong>Hours:</strong> <span data-info="hours">Daily 10:00am–7:30pm (Closed on public holidays)</span></li>
+      <li><strong>Order / Contact:</strong> LINE / Telegram / <a href="https://www.facebook.com/fishstorejapan" data-info-href="social.facebook">Facebook Messenger</a></li>
+      <li><strong>Email:</strong> <span data-info="company.email">fishstorejapan@gmail.com</span></li>
     </ul>
 
     <h2>Activities</h2>
@@ -236,7 +236,7 @@
       <li><a href="index.html" data-ja="トップ" data-en="Top">トップ</a></li>
       <li><a href="menu.html" data-ja="メニュー" data-en="Menu">メニュー</a></li>
       <li><a href="howto.html" data-ja="ご注文方法" data-en="How to Order">ご注文方法</a></li>
-      <li><a href="q&amp;a.html" data-ja="よくあるご質問" data-en="FAQ">よくあるご質問</a></li>
+      <li><a href="faq.html" data-ja="よくあるご質問" data-en="FAQ">よくあるご質問</a></li>
       <li><a href="aboutus.html" data-ja="店舗について" data-en="About Us">店舗について</a></li>
       <li><a href="business/index.html" data-ja="法人のお客様" data-en="For Business">法人のお客様</a></li>
     </ul>
@@ -247,13 +247,13 @@
 </footer>
 
 <div class="floating-container">
-  <a href="https://t.me/+UZAm7-eLzD0yZTA1" class="float-btn btn-tele" target="_blank" rel="noopener noreferrer">
+  <a href="https://t.me/+UZAm7-eLzD0yZTA1" data-info-href="order.telegramHome" class="float-btn btn-tele" target="_blank" rel="noopener noreferrer">
     <span>✈</span> Order by Telegram
   </a>
-  <a href="https://miniapp.line.me/2006469733-lgZj9vJ4" class="float-btn btn-line" target="_blank" rel="noopener noreferrer">
+  <a href="https://miniapp.line.me/2006469733-lgZj9vJ4" data-info-href="order.lineMiniApp" class="float-btn btn-line" target="_blank" rel="noopener noreferrer">
     <span>📲</span> Order by LINE
   </a>
-  <a href="https://www.facebook.com/fishstorejapan" class="float-btn btn-fb" target="_blank" rel="noopener noreferrer">
+  <a href="https://www.facebook.com/fishstorejapan" data-info-href="social.facebook" class="float-btn btn-fb" target="_blank" rel="noopener noreferrer">
     <span>💬</span> Order by Facebook
   </a>
 </div>

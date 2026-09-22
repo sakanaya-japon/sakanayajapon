@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>よくあるご質問｜SAKANAYA JAPON</title>
+  <link rel="icon" href="assets/images/logo.jpg">
+  <meta name="description" content="SAKANAYA JAPON へよく寄せられるご質問。注文方法・締切・配送・お支払い・キャンセル・保存方法についてお答えします。">
+
+  <!-- ヘッダー・フッター・言語切替は common.css / common.js が担当する。
+       ページ固有の見た目だけを下の <style> に書くこと（common.css より後ろなので上書きできる）。 -->
+  <link rel="stylesheet" href="assets/css/common.css">
+  <script src="assets/js/site-info.js" defer></script>
+  <script src="assets/js/common.js" defer></script>
+
+  <style>
+    .qa-wrap { max-width: 800px; margin: 0 auto; padding: 32px 20px 56px; }
+
+    .qa-wrap h1 { text-align: center; color: var(--blue); margin-top: 0; }
+
+    .qa-section { margin-bottom: 30px; }
+    .qa-section h2 {
+      color: var(--blue);
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+      font-size: 19px;
+    }
+
+    .qa-item {
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #f9f9f9;
+      border-radius: 5px;
+    }
+    .qa-item strong { display: block; margin-bottom: 5px; color: var(--blue-dark); }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border: 2px solid var(--blue);
+      border-radius: 8px;
+    }
+
+    /* ── 画面右下に追従する注文ボタン（4ページ共通） ── */
+    .floating-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;  /* 縦に並べる（スマホで押しやすい） */
+      gap: 10px;
+      z-index: 9999;
+    }
+
+    .float-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 50px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      font-size: 13px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease;
+      min-width: 160px;
+    }
+
+    .float-btn:active { transform: scale(0.95); }
+    .float-btn span { margin-right: 8px; }
+
+    .btn-line { background-color: #00b900; }
+    .btn-tele { background-color: #0088cc; }
+
+    @media (max-width: 768px) {
+      .float-btn { padding: 8px 15px; font-size: 12px; min-width: 140px; }
+    }
+  </style>
+  <script>
+    /* 日英の切替は common.js（ヘッダーの言語切替）に任せている。
+       ここはこのページ専用の検索だけを持つ。 */
+    function searchQA(lang) {
+      const input = document.getElementById('search-' + lang).value.toLowerCase();
+      const items = document.querySelectorAll('#qa-' + lang + ' .qa-item');
+      items.forEach(item => {
+        item.style.display = item.textContent.toLowerCase().includes(input) ? '' : 'none';
+      });
+    }
+  </script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/images/logo.jpg" alt="">
+      <span class="brand-name">SAKANAYA JAPON</span>
+    </a>
+    <div class="header-right">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-set-lang="ja" aria-pressed="true">日本語</button>
+        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="biz-link" href="business/index.html"
+         data-ja="法人のお客様（飲食店・小売店）" data-en="For Business (restaurants &amp; retailers)">法人のお客様（飲食店・小売店）</a>
+    </div>
+  </div>
+</header>
+
+<main class="qa-wrap">
+<div id="qa-ja" data-lang="ja">
+  <h1>よくある質問</h1>
+  <input type="text" id="search-ja" onkeyup="searchQA('ja')" placeholder="質問を検索...">
+
+  <div class="qa-section">
+    <h2>注文方法について</h2>
+    <div class="qa-item"><strong>Q: 注文はどこからできますか？</strong>A: <a href="https://miniapp.line.me/2006469733-lgZj9vJ4" data-info-href="order.lineMiniApp">LINEのオンライン注文システム</a>からご注文いただけます。</div>
+    <div class="qa-item"><strong>Q: Facebookページからも注文できますか？</strong>A: Facebookでは一部の商品情報をご覧いただけますが、ご注文はLINE注文システムをご利用ください。→ <a href="https://www.facebook.com/fishstorejapan" data-info-href="social.facebook">Facebookページはこちら</a></div>
+    <div class="qa-item"><strong>Q: アレルギーがあるのですが、どうすればいいですか？</strong>A: LINE注文システムでアレルギー情報をご記入ください。</div>
+    <div class="qa-item"><strong>Q: おまかせのお刺身は魚の指定はできますか？</strong>A: アレルギー対応以外の魚種指定は承っておりません。その日のお勧め魚でご用意いたします。</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>注文の締切・配送について</h2>
+    <div class="qa-item"><strong>Q: 注文の締切時間はありますか？</strong>A: <span data-info="orderDeadline">16:30（ご希望の配送時間の2時間前までにご注文ください）</span></div>
+    <div class="qa-item"><strong>Q: 当日の注文は可能ですか？</strong>A: はい、可能です。</div>
+    <div class="qa-item"><strong>Q: 商品はいつ届きますか？</strong>A: LINE注文システムで仕上がり時間をご指定いただけます。</div>
+    <div class="qa-item"><strong>Q: どのエリアまで配達できますか？</strong>A: プノンペン市内全域です。</div>
+    <div class="qa-item"><strong>Q: 商品の受け取り方法はどうなりますか？</strong>A: GRAB EXPRESSで配送します。</div>
+    <div class="qa-item"><strong>Q: 配送料はいくらですか？</strong>A: 中央市場近くからGRAB EXPRESSで配送します。配送料はお客様負担です。</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>商品のお支払い等について</h2>
+    <div class="qa-item"><strong>Q: 支払い方法は？</strong>A: QRコード決済をご利用いただけます。</div>
+    <div class="qa-item"><strong>Q: ドルで支払いできますか？</strong>A: はい、送金先はリエル口座となりますが、ドルでのお支払いも可能です。</div>
+    <div class="qa-item"><strong>Q: 商品の状態が悪かった場合は？</strong>A: 商品受け取り時にすぐご連絡ください。状況を確認し、対応いたします。</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>キャンセル・保存方法について</h2>
+    <div class="qa-item"><strong>Q: 注文後のキャンセルはできますか？</strong>A: 配送希望時間2時間前までにご連絡ください。</div>
+    <div class="qa-item"><strong>Q: 商品の保存方法は？</strong>A: 冷蔵商品は4℃以下で保存し、当日中にお召し上がりください。</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>その他</h2>
+    <div class="qa-item"><strong>Q: 店舗はありますか？</strong>A: 現在はオンライン販売のみです。</div>
+    <div class="qa-item"><strong>Q: 毎日入荷していますか？</strong>A: 日本やカンボジアの漁港から定期的に入荷しています。</div>
+    <div class="qa-item"><strong>Q: 魚をさばいてもらえますか？</strong>A: はい、刺身用・焼き用など用途に応じて下処理いたします。ご注文時にお知らせください。</div>
+    <div class="qa-item"><strong>Q: 配送ボックスや桶は返却が必要ですか？</strong>A: 当店では繰り返し使える桶や配送ボックスの回収を行っております。Grabピックアップ、受付へのお預け、店舗へのお持ち込みのいずれかでご返却ください。</div>
+    <div class="qa-item"><strong>Q: レストラン向けの大口注文は可能ですか？</strong>A: はい、対応可能です。お気軽にご相談ください。</div>
+    <div class="qa-item"><strong>Q: 質問があるときはどこに連絡すればいいですか？</strong>A: <a href="https://line.me/R/ti/p/@sakanayajapan" data-info-href="order.lineOfficial">公式LINEチャット</a>または<a href="https://www.facebook.com/fishstorejapan" data-info-href="social.facebook">Facebookメッセージ</a>までご連絡ください。</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>店舗情報</h2>
+    <p><strong>店名：</strong>SAKANAYA JAPON<br>
+    <strong>住所：</strong><span data-info="company.address">#72BE0, Street 174, Phum 11, Sangkat Phsar Thmey 3, Khan Daun Penh, Phnom Penh, Cambodia</span><br>
+    <strong>電話：</strong><span data-info="company.phoneLocal">016-881-370</span><br>
+    <strong>営業時間：</strong><span data-info="hours">毎日 10:00〜19:30（国民の休日を除く）</span></p>
+  </div>
+</div>
+
+<div id="qa-en" data-lang="en">
+  <h1>Frequently Asked Questions</h1>
+  <input type="text" id="search-en" onkeyup="searchQA('en')" placeholder="Search questions...">
+
+  <div class="qa-section">
+    <h2>Ordering</h2>
+    <div class="qa-item"><strong>Q: How can I place an order?</strong>A: You can place an order through our <a href="https://t.me/fishstoreJapon" data-info-href="social.telegramChannel">OFFICIAL TELEGRAM</a>.</div>
+    <div class="qa-item"><strong>Q: Can I order from Facebook?</strong>A: You can view product information on Facebook, but please place orders via the LINE order system. → <a href="https://www.facebook.com/fishstorejapan" data-info-href="social.facebook">Facebook page</a>.</div>
+    <div class="qa-item"><strong>Q: I have allergies. What should I do?</strong>A: Please specify your allergies in the LINE order system when ordering.</div>
+    <div class="qa-item"><strong>Q: Can I specify the fish for the omakase sashimi?</strong>A: Except for allergy requests, we cannot accept specific fish requests. We prepare the sashimi with the day's recommended fish.</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>Deadline & Delivery</h2>
+    <div class="qa-item"><strong>Q: Is there an order deadline?</strong>A: <span data-info="orderDeadline">4:30 PM (at least 2 hours before your desired delivery time)</span></div>
+    <div class="qa-item"><strong>Q: Can I place a same-day order?</strong>A: Yes, same-day orders are accepted.</div>
+    <div class="qa-item"><strong>Q: When will my order arrive?</strong>A: Please check the ready time in the LINE order system at checkout.</div>
+    <div class="qa-item"><strong>Q: What areas do you deliver to?</strong>A: We deliver throughout Phnom Penh.</div>
+    <div class="qa-item"><strong>Q: How is my order delivered?</strong>A: We use GRAB EXPRESS for delivery.</div>
+    <div class="qa-item"><strong>Q: What is the delivery fee?</strong>A: Delivery starts from Central Market via GRAB EXPRESS. Customers are responsible for delivery fees.</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>Payment</h2>
+    <div class="qa-item"><strong>Q: What payment methods do you accept?</strong>A: We accept payment via QR code.</div>
+    <div class="qa-item"><strong>Q: Can I pay in US dollars?</strong>A: Yes, although your account is in riel, you may also pay in US dollars.</div>
+    <div class="qa-item"><strong>Q: What if the product arrives in poor condition?</strong>A: Please contact us immediately upon receipt. We will assess the situation and respond accordingly.</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>Cancellation & Storage</h2>
+    <div class="qa-item"><strong>Q: Can I cancel after placing an order?</strong>A: You may cancel up to 2 hours before your requested delivery time.</div>
+    <div class="qa-item"><strong>Q: How should I store the product?</strong>A: Storage varies by product. Refrigerated items should be kept at 4°C or below and consumed on the same day.</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>Others</h2>
+    <div class="qa-item"><strong>Q: Do you have a physical store?</strong>A: We currently operate online only.</div>
+    <div class="qa-item"><strong>Q: Do you restock daily?</strong>A: Yes, we receive regular shipments from Japan and Cambodia ports.</div>
+    <div class="qa-item"><strong>Q: Can you clean the fish for me?</strong>A: Yes, we can prepare fish for sashimi, grilling, etc., according to your needs. Please let us know when ordering.</div>
+    <div class="qa-item"><strong>Q: Do I need to return the delivery box or container?</strong>A: We collect reusable boxes and containers. You can return them via Grab pick-up, drop-off at reception, or by bringing them to our store.</div>
+    <div class="qa-item"><strong>Q: Do you accept large restaurant orders?</strong>A: Yes, we do. Please contact us for more information.</div>
+    <div class="qa-item"><strong>Q: Where can I contact you if I have questions?</strong>A: Please reach us via <a href="https://t.me/+UZAm7-eLzD0yZTA1" data-info-href="order.telegramHome">TELEGRAM chat</a> or <a href="https://www.facebook.com/fishstorejapan" data-info-href="social.facebook">Facebook message</a>.</div>
+  </div>
+
+  <div class="qa-section">
+    <h2>Store Information</h2>
+    <p><strong>Name:</strong> SAKANAYA JAPON<br>
+    <strong>Address:</strong> <span data-info="company.address">#72BE0, Street 174, Phum 11, Sangkat Phsar Thmey 3, Khan Daun Penh, Phnom Penh, Cambodia</span><br>
+    <strong>Phone:</strong> <span data-info="company.phoneLocal">016-881-370</span><br>
+    <strong>Hours:</strong> <span data-info="hours">Daily 10:00am–7:30pm (Closed on public holidays)</span></p>
+  </div>
+</div>
+</main>
+
+<footer class="site-footer has-float">
+  <div class="footer-inner">
+    <ul class="footer-links">
+      <li><a href="index.html" data-ja="トップ" data-en="Top">トップ</a></li>
+      <li><a href="menu.html" data-ja="メニュー" data-en="Menu">メニュー</a></li>
+      <li><a href="howto.html" data-ja="ご注文方法" data-en="How to Order">ご注文方法</a></li>
+      <li><a href="faq.html" data-ja="よくあるご質問" data-en="FAQ">よくあるご質問</a></li>
+      <li><a href="aboutus.html" data-ja="店舗について" data-en="About Us">店舗について</a></li>
+      <li><a href="business/index.html" data-ja="法人のお客様" data-en="For Business">法人のお客様</a></li>
+    </ul>
+    <p class="footer-note">
+      SAKANAYA JAPON ／ #72BE0, Street 174, Khan Daun Penh, Phnom Penh, Cambodia
+    </p>
+  </div>
+</footer>
+
+<div class="floating-container">
+  <a href="https://t.me/+UZAm7-eLzD0yZTA1" data-info-href="order.telegramHome" class="float-btn btn-tele" target="_blank" rel="noopener noreferrer">
+    <span>✈</span> Order by Telegram
+  </a>
+  <a href="https://miniapp.line.me/2006469733-lgZj9vJ4" data-info-href="order.lineMiniApp" class="float-btn btn-line" target="_blank" rel="noopener noreferrer">
+    <span>📲</span> Order by LINE
+  </a>
+</div>
+
+</body>
+</html>

@@ -19,22 +19,27 @@
 | `assets/js/` | `site-info.js`（営業時間・窓口の情報源）/ `common.js`（日英切替） |
 | `menu.html` | メニュー画像1枚 + 注文ボタン |
 | `howto.html` | LINE での注文方法（動画 `howtouse.mp4`） |
-| `q&a.html` | よくあるご質問 |
+| `faq.html` | よくあるご質問 |
+| `q&a.html` | **旧URLからの案内ページ**（`faq.html` へ自動転送。中身はない） |
 | `aboutus.html` | 店舗情報・営業時間・アクセス |
-| `logo.jpg` | ロゴ（favicon / OGP 兼用） |
-| `fish-photo.jpg` | トップ背景スライドショー用 |
-| `english-menu20260207.jpg` | `menu.html` に表示するメニュー画像 |
-| `howtouse.mp4` | 注文方法の説明動画（約2.8MB） |
+| `assets/images/logo.jpg` | ロゴ（favicon / OGP 兼用） |
+| `assets/images/fish-photo.jpg` | トップ背景スライドショー用 |
+| `assets/images/english-menu20260207.jpg` | `menu.html` に表示するメニュー画像 |
+| `howtouse.mp4` | 注文方法の説明動画（約2.8MB。ルート直下のまま） |
 | `docs/` | 運用ドキュメント（サイトとしては公開されない） |
 
 ### 注意点
 
-- `index.html` の背景スライドショーは `fish-photo.jpg` / `sashimi.jpg` / `event.jpg` を読もうとしますが、
-  **現在リポジトリにあるのは `fish-photo.jpg` だけ**です。
+- `index.html` の背景スライドショーは `assets/images/` の `fish-photo.jpg` / `sashimi.jpg` / `event.jpg` を
+  読もうとしますが、**現在リポジトリにあるのは `fish-photo.jpg` だけ**です。
   存在しない画像は自動でスキップされる作りなので表示は壊れませんが、実質1枚のみ表示されています。
-  スライドショーにしたい場合は残り2枚を追加してください。
-- `q&a.html` はファイル名に `&` を含むため、URL では `q%26a.html` になります。
-  将来 `faq.html` へ改名する際は、旧URLからの案内を用意してください。
+  スライドショーにしたい場合は残り2枚を `assets/images/` に追加してください。
+- ~~`q&a.html` はファイル名に `&` を含むため URL が `q%26a.html` になる~~
+  → **2026-09-22 に `faq.html` へ改名済み**。旧URL `q%26a.html` には案内ページを置いて
+  `faq.html` へ転送しています（GitHub Pages はサーバ側リダイレクトができないため meta refresh）。
+  **案内ページは最低3か月は消さないでください**（顧客のブックマーク・外部リンクの切替期間）。
+- 営業時間・住所・電話・窓口URLは `assets/js/site-info.js` が唯一の情報源です。
+  ページ側には `data-info` / `data-info-href` だけを書き、値を直接書かないでください。
 
 ---
 
@@ -165,14 +170,54 @@ Phase 1 の時点では既存ページ（`menu.html` / `howto.html` / `q&a.html`
 ### Phase 2（進行中）
 
 - ✅ **既存4ページのヘッダー・フッターを新トップと統一**（2026-09-14。下記参照）
-- ⬜ 既存4ページにも `site-info.js` を適用し、営業時間・窓口URLの直書きをなくす
-- ⬜ `q&a.html` → `faq.html` への改名（旧URLからの案内を用意）
-- ⬜ 画像を `assets/images/` へ整理
-- ⬜ 法人向け「加工」「配送」「新規取引」の詳細ページ追加
+- ✅ **既存4ページにも `site-info.js` を適用し、営業時間・窓口URLの直書きをなくした**（2026-09-22）
+- ✅ **`q&a.html` → `faq.html` へ改名**（旧URLに案内ページを設置。2026-09-22）
+- ✅ **画像を `assets/images/` へ整理**（2026-09-22）
+- ⬜ 法人向け「加工」「配送」「新規取引」の詳細ページ追加（**内容の確定待ち**）
+
+#### 単一情報源化・改名・画像整理（✅ 2026-09-22）
+
+**`site-info.js` への一本化**
+
+`menu` / `howto` / `faq` / `aboutus` の営業時間・締切・住所・電話・Email・窓口URLを
+すべて `data-info` / `data-info-href` に置き換えました（全38箇所）。
+値を変えるときは `assets/js/site-info.js` **だけ**を書き換えます。
+
+- HTML には日本語（英語ブロックには英語）の既定値を残してあるので、
+  JS が読めなくても正しい値が表示されます
+- 外部リンクの `target="_blank"` と `rel="noopener noreferrer"` は `common.js` が自動で付けます
+- **遷移先は一切変えていません。** 既存のリンクを「同じ宛先を指すキー」に機械的に置き換えただけです
+  （どの窓口に着地させるかは事業判断のため。未解決の不整合は下記「申し送り」を参照）
+
+**`faq.html` への改名**
+
+`q&a.html` は `&` のせいで URL が `q%26a.html` になり、共有時に壊れやすい名前でした。
+`faq.html` に改名し、旧URLには案内ページ（3秒後に自動転送・`noindex`・`canonical` 付き）を置いています。
+
+**画像の整理**
+
+`logo.jpg` / `fish-photo.jpg` / `english-menu20260207.jpg` を `assets/images/` へ移動し、
+参照22箇所（favicon・OGP の絶対URL・CSS背景・スライドショーのJS配列）を更新しました。
+`howtouse.mp4` は画像ではないためルート直下に残しています。
+
+> ⚠️ **OGP画像のURLが変わりました。** 既に Facebook / LINE で共有済みの投稿は、
+> キャッシュされた古いURL（`/sakanayajapon/logo.jpg` 等）を参照するため
+> プレビュー画像が表示されなくなることがあります。リンク自体は正常に開きます。
+> 気になる場合は Facebook のシェアデバッガーでキャッシュを更新してください。
+
+#### 申し送り（要判断）
+
+`site-info.js` 化の作業中に見つけた、**表示内容の不整合**です。直すには事業判断が要るため手を付けていません。
+
+| 箇所 | 現状 | 論点 |
+|---|---|---|
+| `faq.html` 英語版「How can I place an order?」 | Telegram チャンネル（`t.me/fishstoreJapon`）へ誘導 | 日本語版は LINE 注文システム。`docs/contact-points.md` の統一案では個人の主窓口は LINE Mini App |
+| `aboutus.html` 英語版の CTA ボタン | 同上（Telegram チャンネル） | 日本語版は LINE Mini App。英語話者だけ別の窓口に着地している |
+| 各ページのフッターの住所 | 短縮形を直書き（5ページ） | `site-info.js` の `company.address` は完全形。フッターを長くしてよいか |
 
 #### ヘッダー・フッターの統一（✅ 2026-09-14）
 
-`menu.html` / `howto.html` / `q&a.html` / `aboutus.html` の4ページが
+`menu.html` / `howto.html` / `faq.html`（当時は `q&a.html`）/ `aboutus.html` の4ページが
 `assets/css/common.css` と `common.js` を読み込むようになり、
 ヘッダー・フッター・言語切替がトップページと同じものになりました。
 
@@ -191,7 +236,7 @@ Phase 1 の時点では既存ページ（`menu.html` / `howto.html` / `q&a.html`
   トップページ `index.html` の `<style>` と**同じ値を二重に持っている**。
   片方だけ直すと見た目がずれるため、変更時は必ず両方を直すこと
 - 言語別の本文は `data-lang="ja"` / `data-lang="en"` に統一。
-  `q&a.html` の検索（`searchQA`）はページ固有のためページ側に残してある
+  `faq.html` の検索（`searchQA`）はページ固有のためページ側に残してある
 - `body` を縦 flex にし、`.site-footer` に `margin-top: auto` を付けた。
   内容が短いページでもフッターが画面下端まで下がる
 - 右下の追従ボタンがフッターのリンクに被らないよう、
