@@ -1,188 +1,403 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAKANAYA JAPON - PRODUCT LIST</title>
-    <link rel="stylesheet" href="style.css?v=20260922">
-    <link rel="icon" href="images/logo.jpg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SAKANAYA JAPON｜海のある日常を、カンボジアの食卓に。</title>
+  <link rel="icon" href="logo.jpg">
+  <meta name="description" content="カンボジア・プノンペンの魚屋 SAKANAYA JAPON。日本の鮮度管理で、刺身・鮮魚・お惣菜をご家庭へ。LINE・Telegram・Facebook Messenger で注文できます。">
+  <!-- OGP（FacebookやLINE等でシェアした際のプレビュー用）
+       ※ 2026-09 の Organization 移管に合わせて差し替え済み（docs/github-inventory.md §3） -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SAKANAYA JAPON｜海のある日常を、カンボジアの食卓に。">
+  <meta property="og:description" content="プノンペンの魚屋。日本の鮮度管理で刺身・鮮魚・お惣菜をお届け。LINE・Telegram・Facebook Messenger で注文OK。">
+  <meta property="og:image" content="https://sakanaya-japon.github.io/sakanayajapon/fish-photo.jpg">
+  <meta property="og:url" content="https://sakanaya-japon.github.io/sakanayajapon/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- 営業時間・窓口URLは site-info.js が唯一の情報源。common.js が日英切替と流し込みを行う -->
+  <script src="assets/js/site-info.js" defer></script>
+  <script src="assets/js/common.js" defer></script>
+
+  <style>
+    :root {
+      --navy: #2b4c8c;        /* ロゴの波の紺。アイコンの色 */
+      --navy-deep: #12324f;
+      --ink: #1c2430;
+      --tg: #2a9bd6;          /* Telegram */
+      --fb: #1877f2;          /* Facebook */
+      --header-h: 60px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #0a1a2b;    /* 写真の読み込み前に見える色 */
+      color: #fff;
+    }
+
+    /* ── 1. ヘッダー（白帯）：ロゴ＋店名 ／ 言語切替＋法人向け ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      height: var(--header-h);
+      background: #fff;
+      color: var(--navy-deep);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+    }
+    .header-inner {
+      max-width: 1100px;
+      height: 100%;
+      margin: 0 auto;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--navy-deep);
+      min-width: 0;
+    }
+    .brand img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: 0 0 auto; }
+    .brand-name { font-weight: 800; font-size: 19px; letter-spacing: 0.04em; white-space: nowrap; }
+
+    .header-right { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; }
+
+    .lang-toggle {
+      display: flex;
+      border: 1px solid rgba(43, 76, 140, 0.3);
+      border-radius: 999px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .lang-toggle button {
+      appearance: none;
+      border: 0;
+      background: none;
+      font: inherit;
+      font-size: 13px;
+      font-weight: bold;
+      color: var(--navy);
+      padding: 6px 13px;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .lang-toggle button[aria-pressed="true"] { background: var(--navy); color: #fff; }
+    .lang-toggle button:focus-visible { outline: 2px solid var(--navy); outline-offset: -2px; }
+
+    .biz-link {
+      color: var(--navy-deep);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 13.5px;
+      white-space: nowrap;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .biz-link:hover { background: #eef3fa; border-color: rgba(43, 76, 140, 0.3); }
+    .biz-link:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+
+    /* ── 2. ヒーロー：写真を全面に敷き、上下を暗くして文字を立たせる ── */
+    .hero {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px 44px;
+      overflow: hidden;
+    }
+    /* 1枚目の写真は CSS で直接敷く（JS が動かなくても写真が出る）。
+       スライドショーの JS は、この上に2枚目以降を重ねてフェードさせるだけ */
+    .bg-slideshow {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: #0a1a2b url('fish-photo.jpg') center / cover no-repeat;
+    }
+    .bg-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+    .bg-slide.active { opacity: 1; }
+    /* 暗さの調整はここ。数値を上げるほど写真が暗くなる */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.45) 45%, rgba(0, 0, 0, 0.72) 100%);
+    }
+    .hero-inner { position: relative; z-index: 2; }   /* 文字だけを写真とグラデーションの前面に */
+
+    .hero-inner { width: 100%; max-width: 900px; text-align: center; }
+
+    .hero-logo {
+      width: 124px;
+      height: 124px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #fff;
+      background: #fff;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.5);
+      margin: 0 auto 16px;
+      display: block;
+    }
+    .site-title {
+      font-size: 46px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      line-height: 1.15;
+      margin: 0 0 10px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55), 0 0 24px rgba(0, 0, 0, 0.35);
+    }
+    .tagline {
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.45;
+      margin: 0 0 40px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55), 0 0 20px rgba(0, 0, 0, 0.35);
+    }
+    .tagline small {
+      display: block;
+      margin-top: 6px;
+      font-size: 18px;
+      font-weight: 600;
+      opacity: 0.95;
+    }
+
+    /* ── 3. メニュー：白い丸アイコン＋白文字、2列×2行 ── */
+    .menu {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px 28px;
+      max-width: 620px;
+      margin: 0 auto 32px;
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+      color: #fff;
+      text-align: left;
+      border-radius: 999px;
+      transition: transform 0.2s;
+    }
+    .item:hover { transform: translateY(-3px); }
+    .item:focus-visible { outline: 3px solid #fff; outline-offset: 6px; }
+    .item .circle {
+      flex: 0 0 auto;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: #fff;
+      color: var(--navy-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .item:hover .circle { box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45); }
+    .item .circle svg { width: 34px; height: 34px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .item .t { display: block; font-size: 24px; font-weight: 800; line-height: 1.2; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); }
+    .item .s { display: block; font-size: 14px; font-weight: 500; margin-top: 3px; opacity: 0.95; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
+
+    /* ── 4. 下段ピル：Telegram / Facebook ── */
+    .pills {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 660px;
+      margin: 0 auto;
+    }
+    .pill {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      min-height: 60px;
+      padding: 12px 22px;
+      border-radius: 999px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 20px;
+      line-height: 1.2;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      transition: transform 0.2s, filter 0.2s;
+    }
+    .pill:hover { transform: translateY(-3px); filter: brightness(1.08); }
+    .pill:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+    .pill svg { width: 28px; height: 28px; flex: 0 0 auto; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .pill.telegram { background: var(--tg); }
+    .pill.facebook-like { background: var(--fb); }
+
+    /* ── 5. 言語別ブロック（common.js が html[lang] を切り替える。JS無効時は日本語） ── */
+    [data-lang] { display: none; }
+    [data-lang="ja"] { display: block; }
+    html[lang="ja"] [data-lang="ja"] { display: block; }
+    html[lang="ja"] [data-lang="en"] { display: none; }
+    html[lang="en"] [data-lang="en"] { display: block; }
+    html[lang="en"] [data-lang="ja"] { display: none; }
+
+    /* ── 6. スマホ ── */
+    @media (max-width: 560px) {
+      .brand-name { font-size: 16px; }
+      .biz-link { font-size: 12px; padding: 6px 9px; }
+      .lang-toggle button { padding: 5px 10px; font-size: 12px; }
+      .hero { padding: 28px 16px 36px; }
+      .hero-logo { width: 92px; height: 92px; margin-bottom: 12px; }
+      .site-title { font-size: 34px; }
+      .tagline { font-size: 18px; margin-bottom: 28px; }
+      .tagline small { font-size: 14.5px; }
+      .menu { gap: 18px 12px; margin-bottom: 26px; }
+      .item { flex-direction: column; text-align: center; gap: 10px; }
+      .item .circle { width: 60px; height: 60px; }
+      .item .circle svg { width: 30px; height: 30px; }
+      .item .t { font-size: 19px; }
+      .item .s { font-size: 12.5px; }
+      .pills { grid-template-columns: 1fr; gap: 12px; }
+      .pill { font-size: 17px; min-height: 54px; }
+      .pill svg { width: 24px; height: 24px; }
+    }
+    @media (max-width: 380px) {
+      .biz-link { display: none; }  /* 極小画面ではヘッダーに入らないため非表示 */
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <div class="header-container header-flex-row">
-            <img src="images/logo.jpg" alt="SAKANAYA JAPON" class="logo-mini">
-            <div class="title-section">
-                <div class="title-with-footer">
-                    <h2 class="title-main-inline">PRODUCT LIST</h2>
-                    <span class="mini-footer">© 2026 SAKANAYA JAPON</span>
-                </div>
-                <p class="update-date-inline" id="update-date">UPDATE: —</p>
-            </div>
-            <div class="contact-section-inline">
-                <a href="tel:016881370" class="tel-inline-text">📞 016-881-370</a>
-                <!-- 取引先ログイン。未認証は「🔓 取引先ログイン」、認証済みは店名を表示しログアウトになる -->
-                <button id="access-btn" class="access-btn" onclick="onAccessBtnClick()">🔓 Partner login</button>
-            </div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html">
+        <img src="logo.jpg" alt="">
+        <span class="brand-name">SAKANAYA JAPON</span>
+      </a>
+      <div class="header-right">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button type="button" data-set-lang="ja" aria-pressed="true">日本語</button>
+          <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
         </div>
-    </header>
-
-    <div class="lang-bar">
-        <button id="lang-jp" class="lang-btn" onclick="setLang('jp')">🇯🇵 日本語</button>
-        <button id="lang-en" class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
+        <a class="biz-link" href="business/index.html"
+           data-ja="法人のお客様（飲食店・小売店）" data-en="For Business (restaurants &amp; retailers)">法人のお客様（飲食店・小売店）</a>
+      </div>
     </div>
+  </header>
 
-    <nav class="category-nav">
-        <button id="cat-all" class="nav-btn active" onclick="filterCategory('ALL', this)">ALL of Stock</button>
-        <button id="cat-kh" class="nav-btn" onclick="filterCategory('COUNTRY_KH', this)">🇰🇭 CAMBODIA</button>
-        <button id="cat-jp" class="nav-btn" onclick="filterCategory('COUNTRY_JP', this)">🇯🇵 JAPAN</button>
-        <button id="cat-frozen" class="nav-btn" onclick="filterCategory('FROZEN', this)">FROZEN</button>
-        <button id="cat-fillet" class="nav-btn" onclick="filterCategory('FRESH-FILLET/DR/SD', this)">FRESH FILLET/DR/SD/WHOLE</button>
-        <button class="nav-btn" id="cat-vege" onclick="filterCategory('VEGE', this)">VEGETABLE</button>    
-        <button id="cat-oil" class="nav-btn" onclick="filterCategory('OIL&SEASONING', this)">OIL & SEASONING</button>
-        <button class="nav-btn" id="cat-kitchen" onclick="filterCategory('KITCHEN', this)">KITCHEN SUPPLIES</button>
-        <button id="cat-waiting" class="nav-btn nav-btn-waiting" onclick="filterCategory('OUT_OF_STOCK', this)">OUT OF STOCK</button>
-        <a href="https://t.me/SAKANAYAJAPON" target="_blank" class="header-inquiry-btn" id="inquiry-btn">
-        💬 <span id="inquiry-text">INQUIRY</span>　
+  <main class="hero">
+    <div class="bg-slideshow" id="bgSlideshow"></div>
+
+    <div class="hero-inner">
+      <img class="hero-logo" src="logo.jpg" alt="">
+      <h1 class="site-title">SAKANAYA JAPON</h1>
+
+      <p class="tagline" data-lang="ja">海のある日常を、カンボジアの食卓に。<small>日本の鮮度管理で、刺身・鮮魚・お惣菜をご家庭へ</small></p>
+      <p class="tagline" data-lang="en">A Taste of the Sea, For Every Cambodian Home<small>Fresh seafood from Japan, in Phnom Penh</small></p>
+
+      <nav class="menu">
+        <a class="item" href="menu.html">
+          <span class="circle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
+          <span>
+            <span class="t" data-ja="メニュー" data-en="Menu">メニュー</span>
+            <span class="s" data-ja="本日の鮮魚・おまかせセット" data-en="Today's seafood &amp; sets">本日の鮮魚・おまかせセット</span>
+          </span>
         </a>
-        <div class="cart-wrapper">
-            <button id="cart-toggle-btn" class="cart-toggle-btn" onclick="toggleCartPanel()">
-                🛒 <span id="cart-count-badge" class="cart-count-badge">0</span>
-            </button>
+        <a class="item" href="howto.html">
+          <span class="circle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
+          <span>
+            <span class="t" data-ja="ご注文方法" data-en="How to Order">ご注文方法</span>
+            <span class="s" data-ja="LINE でのご注文（動画ガイド）" data-en="Via LINE (video guide)">LINE でのご注文（動画ガイド）</span>
+          </span>
+        </a>
+        <a class="item" href="q&amp;a.html">
+          <span class="circle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg></span>
+          <span>
+            <span class="t" data-ja="よくあるご質問" data-en="FAQ">よくあるご質問</span>
+            <span class="s" data-ja="配送・お支払いなど" data-en="Delivery, payment &amp; more">配送・お支払いなど</span>
+          </span>
+        </a>
+        <a class="item" href="aboutus.html">
+          <span class="circle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
+          <span>
+            <span class="t" data-ja="店舗について" data-en="About Us">店舗について</span>
+            <span class="s" data-ja="私たちの想い・店舗情報" data-en="Our story &amp; shop info">私たちの想い・店舗情報</span>
+          </span>
+        </a>
+      </nav>
 
-            <div id="cart-panel" class="cart-panel">
-                <div class="cart-panel-header">
-                    <span class="total-label" id="order-bar-label">📋 Your Order</span>
-                    <button class="cart-close-btn" onclick="closeCartPanel()">×</button>
-                </div>
-
-<div id="cart-items" class="cart-items">
-    <p class="cart-empty">No items selected.</p>
-</div>
-
-<div class="order-bar-actions" style="padding: 10px 15px; display: flex; flex-direction: column; gap: 10px;">
-    <button onclick="showOrderCheckModal()" class="order-send-btn" style="width: 100%; padding: 15px; background: #333; color: #fff; border: none; border-radius: 6px; font-weight: bold;">ご注文 / Order</button>
-    
-    <div style="display: flex; gap: 8px;">
-        <button onclick="document.getElementById('first-time-modal').style.display='flex'" class="order-send-btn" style="flex: 1; background: #666; font-size: 13px;">初めての方</button>
-        <button onclick="clearCart()" class="order-clear-btn" style="flex: 1; font-size: 13px;">クリア</button>
+      <div class="pills">
+        <a href="https://t.me/+UZAm7-eLzD0yZTA1" class="pill telegram" data-info-href="order.telegramHome">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+          <span data-ja="Telegram でチャット" data-en="Chat with us directly.">Telegram でチャット</span>
+        </a>
+        <a href="https://www.facebook.com/fishstorejapan" class="pill facebook-like" data-info-href="social.facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+          <span data-ja="Facebook でいいね！" data-en="Please like our page.">Facebook でいいね！</span>
+        </a>
+      </div>
     </div>
-</div>
+  </main>
 
-                <p class="total-note" id="order-bar-note"></p>
-                <a id="inquiry-floating-btn" class="inquiry-floating-btn" href="https://t.me/SAKANAYAJAPON" target="_blank"></a>
-            </div>
-        </div>
-    </nav>
+  <script>
+    // ▼ 背景に表示する写真のファイル名（横長・高解像度推奨）。ここに足すだけで枚数を増やせます。
+    const bgImages = [
+      'fish-photo.jpg',  // ① 魚（鮮魚）
+      'sashimi.jpg',     // ② 刺身の盛り合わせ
+      'event.jpg'        // ③ イベントの様子（解体ショーなど）
+    ];
 
-    <div class="search-area">
-        <input type="text" id="search-input" placeholder="Search product name..." onkeyup="applyFilters()">
-    </div>
+    const container = document.getElementById('bgSlideshow');
+    const slides = [];
+    let idx = 0, timer = null;
 
-    <!-- 商品リストのExcel(CSV)ダウンロード。クライアント側のみで完結・表示中/全商品を切替。
-         2026-09-18: 価格表の一括持ち出しを防ぐため既定で非表示にした。取引先認証の導入後、
-         認証済みの利用者にだけ .is-visible を付けて再表示する（表示制御は style.css / script.js）。 -->
-    <div id="export-area" class="export-area">
-        <button id="export-current-btn" class="nav-btn" onclick="exportCatalog('current')">⬇ This view to Excel</button>
-        <button id="export-all-btn" class="nav-btn" onclick="exportCatalog('all')">⬇ All items to Excel</button>
-    </div>
+    function startRotation() {
+      if (slides.length > 1 && !timer) {
+        timer = setInterval(() => {
+          slides[idx].classList.remove('active');
+          idx = (idx + 1) % slides.length;
+          slides[idx].classList.add('active');
+        }, 6000); // 6秒ごとに切り替え
+      }
+    }
 
-    <div class="notice-area">
-        <details class="notice-box"open>
-            <summary id="notice-summary-text">【 NOTICE 】 Click to view details</summary>
-            <div class="notice-content">
-                <div id="notice-body-content"></div>
-            </div>
-        </details>
-    </div>
-
-    <section id="recommend-section" class="recommend-section hidden">
-        <div class="section-header"><h3 id="recommend-title">🔥 Today's Recommendation</h3></div>
-        <div id="recommend-container" class="container recommend-container"></div>
-    </section>
-
-    <section class="product-section">
-        <div id="product-container" class="container"></div>
-    </section>
-
-    <!-- 写真ポップアップ：flex-direction:column で写真の下に商品説明（#modal-caption）を表示 -->
-    <div id="image-modal" class="modal" onclick="closeModal()" style="flex-direction:column;">
-        <span class="close-btn">×</span>
-        <img class="modal-content" id="modal-img" alt="Product Image">
-        <p id="modal-caption" onclick="event.stopPropagation()" style="display:none; background:#fff; color:#333; max-width:90%; max-height:30vh; overflow-y:auto; margin:10px auto 0; padding:10px 14px; border-radius:6px; font-size:0.9rem; line-height:1.6; text-align:left; box-sizing:border-box; white-space:pre-line;"></p>
-    </div>
-
-    <script src="script.js?v=20260918"></script>
-
-    <div id="first-time-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10000; justify-content:center; align-items:center;">
-    <div style="background:#fff; width:90%; max-width:400px; padding:25px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.3); position:relative;">
-        
-        <h3 id="modal-title" style="margin-top:0; border-bottom:2px solid #333; padding-bottom:10px;">新規登録</h3>
-        
-        <div style="margin-top:15px;">
-            <label id="label-shop" style="display:block; font-size:0.8rem; font-weight:bold;">店名</label>
-            <input type="text" id="reg-shop-name" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:4px;">
-            
-            <label id="label-staff" style="display:block; font-size:0.8rem; font-weight:bold;">担当者名</label>
-            <input type="text" id="reg-staff-name" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:4px;">
-            
-            <label id="label-phone" style="display:block; font-size:0.8rem; font-weight:bold;">電話番号</label>
-            <input type="tel" id="reg-phone" placeholder="0123456789" style="width:100%; padding:10px; margin-bottom:20px; border:1px solid #ccc; border-radius:4px;">
-        </div>
-
-        <!-- H-5: 登録の成否をインライン表示する状態行（processFirstTimeRegistration が更新） -->
-        <p id="reg-status-msg" style="min-height:1.2em; font-size:0.85rem; margin:0 0 10px; white-space:pre-line;"></p>
-
-        <div style="display:flex; gap:10px;">
-            <button id="btn-cancel" onclick="closeFirstTimeModal()" style="flex:1; padding:12px; background:#eee; border:none; border-radius:6px; cursor:pointer;">キャンセル</button>
-            <button id="btn-submit" onclick="processFirstTimeRegistration()" style="flex:2; padding:12px; background:#333; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">登録</button>
-        </div>
-    </div>
-</div>
-    <!-- 取引先ログイン：コードを GAS へ送り、通ればトークンを受け取って価格を表示する -->
-    <div id="unlock-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10003; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:90%; max-width:400px; padding:25px; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.3);">
-            <h3 id="unlock-title" style="margin-top:0; border-bottom:2px solid #333; padding-bottom:10px;">取引先ログイン</h3>
-            <p id="unlock-lead" style="font-size:0.85rem; color:#555; margin:12px 0;"></p>
-            <input type="text" id="unlock-code" autocomplete="off" autocapitalize="characters" spellcheck="false"
-                   onkeydown="if(event.key==='Enter'){event.preventDefault();submitAccessCode();}"
-                   style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:4px; letter-spacing:0.08em;">
-            <p id="unlock-status-msg" style="min-height:1.2em; font-size:0.85rem; margin:0 0 10px; white-space:pre-line;"></p>
-            <div style="display:flex; gap:10px;">
-                <button id="unlock-btn-cancel" onclick="closeUnlockModal()" style="flex:1; padding:12px; background:#eee; border:none; border-radius:6px; cursor:pointer;">キャンセル</button>
-                <button id="unlock-btn-submit" onclick="submitAccessCode()" style="flex:2; padding:12px; background:#333; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">ログイン</button>
-            </div>
-            <p id="unlock-help" style="font-size:0.75rem; color:#666; margin:14px 0 0;"></p>
-        </div>
-    </div>
-    <div id="order-check-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:10001; justify-content:center; align-items:center;">
-    <div style="background:#fff; width:85%; max-width:350px; padding:20px; border-radius:12px; text-align:center;">
-        <h3 id="check-title" style="margin-bottom:15px;"></h3>
-        <p id="check-lead" style="font-size:0.85rem; color:#555;"></p>
-        <div style="text-align:left; font-weight:bold; font-size:0.85rem; margin:8px 0 4px;">
-            <span id="check-items-label"></span>
-        </div>
-        <div id="check-order-summary" style="text-align:left; max-height:34vh; overflow-y:auto; background:#f9f9f9; border:1px solid #eee; border-radius:6px; padding:10px; font-size:0.85rem;"></div>
-        <label id="check-phone-label" style="display:block; text-align:left; font-weight:bold; font-size:0.85rem; margin-top:12px;"></label>
-        <input type="tel" id="check-phone" placeholder="0123456789" style="width:100%; padding:10px; margin:15px 0; border:1px solid #ccc; border-radius:4px;">
-        <p id="check-phone-note" style="text-align:left; font-size:0.75rem; color:#666; margin:4px 0 0;"></p>
-        <div style="display:flex; gap:10px; margin-top:15px;">
-            <button id="check-btn-back" onclick="document.getElementById('order-check-modal').style.display='none'" style="flex:1; padding:10px; background:#eee; border:none; border-radius:6px;"></button>
-            <button id="check-btn-confirm" onclick="finalizeOrderProcess()" style="flex:1; padding:10px; background:#333; color:#fff; border:none; border-radius:6px;"></button>
-        </div>
-    </div>
-</div>
-    <!-- 注文結果モーダル（成功/未登録/失敗を1枚で切替・showOrderResult が制御） -->
-    <div id="order-result-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:10002; justify-content:center; align-items:center;">
-        <div style="background:#fff; width:85%; max-width:360px; padding:24px; border-radius:12px; text-align:center;">
-            <div id="result-icon" style="font-size:2.4rem; margin-bottom:6px;">✅</div>
-            <h3 id="result-title" style="margin:0 0 6px;"></h3>
-            <p id="result-orderno" style="font-size:1.1rem; font-weight:bold; letter-spacing:.03em; margin:6px 0;"></p>
-            <p id="result-body" style="font-size:0.9rem; color:#555; white-space:pre-line; line-height:1.6; margin:6px 0 0;"></p>
-            <div style="display:flex; gap:10px; margin-top:18px;">
-                <button id="result-btn-secondary" style="flex:1; padding:11px; background:#eee; border:none; border-radius:6px;"></button>
-                <button id="result-btn-primary"   style="flex:1; padding:11px; background:#333; color:#fff; border:none; border-radius:6px; font-weight:bold;"></button>
-            </div>
-        </div>
-    </div>
+    // 読み込めた画像だけを順に背景へ追加（存在しないファイルは自動でスキップ）
+    bgImages.forEach(src => {
+      const probe = new Image();
+      probe.onload = () => {
+        const d = document.createElement('div');
+        d.className = 'bg-slide';
+        d.style.backgroundImage = `url('${src}')`;
+        container.appendChild(d);
+        slides.push(d);
+        if (slides.length === 1) d.classList.add('active'); // 最初の1枚はすぐ表示
+        startRotation();
+      };
+      probe.src = src;
+    });
+  </script>
 </body>
 </html>
