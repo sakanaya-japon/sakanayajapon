@@ -20,7 +20,7 @@ SAKANAYA 系を Organization へ寄せるまでの手順をまとめたもの。
 |---|---|---|---|---|
 | 1 | `sakanaya-japon/sakanaya-productlist` | **法人向け商品カタログ（現行本番）** | 2026-09-11 | 維持（正） |
 | 2 | `Sasuraimitsu/sakanaya-productlist` | 旧カタログURL → 移転案内ページ | 2026-09-03 | 案内期間終了後に Archive |
-| 3 | `Sasuraimitsu/sakanayajapon` | 個人向けサイト（本リポジトリ） | 2026-06-15 | **Org へ移管** |
+| 3 | `Sasuraimitsu/sakanayajapon` | 個人向けサイト（本リポジトリ） | 2026-06-15 | ✅ **Org へ移管済**（`sakanaya-japon/sakanayajapon`） |
 | 4 | `Sasuraimitsu/sakanayajapon-air` | カタログの旧試作版 | 2026-09-14 | 価格削除済 → **Archive待ち**（§2参照） |
 | 5 | `Sasuraimitsu/sakanaya-punch` | 勤怠管理システム | 2026-06-30 | **Org へ移管 + 公開範囲要確認** |
 | 6 | `Sasuraimitsu/metis-order-web` | METIS 受注サイト | 2026-07-12 | 維持（要 description） |
@@ -132,7 +132,7 @@ Archive するだけでは**公開状態は続き、価格は誰でも読めた�
 | 勤怠管理 | `sasuraimitsu.github.io/sakanaya-punch/` | `sakanaya-japon.github.io/sakanaya-punch/` |
 
 `index.html` / `business/index.html` の OGP に旧URLが直書きされていましたが、
-**2026-09-14 の移管に合わせて差し替え済み**です。
+**2026-09 の移管に合わせて差し替え済み**です。
 
 ```html
 <!-- 差し替え済み（index.html） -->
