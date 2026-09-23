@@ -205,15 +205,15 @@ Phase 1 の時点では既存ページ（`menu.html` / `howto.html` / `q&a.html`
 > プレビュー画像が表示されなくなることがあります。リンク自体は正常に開きます。
 > 気になる場合は Facebook のシェアデバッガーでキャッシュを更新してください。
 
-#### 申し送り（要判断）
+#### 申し送り
 
-`site-info.js` 化の作業中に見つけた、**表示内容の不整合**です。直すには事業判断が要るため手を付けていません。
+`site-info.js` 化の作業中に見つけた項目です。
 
-| 箇所 | 現状 | 論点 |
+| 箇所 | 現状 | 状態 |
 |---|---|---|
-| `faq.html` 英語版「How can I place an order?」 | Telegram チャンネル（`t.me/fishstoreJapon`）へ誘導 | 日本語版は LINE 注文システム。`docs/contact-points.md` の統一案では個人の主窓口は LINE Mini App |
-| `aboutus.html` 英語版の CTA ボタン | 同上（Telegram チャンネル） | 日本語版は LINE Mini App。英語話者だけ別の窓口に着地している |
-| 各ページのフッターの住所 | 短縮形を直書き（5ページ） | `site-info.js` の `company.address` は完全形。フッターを長くしてよいか |
+| `faq.html` 英語版「How can I place an order?」 | Telegram チャンネル（`t.me/fishstoreJapon`）へ誘導 | ✅ **2026-09-23 確定: 現状維持**。日本語版=LINE / 英語版=Telegram は意図的な使い分け（`docs/contact-points.md` §4） |
+| `aboutus.html` 英語版の CTA ボタン | 同上（Telegram チャンネル） | ✅ 同上 |
+| 各ページのフッターの住所 | 短縮形を直書き（5ページ） | ⬜ **要判断**。`site-info.js` の `company.address` は完全形。フッターを長くしてよいか |
 
 #### ヘッダー・フッターの統一（✅ 2026-09-14）
 
