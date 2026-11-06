@@ -114,6 +114,12 @@
   .seg { display: flex; gap: 8px; flex-wrap: wrap; }
   .seg button { flex: 1; min-width: 120px; min-height: 44px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); cursor: pointer; font-weight: 600; padding: 8px 10px; }
   .seg button[aria-pressed="true"] { border: 2px solid var(--accent); color: var(--accent); background: var(--accent-soft); }
+  .tgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .tgrid button { min-height: 44px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); cursor: pointer; font-weight: 600; font-size: 14px; padding: 6px 2px; color: var(--text); }
+  .tgrid button[aria-pressed="true"] { border: 2px solid var(--accent); color: var(--accent); background: var(--accent-soft); }
+  @media (max-width: 340px) { .tgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .ahead { display: inline-block; font-size: 12px; color: var(--chef-ink); background: var(--chef-soft); border-radius: 6px; padding: 1px 6px; margin-top: 2px; }
+  .ver { text-align: center; color: var(--muted); font-size: 11px; padding: 18px 0 4px; }
   .alert { margin: 12px 0; padding: 12px; border-radius: 10px; background: #fdecec; color: var(--danger); font-size: 14px; }
   html[data-theme="dark"] .alert { background: #3a1616; }
   .center { min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px; }
@@ -148,6 +154,7 @@
   // GAS のウェブアプリ URL（デプロイ後に差し替える）
   var API_URL = window.TGB_API_URL || 'https://script.google.com/macros/s/AKfycbxQ5XQIdVgGYteb5fXKgEObboVsGomrDpepqSr7oYz96y-YZRw7jYwLZUpd5zEI1K0J/exec';
   var BOT_LINK = 'https://t.me/sakanaya_order_bot/menu';
+  var APP_VERSION = 8; // GAS の MINIAPP_VERSION がこれより大きいと、開いたときに1回だけ読み直す（Telegram の中の古い画面対策）
   var TZ = 'Asia/Phnom_Penh';
 
   var tg = (window.Telegram && window.Telegram.WebApp) || null;
@@ -183,6 +190,8 @@
       allergyQ: 'Food allergies', allergyNo: 'None', allergyYes: 'Yes', allergyPh: 'Please tell us what (e.g. shrimp, crab, shellfish)',
       allergyErr: 'Please tell us if you have any food allergies.', allergyTextErr: 'Please write your allergies.',
       choose: 'Choose', chooseOpt: 'Choose one', openMap: 'Open in Google Maps', pickupAt: 'Pick up at',
+      orderAhead: function (h) { return 'Order ' + h + 'h ahead'; },
+      leadNote: function (names, h) { return names + ': please order at least ' + h + ' hours before you receive it. Earlier times are not shown.'; },
       err: {
         network: "We couldn't reach the shop. Check your connection and tap “Place order” again. You won't be charged twice.",
         auth: 'Your session expired. Please close and reopen the menu from Telegram.',
@@ -225,6 +234,8 @@
       allergyQ: 'អាឡែកហ្ស៊ីចំណីអាហារ', allergyNo: 'គ្មាន', allergyYes: 'មាន', allergyPh: 'សូមប្រាប់យើង (ឧ. បង្គា ក្តាម គ្រំ)',
       allergyErr: 'សូមប្រាប់យើងថាតើអ្នកមានអាឡែកហ្ស៊ីចំណីអាហារឬទេ។', allergyTextErr: 'សូមសរសេរអាឡែកហ្ស៊ីរបស់អ្នក។',
       choose: 'ជ្រើសរើស', chooseOpt: 'ជ្រើសរើសមួយ', openMap: 'បើកក្នុង Google Maps', pickupAt: 'មកយកនៅ',
+      orderAhead: function (h) { return 'បញ្ជាទិញមុន ' + h + ' ម៉ោង'; },
+      leadNote: function (names, h) { return names + '៖ សូមបញ្ជាទិញយ៉ាងហោចណាស់ ' + h + ' ម៉ោងមុនពេលទទួល។'; },
       err: {
         network: 'មិនអាចភ្ជាប់ទៅហាងបានទេ។ សូមពិនិត្យអ៊ីនធឺណិត ហើយចុច “បញ្ជាទិញ” ម្តងទៀត។ អ្នកនឹងមិនត្រូវគិតប្រាក់ពីរដងទេ។',
         auth: 'សូមបិទ ហើយបើកម៉ឺនុយម្តងទៀតពី Telegram។',
@@ -267,6 +278,8 @@
       allergyQ: 'アレルギー', allergyNo: 'なし', allergyYes: 'あり', allergyPh: '内容を入れてください（例：エビ・カニ・貝類）',
       allergyErr: 'アレルギーの有無を選んでください。', allergyTextErr: 'アレルギーの内容を書いてください。',
       choose: '選ぶ', chooseOpt: 'お選びください', openMap: 'Google マップで開く', pickupAt: '受け取り場所',
+      orderAhead: function (h) { return h + '時間前までに注文'; },
+      leadNote: function (names, h) { return names + ' は受け取りの ' + h + ' 時間前までのご注文が必要です（それより早い時間は出していません）。'; },
       err: {
         network: 'お店につながりませんでした。通信状態を確認して、もう一度「注文を確定する」を押してください。二重に注文されることはありません。',
         auth: '有効期限が切れました。Telegram からメニューを開き直してください。',
@@ -372,6 +385,29 @@
       .filter(Boolean);
   }
   function openItem(code) { S.overlay = 'item:' + code; render(); }
+  /* カートの品に必要な準備時間（分）。品ごとの Lead minutes の最大 */
+  function cartLead() {
+    var m = 0;
+    Object.keys(S.cart).forEach(function (k) { var it = item(codeOf(k)); if (it && it.lead > m) m = it.lead; });
+    return m;
+  }
+  function leadItems() {
+    var base = (S.data && S.data.config.leadMinutes) || 0, seen = {}, out = [];
+    Object.keys(S.cart).forEach(function (k) { var it = item(codeOf(k)); if (it && it.lead > base && !seen[it.code]) { seen[it.code] = 1; out.push(it); } });
+    return out;
+  }
+  /* いま選べる日と時間：サーバーの一覧から、開いてからの経過時間とカートの準備時間で絞る */
+  function availDates() {
+    var d = S.data, c = d.config;
+    var lead = Math.max(c.leadMinutes || 0, cartLead());
+    var hm = String(d.now || '').slice(11, 16).split(':');
+    var nowMin = (Number(hm[0]) || 0) * 60 + (Number(hm[1]) || 0) + Math.floor((Date.now() - (S.bootAt || Date.now())) / 60000);
+    return d.dates.map(function (x) {
+      var off = x.offset !== undefined ? x.offset : (x.isToday ? 0 : 1);
+      var sl = x.slots.filter(function (s) { return s.start === undefined || off * 1440 + s.start - nowMin >= lead; });
+      return { key: x.key, isToday: x.isToday, offset: off, slots: sl };
+    }).filter(function (x) { return x.slots.length; });
+  }
   function openExternal(url) {
     if (!/^https:\/\//i.test(url)) return;
     try { if (tg && tg.openLink) tg.openLink(url); else window.open(url, '_blank', 'noopener'); } catch (e) { window.open(url, '_blank', 'noopener'); }
@@ -440,7 +476,7 @@
     if (S.screen === 'done') return root.appendChild(doneView());
     if (S.screen === 'cart') { root.appendChild(header()); root.appendChild(cartView()); }
     else if (S.screen === 'checkout') { root.appendChild(header()); root.appendChild(checkoutView()); }
-    else { root.appendChild(header()); root.appendChild(tabs()); root.appendChild(banners()); root.appendChild(S.tab === 'today' ? todayView() : catView(S.tab)); root.appendChild(cartBar()); }
+    else { root.appendChild(header()); root.appendChild(tabs()); root.appendChild(banners()); root.appendChild(S.tab === 'today' ? todayView() : catView(S.tab)); root.appendChild(h('div', { class: 'ver' }, 'v' + APP_VERSION)); root.appendChild(cartBar()); }
     if (S.overlay === 'splash') root.appendChild(splashView());
     if (S.overlay === 'invite') root.appendChild(inviteView());
     if (S.overlay && S.overlay.indexOf('item:') === 0) root.appendChild(itemView(S.overlay.slice(5)));
@@ -454,7 +490,7 @@
     return h('div', { class: 'head' },
       h('div', { class: 'brand' }, h('b', null, 'SAKANAYA JAPON'),
         h('span', null, t('sub')),
-        c ? h('span', null, t('hours') + ' ' + c.openTime + '–' + c.closeTime) : null),
+        c ? h('span', null, t('hours') + ' ' + (c.firstTime || c.openTime) + '–' + c.closeTime) : null),
       h('div', { class: 'hbtns' },
         h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Language', onclick: function () {
           S.lang = langs[(langs.indexOf(S.lang) + 1) % langs.length]; store('lang', S.lang); render();
@@ -531,6 +567,7 @@
       h('div', { class: 'rmain' },
         h('div', { class: 'rtitle' }, h('b', null, nm(it)), chips),
         h('span', { class: 'note' }, khr(it.price), ' ', h('span', { class: 'usd' }, usd(it.price)), it.unit ? ' · ' + it.unit : ''),
+        aheadTag(it),
         ds(it) ? h('span', { class: 'pnote' }, ds(it)) : null),
       qtyControl(it.code, true));
   }
@@ -562,9 +599,14 @@
           h('div', { class: 'rtitle' }, (it.badges || []).map(function (b) { return chipFor(it, b); })),
           it.comment ? h('p', null, it.comment) : null,
           ds(it) ? h('p', { class: 'note' }, ds(it)) : null,
+          aheadTag(it),
           hasOpts(it) ? optPicker(it) : null,
           h('div', { class: 'prow', style: 'padding-top:12px' }, h('span', null, priceEl(it.price), it.unit ? h('span', { class: 'usd' }, ' · ' + it.unit) : null),
             qtyControl(hasOpts(it) ? keyOf(it.code, curOpt(it)) : it.code, false)))));
+  }
+  function aheadTag(it) {
+    var base = (S.data && S.data.config.leadMinutes) || 0;
+    return it.lead > base ? h('span', { class: 'ahead' }, '⏱ ' + t('orderAhead')(Math.ceil(it.lead / 60))) : null;
   }
   function curOpt(it) {
     var o = S.optSel[it.code];
@@ -686,7 +728,7 @@
     if (f.map === undefined) f.map = saved.map || c.map || '';
     if (!f.type) f.type = 'Delivery';
     if (!f.payment) f.payment = S.data.config.payments[0] || 'KHQR';
-    var dates = S.data.dates;
+    var dates = availDates();
     if (!f.date || !dates.some(function (d) { return d.key === f.date; })) f.date = dates.length ? dates[0].key : '';
     var d = dates.filter(function (x) { return x.key === f.date; })[0];
     if (!d || !d.slots.some(function (s) { return s.id === f.slot; })) f.slot = '';
@@ -718,7 +760,10 @@
       if (c.pickupMap) pbox.appendChild(h('button', { type: 'button', class: 'big ghost', onclick: function () { openExternal(c.pickupMap); } }, '🗺 ' + t('openMap')));
       page.appendChild(pbox);
     }
-    var dates = S.data.dates;
+    prefill(); // カートの準備時間で選べる日・時間が変わるので、毎回たしかめる
+    var dates = availDates();
+    var li = leadItems();
+    if (li.length) page.appendChild(h('div', { class: 'banner' }, '⏱ ', t('leadNote')(li.map(nm).join(', '), Math.ceil(Math.max.apply(null, li.map(function (x) { return x.lead; })) / 60))));
     if (!dates.length) page.appendChild(h('div', { class: 'alert' }, t('noDates')));
     else {
       var dsel = h('select', { id: 'f-date', onchange: function (ev) { f.date = ev.target.value; f.slot = ''; render(); } },
@@ -726,12 +771,13 @@
       page.appendChild(field('f-date', t('date'), dsel));
       var day = dates.filter(function (d) { return d.key === f.date; })[0] || dates[0];
       if (c.timeMode === 'time' || day.slots.length > 6) {
-        var tsel = h('select', { id: 'f-slot', 'aria-describedby': 'f-slot-hint', onchange: function (ev) { f.slot = ev.target.value; delete e.slot; ev.target.closest('.field').classList.remove('bad'); var er = ev.target.closest('.field').querySelector('.err'); if (er) er.remove(); } },
-          [h('option', { value: '', selected: !f.slot, disabled: true }, t('chooseTime'))].concat(day.slots.map(function (s) {
-            return h('option', { value: s.id, selected: f.slot === s.id }, s.label);
-          })));
-        page.appendChild(field('f-slot', c.timeMode === 'time' ? t('timeRecv') : t('time'), tsel, e.slot,
-          c.timeMode === 'time' && c.leadMinutes ? t('leadHint')(c.leadMinutes) : null));
+        var tg2 = h('div', { class: 'tgrid', id: 'f-slot', role: 'radiogroup', 'aria-label': t('timeRecv') }, day.slots.map(function (s) {
+          return h('button', { type: 'button', role: 'radio', 'aria-checked': f.slot === s.id ? 'true' : 'false', 'aria-pressed': f.slot === s.id ? 'true' : 'false', 'data-slot': s.id,
+            onclick: function () { f.slot = s.id; delete e.slot; render(); } }, s.label);
+        }));
+        page.appendChild(h('div', { class: 'field' + (e.slot ? ' bad' : '') }, h('span', { class: 'lbl' }, c.timeMode === 'time' ? t('timeRecv') : t('time')), tg2,
+          e.slot ? h('span', { class: 'err' }, e.slot) : null,
+          c.timeMode === 'time' && c.leadMinutes ? h('span', { class: 'note', id: 'f-slot-hint' }, t('leadHint')(c.leadMinutes)) : null));
       } else {
         page.appendChild(h('div', { class: 'field' + (e.slot ? ' bad' : '') }, h('span', { class: 'lbl' }, t('time')),
           h('div', { class: 'seg' }, day.slots.map(function (s) {
@@ -829,7 +875,7 @@
   }
 
   function reloadDates() {
-    api({ a: 'boot' }, 30000).then(function (r) { if (r && r.ok) { S.data.dates = r.dates; prefill(); render(); } }, function () {});
+    api({ a: 'boot' }, 30000).then(function (r) { if (r && r.ok) { S.data.dates = r.dates; S.data.now = r.now; S.bootAt = Date.now(); prefill(); render(); } }, function () {});
   }
 
   function doneView() {
@@ -903,7 +949,14 @@
     if (!initData) { S.screen = 'error'; S.error = t('openInTg'); render(); return; }
     api({ a: 'boot' }, 30000).then(function (r) {
       if (!r || !r.ok) { S.screen = 'error'; S.error = te((r && r.code) || 'server'); render(); return; }
-      S.data = r;
+      // 画面が古い（Telegram の中に前の版が残っている）ときは、1回だけ読み直す。#tgWebAppData はそのまま
+      var want = Number(r.config && r.config.appVersion) || 0;
+      if (want > APP_VERSION) {
+        var flag = 'tgb_reload_' + want, tried = false;
+        try { tried = sessionStorage.getItem(flag) === '1'; sessionStorage.setItem(flag, '1'); } catch (e) { tried = true; }
+        if (!tried) { location.replace(location.pathname + '?v=' + want + location.hash); return; }
+      }
+      S.data = r; S.bootAt = Date.now();
       var savedLang = load('lang'); S.lang = savedLang || r.lang || S.lang;
       var saved = load('cart');
       S.cart = {};
