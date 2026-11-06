@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAKANAYA JAPON Menu</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root {
+    --bg: #ffffff; --card: #ffffff; --soft: #f4f6f8; --text: #111827; --muted: #6b7280; --line: #e5e7eb;
+    --accent: #0f4c81; --accent-text: #ffffff; --accent-soft: #eef4fa;
+    --chef: #c2410c; --arrived: #0f766e; --popular: #b45309; --danger: #b91c1c; --ok: #15803d;
+    --chef-soft: #ffedd5; --chef-ink: #9a3412; --arr-soft: #ccfbf1; --arr-ink: #115e59; --pop-soft: #fef3c7; --pop-ink: #92400e;
+    --radius: 12px;
+  }
+  html[data-theme="dark"] {
+    --bg: #111418; --card: #1a1f25; --soft: #20262d; --text: #f3f4f6; --muted: #9ca3af; --line: #2c333b;
+    --accent: #5aa0e6; --accent-text: #0b1520; --accent-soft: #16283a;
+    --chef-soft: #3a1f12; --chef-ink: #fdba74; --arr-soft: #0f2e2b; --arr-ink: #5eead4; --pop-soft: #3a2c0d; --pop-ink: #fcd34d;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Khmer", "Noto Sans JP", "Hiragino Sans", sans-serif; font-size: 15px; line-height: 1.45; -webkit-text-size-adjust: 100%; }
+  button { font: inherit; color: inherit; }
+  img { display: block; }
+  .wrap { max-width: 560px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 96px; }
+  .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 14px 16px 8px; position: sticky; top: 0; background: var(--bg); z-index: 5; }
+  .brand { display: flex; flex-direction: column; min-width: 0; }
+  .brand b { font-size: 15px; letter-spacing: .04em; }
+  .brand span { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.35; }
+  .hbtns { display: flex; gap: 6px; flex: none; }
+  .ibtn { min-width: 44px; height: 44px; border-radius: 22px; border: 1px solid var(--line); background: var(--card); display: inline-flex; align-items: center; justify-content: center; position: relative; cursor: pointer; padding: 0 10px; font-size: 13px; font-weight: 600; }
+  .ibtn svg { width: 20px; height: 20px; }
+  .badge-n { position: absolute; top: -3px; right: -3px; min-width: 18px; height: 18px; border-radius: 9px; background: var(--accent); color: var(--accent-text); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
+  .tabs { display: flex; gap: 2px; padding: 0 12px; border-bottom: 1px solid var(--line); overflow-x: auto; position: sticky; top: 76px; background: var(--bg); z-index: 4; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: none; padding: 11px 12px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); font-weight: 500; cursor: pointer; }
+  .tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+  .banner { margin: 10px 16px 0; padding: 10px 12px; border-radius: var(--radius); background: var(--accent-soft); font-size: 13px; display: flex; gap: 8px; align-items: flex-start; }
+  .banner.warn { background: var(--pop-soft); color: var(--pop-ink); }
+  .sec { padding: 14px 0 4px; }
+  .sec-h { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 16px 8px; }
+  .sec-h h2 { font-size: 16px; margin: 0; }
+  .sec-h small { color: var(--muted); font-size: 12px; }
+  .carousel { display: flex; gap: 10px; overflow-x: auto; padding: 2px 16px 6px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .carousel::-webkit-scrollbar { display: none; }
+  .pcard { flex: none; width: 200px; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--card); scroll-snap-align: start; display: flex; flex-direction: column; }
+  .ph { background: var(--soft); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--muted); }
+  .ph img { width: 100%; height: 100%; object-fit: cover; }
+  .ph .fish { width: 44px; height: 44px; opacity: .45; }
+  .pcard .ph { height: 116px; }
+  .pbody { padding: 9px 10px 10px; display: flex; flex-direction: column; gap: 3px; flex: 1; }
+  .pname { font-weight: 700; font-size: 14px; line-height: 1.3; }
+  .pnote { font-size: 12px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .price { font-weight: 700; }
+  .usd { font-size: 12px; color: var(--muted); font-weight: 400; }
+  .prow { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: auto; padding-top: 6px; }
+  .pcard .prow { flex-direction: column; align-items: stretch; gap: 8px; }
+  .pcard .qc .add, .pcard .qc .step { width: 100%; }
+  .pcard .qc .step { justify-content: space-between; }
+  .chip { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+  .chip.today { background: var(--chef-soft); color: var(--chef-ink); }
+  .chip.arrived { background: var(--arr-soft); color: var(--arr-ink); }
+  .chip.popular { background: var(--pop-soft); color: var(--pop-ink); }
+  .chip.last { background: var(--soft); color: var(--muted); }
+  .chip.on { position: absolute; top: 8px; left: 8px; }
+  .row { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); align-items: center; }
+  .row .ph { width: 64px; height: 64px; border-radius: 10px; flex: none; }
+  .row .ph .fish { width: 28px; height: 28px; }
+  .rmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .rtitle { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .rtitle b { font-size: 14px; }
+  .linkish { background: none; border: 0; padding: 0; text-align: left; cursor: pointer; }
+  .soldout { opacity: .55; }
+  .qc { flex: none; }
+  .add { height: 36px; padding: 0 14px; border-radius: 18px; border: 0; background: var(--accent); color: var(--accent-text); font-weight: 700; cursor: pointer; white-space: nowrap; }
+  .add.sm { height: 32px; padding: 0 12px; font-size: 13px; }
+  .add:disabled { background: var(--soft); color: var(--muted); cursor: default; }
+  .step { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 20px; height: 38px; overflow: hidden; background: var(--card); }
+  .step button { width: 38px; height: 38px; border: 0; background: transparent; font-size: 18px; cursor: pointer; }
+  .step span { min-width: 24px; text-align: center; font-weight: 700; }
+  .rank { width: 22px; font-weight: 800; color: var(--muted); flex: none; }
+  .invite-card { margin: 14px 16px; padding: 14px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--accent-soft); display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .invite-card div { flex: 1 1 200px; font-size: 13px; }
+  .invite-card .add { flex: 1 0 auto; }
+  .invite-card b { display: block; font-size: 14px; margin-bottom: 2px; }
+  .cartbar { position: fixed; left: 0; right: 0; bottom: 0; padding: 10px 16px calc(14px + env(safe-area-inset-bottom)); background: var(--bg); border-top: 1px solid var(--line); z-index: 8; }
+  .cartbar .inner { max-width: 528px; margin: 0 auto; }
+  .big { width: 100%; height: 50px; border-radius: 12px; border: 0; background: var(--accent); color: var(--accent-text); font-size: 15px; font-weight: 700; cursor: pointer; }
+  .big.ghost { background: var(--card); color: var(--text); border: 1px solid var(--line); }
+  .big:disabled { opacity: .6; cursor: default; }
+  .page { padding: 4px 16px 16px; }
+  .page h1 { font-size: 20px; margin: 8px 0 12px; }
+  .line { display: flex; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .line .lm { flex: 1; min-width: 0; }
+  .line .lm b { display: block; font-size: 14px; }
+  .line .lm small { color: var(--muted); }
+  .line .amt { font-weight: 700; white-space: nowrap; }
+  .gift { color: var(--ok); font-weight: 700; }
+  .sum { padding: 12px 0; display: flex; flex-direction: column; gap: 6px; }
+  .sum div { display: flex; justify-content: space-between; gap: 10px; }
+  .sum .tot { font-size: 18px; font-weight: 800; padding-top: 6px; border-top: 1px solid var(--line); }
+  .note { font-size: 13px; color: var(--muted); }
+  .field { display: flex; flex-direction: column; gap: 5px; margin: 12px 0; }
+  .field label, .field .lbl { font-size: 13px; font-weight: 600; }
+  .field input, .field textarea, .field select { width: 100%; font: inherit; color: var(--text); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; min-height: 44px; }
+  .field textarea { min-height: 76px; resize: vertical; }
+  .field .err { color: var(--danger); font-size: 12px; min-height: 0; }
+  .field.bad input, .field.bad textarea, .field.bad select { border-color: var(--danger); }
+  .seg { display: flex; gap: 8px; flex-wrap: wrap; }
+  .seg button { flex: 1; min-width: 120px; min-height: 44px; border-radius: 10px; border: 1px solid var(--line); background: var(--card); cursor: pointer; font-weight: 600; padding: 8px 10px; }
+  .seg button[aria-pressed="true"] { border: 2px solid var(--accent); color: var(--accent); background: var(--accent-soft); }
+  .alert { margin: 12px 0; padding: 12px; border-radius: 10px; background: #fdecec; color: var(--danger); font-size: 14px; }
+  html[data-theme="dark"] .alert { background: #3a1616; }
+  .center { min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px; }
+  .spin { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--accent); animation: sp 0.9s linear infinite; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 20; display: flex; align-items: flex-end; justify-content: center; }
+  .sheet { background: var(--bg); width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto; border-radius: 16px 16px 0 0; padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+  .splash { position: fixed; inset: 0; z-index: 30; background: var(--bg); overflow-y: auto; }
+  .splash .inner { max-width: 560px; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
+  .splash .ph { height: 46vh; min-height: 260px; }
+  .splash .close { position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border-radius: 22px; border: 0; background: rgba(255,255,255,.92); color: #111827; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; }
+  .splash .tag { position: absolute; top: 16px; left: 16px; background: rgba(255,255,255,.92); color: #111827; font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 999px; }
+  .splash .tag2 { position: absolute; bottom: 14px; left: 16px; background: var(--chef); color: #fff; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .splash .body { padding: 18px 16px 8px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .splash h1 { font-size: 26px; margin: 0; line-height: 1.2; }
+  .splash .acts { padding: 12px 16px calc(18px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 10px; }
+  .done-ok { width: 64px; height: 64px; border-radius: 32px; background: #dcfce7; color: var(--ok); display: flex; align-items: center; justify-content: center; font-size: 32px; }
+  .qr { width: 240px; max-width: 80vw; border-radius: 12px; border: 1px solid var(--line); background: #fff; }
+  .muted { color: var(--muted); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .copyrow { display: flex; gap: 8px; }
+  .copyrow input { flex: 1; min-width: 0; font: inherit; font-size: 13px; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--soft); color: var(--text); }
+</style>
+</head>
+<body>
+<div id="app" class="wrap" aria-live="polite"></div>
+<script>
+(function () {
+  'use strict';
+
+  /* ===================== 設定 ===================== */
+  // GAS のウェブアプリ URL（デプロイ後に差し替える）
+  var API_URL = window.TGB_API_URL || 'https://script.google.com/macros/s/AKfycbxQ5XQIdVgGYteb5fXKgEObboVsGomrDpepqSr7oYz96y-YZRw7jYwLZUpd5zEI1K0J/exec';
+  var BOT_LINK = 'https://t.me/sakanaya_order_bot/menu';
+  var TZ = 'Asia/Phnom_Penh';
+
+  var tg = (window.Telegram && window.Telegram.WebApp) || null;
+  var initData = tg && tg.initData ? tg.initData : '';
+  var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || null;
+  var uid = tgUser ? String(tgUser.id) : 'guest';
+
+  /* ===================== 文言 ===================== */
+  var L = {
+    en: {
+      langName: 'EN', sub: 'Fresh from Japan', hours: 'Delivery', today: 'Today', loading: 'Loading the menu…',
+      chefPicks: "Today's picks", justArrived: 'Just arrived', arrivedNote: 'Tuesday flight from Japan', popular: 'Popular this week',
+      add: '+ Add', soldOut: 'Sold out', last: 'Last few', viewCart: 'View cart', items: 'items', item: 'item',
+      cart: 'Your cart', empty: 'Your cart is empty.', keepShopping: 'Continue shopping', checkout: 'Checkout',
+      subtotal: 'Items', giftLine: 'Free gift', giftFriend: 'Welcome gift (invited by a friend)', giftCredit: 'Thank-you gift for inviting a friend',
+      total: 'Total', free: 'Free', minOrder: 'Minimum order', chef: "Chef's pick", arrived: 'Just arrived', popularB: 'Popular', todayB: "Today's pick",
+      seeMenu: 'See full menu', shownOnce: 'Shown once a day', addToCart: 'Add to cart', onlyLeft: function (n) { return 'Only ' + n + ' left today'; },
+      details: 'Details', name: 'Name', phone: 'Phone', how: 'Delivery or pick up', delivery: 'Delivery', pickup: 'Pick up',
+      address: 'Delivery address', addressPh: 'House no., street, area, landmark', map: 'Google Maps link (optional)',
+      date: 'Date', time: 'Time', payment: 'Payment', khqr: 'KHQR (bank app)', cash: 'Cash on delivery', note: 'Note to the shop (optional)',
+      placeOrder: 'Place order', placing: 'Sending your order…', required: 'Required', badPhone: 'Enter a phone number with at least 8 digits',
+      badAddress: 'Enter your delivery address', chooseTime: 'Choose a time', noDates: 'No delivery times are available right now. Please message us.',
+      orderReceived: 'Order received', orderNo: 'Order', when: 'Delivery', whenPickup: 'Pick up', payWithQr: 'Pay with this KHQR and send the receipt to us in Telegram.',
+      payCash: 'Please pay cash when you receive your order.', account: 'Account name', backToMenu: 'Back to menu',
+      inviteTitle: 'Invite a friend', inviteBody: 'Share your link. When your friend orders for the first time, you both get 1 portion of tuna (akami) free.',
+      share: 'Share in Telegram', copy: 'Copy link', copied: 'Copied',
+      welcomeGift: 'Welcome gift: 1 free portion of tuna on your first order.', creditGift: function (n) { return 'You have ' + n + ' free tuna gift' + (n > 1 ? 's' : '') + '. One is added to this order.'; },
+      closedNow: function (o, c) { return 'We are closed now (open ' + o + '–' + c + '). You can still order for the next delivery time.'; },
+      ordersPaused: 'Ordering is paused right now. You can still look at the menu.',
+      openInTg: 'Please open this menu in Telegram.', openTg: 'Open in Telegram', retry: 'Try again',
+      tomorrow: 'Tomorrow', todayLbl: 'Today', notNew: 'The welcome gift is for first-time customers only, so it was not added to this order.',
+      err: {
+        network: "We couldn't reach the shop. Check your connection and tap “Place order” again. You won't be charged twice.",
+        auth: 'Your session expired. Please close and reopen the menu from Telegram.',
+        closed: 'Ordering is paused right now. Please message us.',
+        busy: 'The shop is busy. Please try again in a moment.',
+        invalid: 'Something in the order is not right. Please check and try again.',
+        empty_cart: 'Your cart is empty.',
+        name: 'Enter your name.', phone: 'Enter a phone number with at least 8 digits.', address: 'Enter your delivery address.',
+        slot: 'That time is no longer available. Please choose another time.',
+        item_unavailable: 'Some items just sold out and were removed from your cart:',
+        min_order: 'Your order is below the minimum.',
+        rate_limit: 'Too many orders in a short time. Please message us.',
+        server: 'Something went wrong on our side. Please try again in a moment.'
+      }
+    },
+    km: {
+      langName: 'ខ្មែរ', sub: 'ស្រស់ពីជប៉ុន', hours: 'ដឹកជញ្ជូន', today: 'ថ្ងៃនេះ', loading: 'កំពុងផ្ទុកម៉ឺនុយ…',
+      chefPicks: 'ជម្រើសពិសេសថ្ងៃនេះ', justArrived: 'ទើបមកដល់', arrivedNote: 'ជើងហោះហើរថ្ងៃអង្គារពីជប៉ុន', popular: 'ពេញនិយមសប្តាហ៍នេះ',
+      add: '+ បន្ថែម', soldOut: 'អស់ស្តុក', last: 'នៅសល់តិច', viewCart: 'មើលកន្ត្រក', items: 'មុខ', item: 'មុខ',
+      cart: 'កន្ត្រករបស់អ្នក', empty: 'កន្ត្រករបស់អ្នកទទេ។', keepShopping: 'បន្តទិញ', checkout: 'បន្តទៅបញ្ជាទិញ',
+      subtotal: 'ទំនិញ', giftLine: 'កាដូឥតគិតថ្លៃ', giftFriend: 'កាដូស្វាគមន៍ (ណែនាំដោយមិត្តភក្តិ)', giftCredit: 'កាដូអរគុណសម្រាប់ការណែនាំមិត្តភក្តិ',
+      total: 'សរុប', free: 'ឥតគិតថ្លៃ', minOrder: 'ការបញ្ជាទិញអប្បបរមា', chef: 'ជម្រើសចុងភៅ', arrived: 'ទើបមកដល់', popularB: 'ពេញនិយម', todayB: 'ជម្រើសថ្ងៃនេះ',
+      seeMenu: 'មើលម៉ឺនុយទាំងអស់', shownOnce: 'បង្ហាញម្តងក្នុងមួយថ្ងៃ', addToCart: 'ដាក់ក្នុងកន្ត្រក', onlyLeft: function (n) { return 'នៅសល់តែ ' + n + ' ថ្ងៃនេះ'; },
+      details: 'ព័ត៌មាន', name: 'ឈ្មោះ', phone: 'លេខទូរស័ព្ទ', how: 'ដឹកជញ្ជូន ឬ មកយកផ្ទាល់', delivery: 'ដឹកជញ្ជូន', pickup: 'មកយកផ្ទាល់',
+      address: 'អាសយដ្ឋានដឹកជញ្ជូន', addressPh: 'ផ្ទះលេខ ផ្លូវ សង្កាត់ ចំណុចសម្គាល់', map: 'តំណ Google Maps (មិនចាំបាច់)',
+      date: 'ថ្ងៃ', time: 'ម៉ោង', payment: 'ការទូទាត់', khqr: 'KHQR (កម្មវិធីធនាគារ)', cash: 'សាច់ប្រាក់ពេលទទួល', note: 'កំណត់សម្គាល់ (មិនចាំបាច់)',
+      placeOrder: 'បញ្ជាទិញ', placing: 'កំពុងផ្ញើការបញ្ជាទិញ…', required: 'ត្រូវបំពេញ', badPhone: 'សូមបញ្ចូលលេខទូរស័ព្ទយ៉ាងហោចណាស់ ៨ ខ្ទង់',
+      badAddress: 'សូមបញ្ចូលអាសយដ្ឋានដឹកជញ្ជូន', chooseTime: 'សូមជ្រើសរើសម៉ោង', noDates: 'មិនមានម៉ោងដឹកជញ្ជូនទេឥឡូវនេះ។ សូមផ្ញើសារមកយើង។',
+      orderReceived: 'បានទទួលការបញ្ជាទិញ', orderNo: 'ការបញ្ជាទិញ', when: 'ដឹកជញ្ជូន', whenPickup: 'មកយកផ្ទាល់', payWithQr: 'សូមទូទាត់តាម KHQR នេះ ហើយផ្ញើវិក្កយបត្រមកយើងក្នុង Telegram។',
+      payCash: 'សូមបង់ប្រាក់សុទ្ធពេលទទួលទំនិញ។', account: 'ឈ្មោះគណនី', backToMenu: 'ត្រឡប់ទៅម៉ឺនុយ',
+      inviteTitle: 'ណែនាំមិត្តភក្តិ', inviteBody: 'ចែករំលែកតំណរបស់អ្នក។ នៅពេលមិត្តភក្តិបញ្ជាទិញលើកដំបូង អ្នកទាំងពីរនឹងទទួលបានត្រីធូណា ១ ចំណែក ឥតគិតថ្លៃ។',
+      share: 'ចែករំលែកក្នុង Telegram', copy: 'ចម្លងតំណ', copied: 'បានចម្លង',
+      welcomeGift: 'កាដូស្វាគមន៍៖ ត្រីធូណា ១ ចំណែក ឥតគិតថ្លៃ សម្រាប់ការបញ្ជាទិញលើកដំបូង។', creditGift: function (n) { return 'អ្នកមានកាដូត្រីធូណា ' + n + '។ មួយត្រូវបានបន្ថែមក្នុងការបញ្ជាទិញនេះ។'; },
+      closedNow: function (o, c) { return 'ហាងបិទឥឡូវនេះ (បើក ' + o + '–' + c + ')។ អ្នកនៅតែអាចបញ្ជាទិញសម្រាប់ម៉ោងដឹកជញ្ជូនបន្ទាប់។'; },
+      ordersPaused: 'ការបញ្ជាទិញត្រូវបានផ្អាក។ អ្នកនៅតែអាចមើលម៉ឺនុយបាន។',
+      openInTg: 'សូមបើកម៉ឺនុយនេះក្នុង Telegram។', openTg: 'បើកក្នុង Telegram', retry: 'ព្យាយាមម្តងទៀត',
+      tomorrow: 'ថ្ងៃស្អែក', todayLbl: 'ថ្ងៃនេះ', notNew: 'កាដូស្វាគមន៍សម្រាប់តែអតិថិជនថ្មីប៉ុណ្ណោះ ដូច្នេះមិនបានបន្ថែមក្នុងការបញ្ជាទិញនេះទេ។',
+      err: {
+        network: 'មិនអាចភ្ជាប់ទៅហាងបានទេ។ សូមពិនិត្យអ៊ីនធឺណិត ហើយចុច “បញ្ជាទិញ” ម្តងទៀត។ អ្នកនឹងមិនត្រូវគិតប្រាក់ពីរដងទេ។',
+        auth: 'សូមបិទ ហើយបើកម៉ឺនុយម្តងទៀតពី Telegram។',
+        closed: 'ការបញ្ជាទិញត្រូវបានផ្អាក។ សូមផ្ញើសារមកយើង។',
+        busy: 'ហាងរវល់។ សូមព្យាយាមម្តងទៀតបន្តិចទៀត។',
+        invalid: 'មានបញ្ហាក្នុងការបញ្ជាទិញ។ សូមពិនិត្យ ហើយព្យាយាមម្តងទៀត។',
+        empty_cart: 'កន្ត្រករបស់អ្នកទទេ។',
+        name: 'សូមបញ្ចូលឈ្មោះ។', phone: 'សូមបញ្ចូលលេខទូរស័ព្ទយ៉ាងហោចណាស់ ៨ ខ្ទង់។', address: 'សូមបញ្ចូលអាសយដ្ឋានដឹកជញ្ជូន។',
+        slot: 'ម៉ោងនោះមិនទំនេរទៀតទេ។ សូមជ្រើសម៉ោងផ្សេង។',
+        item_unavailable: 'ទំនិញខ្លះទើបអស់ស្តុក ហើយត្រូវបានដកចេញពីកន្ត្រក៖',
+        min_order: 'ការបញ្ជាទិញរបស់អ្នកតិចជាងអប្បបរមា។',
+        rate_limit: 'ការបញ្ជាទិញច្រើនពេកក្នុងរយៈពេលខ្លី។ សូមផ្ញើសារមកយើង។',
+        server: 'មានបញ្ហានៅខាងយើង។ សូមព្យាយាមម្តងទៀតបន្តិចទៀត។'
+      }
+    },
+    ja: {
+      langName: '日本語', sub: '日本から直送', hours: '配達', today: '今日', loading: 'メニューを読み込んでいます…',
+      chefPicks: '今日のおすすめ', justArrived: '入荷したて', arrivedNote: '火曜の空輸便', popular: '今週の人気',
+      add: '+ 追加', soldOut: '売切れ', last: '残りわずか', viewCart: 'カートを見る', items: '点', item: '点',
+      cart: 'カート', empty: 'カートは空です。', keepShopping: '買い物を続ける', checkout: '注文手続きへ',
+      subtotal: '商品', giftLine: 'プレゼント', giftFriend: 'ご紹介特典（初回）', giftCredit: 'ご紹介のお礼',
+      total: '合計', free: '無料', minOrder: '最低注文金額', chef: '店のおすすめ', arrived: '入荷したて', popularB: '人気', todayB: '今日のおすすめ',
+      seeMenu: 'メニューを全部見る', shownOnce: '1日1回表示', addToCart: 'カートに入れる', onlyLeft: function (n) { return '本日残り ' + n; },
+      details: 'お届け先', name: 'お名前', phone: '電話番号', how: '配達 / 店頭受け取り', delivery: '配達', pickup: '店頭受け取り',
+      address: 'お届け先の住所', addressPh: '番地・通り・地区・目印', map: 'Google マップのリンク（任意）',
+      date: '日付', time: '時間帯', payment: 'お支払い', khqr: 'KHQR（銀行アプリ）', cash: '受け取り時に現金', note: 'お店へのメモ（任意）',
+      placeOrder: '注文を確定する', placing: '注文を送信しています…', required: '必須', badPhone: '8桁以上の電話番号を入れてください',
+      badAddress: 'お届け先の住所を入れてください', chooseTime: '時間帯を選んでください', noDates: 'いま選べる配達時間がありません。メッセージでご連絡ください。',
+      orderReceived: 'ご注文を受け付けました', orderNo: '注文番号', when: '配達', whenPickup: '店頭受け取り', payWithQr: 'この KHQR でお支払いのうえ、明細を Telegram でお送りください。',
+      payCash: 'お受け取り時に現金でお支払いください。', account: '口座名義', backToMenu: 'メニューに戻る',
+      inviteTitle: '友達に紹介', inviteBody: 'あなた専用のリンクを送ってください。お友達が初めて注文すると、お二人に赤身のお刺身1人前をプレゼントします。',
+      share: 'Telegram で送る', copy: 'リンクをコピー', copied: 'コピーしました',
+      welcomeGift: 'ご紹介特典：初回のご注文に赤身のお刺身1人前をお付けします。', creditGift: function (n) { return '紹介のお礼が ' + n + ' 回分あります。今回の注文に1回分をお付けします。'; },
+      closedNow: function (o, c) { return 'ただいま営業時間外です（' + o + '–' + c + '）。次の時間帯でご注文いただけます。'; },
+      ordersPaused: 'ただいま注文の受付を停止しています。メニューはご覧いただけます。',
+      openInTg: 'このメニューは Telegram で開いてください。', openTg: 'Telegram で開く', retry: 'もう一度試す',
+      tomorrow: '明日', todayLbl: '今日', notNew: 'ご紹介特典は初めてのお客様が対象のため、今回のご注文には付きません。',
+      err: {
+        network: 'お店につながりませんでした。通信状態を確認して、もう一度「注文を確定する」を押してください。二重に注文されることはありません。',
+        auth: '有効期限が切れました。Telegram からメニューを開き直してください。',
+        closed: 'ただいま注文の受付を停止しています。メッセージでご連絡ください。',
+        busy: '混み合っています。少し待ってからもう一度お試しください。',
+        invalid: '注文の内容に問題があります。確認してもう一度お試しください。',
+        empty_cart: 'カートが空です。',
+        name: 'お名前を入れてください。', phone: '8桁以上の電話番号を入れてください。', address: 'お届け先の住所を入れてください。',
+        slot: 'その時間帯は選べなくなりました。別の時間帯を選んでください。',
+        item_unavailable: '売り切れた商品があり、カートから外しました：',
+        min_order: '最低注文金額に届いていません。',
+        rate_limit: '短い時間に注文が多すぎます。メッセージでご連絡ください。',
+        server: 'お店側で問題が起きました。少し待ってからもう一度お試しください。'
+      }
+    }
+  };
+
+  /* ===================== 状態 ===================== */
+  var S = {
+    lang: pickLang(tgUser && tgUser.language_code),
+    screen: 'loading', data: null, error: '', tab: 'today',
+    cart: {}, form: {}, errors: {}, alert: '', submitting: false, result: null,
+    clientOrderId: newId(), overlay: null, splashQty: 1
+  };
+  var root = document.getElementById('app');
+
+  function t(k) { var d = L[S.lang] || L.en; return d[k] !== undefined ? d[k] : (L.en[k] !== undefined ? L.en[k] : k); }
+  function te(code) { var d = (L[S.lang] || L.en).err; return d[code] || L.en.err[code] || L.en.err.server; }
+  function pickLang(c) { c = String(c || '').toLowerCase(); return c.indexOf('km') === 0 ? 'km' : (c.indexOf('ja') === 0 ? 'ja' : 'en'); }
+  function newId() {
+    var a = '';
+    try { var b = new Uint8Array(12); crypto.getRandomValues(b); for (var i = 0; i < b.length; i++) a += ('0' + b[i].toString(16)).slice(-2); }
+    catch (e) { a = String(Date.now()) + Math.random().toString(16).slice(2); }
+    return 'tg' + a.slice(0, 24);
+  }
+
+  /* ===================== 保存（端末内・失敗しても動く） ===================== */
+  function store(k, v) { try { localStorage.setItem('tgb_' + k + '_' + uid, JSON.stringify(v)); } catch (e) {} }
+  function load(k) { try { var s = localStorage.getItem('tgb_' + k + '_' + uid); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
+
+  /* ===================== DOM ===================== */
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      var v = attrs[k];
+      if (v === null || v === undefined || v === false) return;
+      if (k === 'class') el.className = v;
+      else if (k === 'text') el.textContent = v;
+      else if (k.indexOf('on') === 0) el.addEventListener(k.slice(2), v);
+      else if (k === 'style') el.setAttribute('style', v);
+      else el.setAttribute(k, v === true ? '' : v);
+    });
+    for (var i = 2; i < arguments.length; i++) append(el, arguments[i]);
+    return el;
+  }
+  function append(el, c) {
+    if (c === null || c === undefined || c === false) return;
+    if (Array.isArray(c)) { c.forEach(function (x) { append(el, x); }); return; }
+    el.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(String(c)) : c);
+  }
+  var FISH = '<svg class="fish" viewBox="0 0 64 40" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 20C16 6 36 6 48 20C36 34 16 34 6 20Z"/><path d="M48 20L60 11L57 20L60 29Z"/><circle cx="16" cy="18" r="2" fill="currentColor" stroke="none"/></svg>';
+  function photo(it, cls) {
+    var box = h('div', { class: 'ph ' + (cls || '') });
+    if (it && it.photo) {
+      var img = h('img', { src: it.photo, alt: '', loading: 'lazy' });
+      img.addEventListener('error', function () { box.innerHTML = FISH; });
+      box.appendChild(img);
+    } else box.innerHTML = FISH;
+    return box;
+  }
+  var ICON_CART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>';
+  var ICON_GIFT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>';
+  var ICON_X = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+  function svgBtn(svg, label, onclick, extra) {
+    var b = h('button', { type: 'button', class: 'ibtn', 'aria-label': label, onclick: onclick });
+    b.innerHTML = svg;
+    if (extra) b.appendChild(extra);
+    return b;
+  }
+
+  /* ===================== 金額・商品 ===================== */
+  function khr(n) { return Math.round(Number(n) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '៛'; }
+  function usd(n) { var r = (S.data && S.data.config.khrPerUsd) || 4000; return '≈$' + ((Number(n) || 0) / r).toFixed(2); }
+  function priceEl(n) { return h('span', { class: 'price' }, khr(n), ' ', h('span', { class: 'usd' }, usd(n))); }
+  function item(code) { var a = S.data ? S.data.menu.items : []; for (var i = 0; i < a.length; i++) if (a[i].code === code) return a[i]; return null; }
+  function nm(it) { return (it.name && (it.name[S.lang] || it.name.en)) || it.code; }
+  function ds(it) { return (it.desc && (it.desc[S.lang] || it.desc.en)) || ''; }
+  function cartCount() { var n = 0; Object.keys(S.cart).forEach(function (c) { n += S.cart[c]; }); return n; }
+  function cartLines() {
+    return Object.keys(S.cart).map(function (c) { var it = item(c); return it ? { it: it, qty: S.cart[c], amount: it.price * S.cart[c] } : null; })
+      .filter(Boolean);
+  }
+  function gifts() {
+    if (!S.data || !S.data.config.referral) return [];
+    var g = [], gi = item(S.data.config.giftCode), qty = S.data.config.giftQty || 1;
+    var label = gi ? nm(gi) : S.data.config.giftCode;
+    if (S.data.customer.friendGift) g.push({ kind: 'friend', label: label, qty: qty });
+    if (S.data.customer.credits > 0) g.push({ kind: 'credit', label: label, qty: qty });
+    return g;
+  }
+  function subtotal() { return cartLines().reduce(function (s, l) { return s + l.amount; }, 0); }
+  function setQty(code, q) {
+    var it = item(code);
+    if (!it || it.soldOut) return;
+    q = Math.max(0, Math.min(50, q));
+    if (it.stock !== null && it.stock !== undefined) q = Math.min(q, it.stock);
+    if (q) S.cart[code] = q; else delete S.cart[code];
+    store('cart', { cart: S.cart, ts: Date.now() });
+    try { tg && tg.HapticFeedback && tg.HapticFeedback.selectionChanged(); } catch (e) {}
+    refreshQty();
+  }
+
+  /* ===================== 数量ボタン（その場で更新） ===================== */
+  function qtyControl(code, small) {
+    var box = h('div', { class: 'qc', 'data-code': code, 'data-small': small ? '1' : '' });
+    fillQty(box);
+    return box;
+  }
+  function fillQty(box) {
+    var code = box.getAttribute('data-code'), small = !!box.getAttribute('data-small');
+    var it = item(code), q = S.cart[code] || 0;
+    box.innerHTML = '';
+    if (!it || it.soldOut) { box.appendChild(h('button', { type: 'button', class: 'add' + (small ? ' sm' : ''), disabled: true }, t('soldOut'))); return; }
+    if (!q) { box.appendChild(h('button', { type: 'button', class: 'add' + (small ? ' sm' : ''), 'aria-label': t('add') + ' ' + nm(it), onclick: function () { setQty(code, 1); } }, t('add'))); return; }
+    box.appendChild(h('div', { class: 'step' },
+      h('button', { type: 'button', 'aria-label': '−', onclick: function () { setQty(code, q - 1); } }, '−'),
+      h('span', { 'aria-live': 'polite' }, String(q)),
+      h('button', { type: 'button', 'aria-label': '+', onclick: function () { setQty(code, q + 1); } }, '+')));
+  }
+  function refreshQty() {
+    Array.prototype.forEach.call(document.querySelectorAll('.qc[data-code]'), fillQty);
+    var n = cartCount();
+    Array.prototype.forEach.call(document.querySelectorAll('[data-cart-n]'), function (el) { el.textContent = String(n); el.style.display = n ? '' : 'none'; });
+    var bar = document.getElementById('cartbar');
+    if (bar) bar.replaceWith(cartBar());
+    if (S.screen === 'cart') render();
+  }
+
+  /* ===================== 画面 ===================== */
+  function render() {
+    root.innerHTML = '';
+    document.documentElement.lang = S.lang === 'km' ? 'km' : (S.lang === 'ja' ? 'ja' : 'en');
+    var back = S.screen === 'cart' || S.screen === 'checkout' || !!S.overlay;
+    try { if (tg && tg.BackButton) { back ? tg.BackButton.show() : tg.BackButton.hide(); } } catch (e) {}
+    if (S.screen === 'loading') return root.appendChild(h('div', { class: 'center' }, h('div', { class: 'spin', role: 'status', 'aria-label': t('loading') }), h('div', { class: 'muted' }, t('loading'))));
+    if (S.screen === 'error') return root.appendChild(errorView());
+    if (S.screen === 'done') return root.appendChild(doneView());
+    if (S.screen === 'cart') { root.appendChild(header()); root.appendChild(cartView()); }
+    else if (S.screen === 'checkout') { root.appendChild(header()); root.appendChild(checkoutView()); }
+    else { root.appendChild(header()); root.appendChild(tabs()); root.appendChild(banners()); root.appendChild(S.tab === 'today' ? todayView() : catView(S.tab)); root.appendChild(cartBar()); }
+    if (S.overlay === 'splash') root.appendChild(splashView());
+    if (S.overlay === 'invite') root.appendChild(inviteView());
+    if (S.overlay && S.overlay.indexOf('item:') === 0) root.appendChild(itemView(S.overlay.slice(5)));
+  }
+
+  function header() {
+    var c = S.data ? S.data.config : null;
+    var n = cartCount();
+    var badge = h('span', { class: 'badge-n', 'data-cart-n': '1', style: n ? '' : 'display:none' }, String(n));
+    var langs = ['en', 'km', 'ja'];
+    return h('div', { class: 'head' },
+      h('div', { class: 'brand' }, h('b', null, 'SAKANAYA JAPON'),
+        h('span', null, t('sub')),
+        c ? h('span', null, t('hours') + ' ' + c.openTime + '–' + c.closeTime) : null),
+      h('div', { class: 'hbtns' },
+        h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Language', onclick: function () {
+          S.lang = langs[(langs.indexOf(S.lang) + 1) % langs.length]; store('lang', S.lang); render();
+        } }, t('langName')),
+        (c && c.referral) ? svgBtn(ICON_GIFT, t('inviteTitle'), function () { S.overlay = 'invite'; render(); }) : null,
+        svgBtn(ICON_CART, t('cart'), function () { S.screen = 'cart'; S.overlay = null; render(); window.scrollTo(0, 0); }, badge)));
+  }
+
+  function tabs() {
+    var cats = ['today'].concat(S.data.menu.categories.filter(function (c) { return S.data.menu.items.some(function (it) { return it.cat === c; }); }));
+    return h('div', { class: 'tabs', role: 'tablist' }, cats.map(function (c) {
+      return h('button', { type: 'button', class: 'tab', role: 'tab', 'aria-selected': S.tab === c ? 'true' : 'false', onclick: function () { S.tab = c; render(); window.scrollTo(0, 0); } }, c === 'today' ? t('today') : c);
+    }));
+  }
+
+  function banners() {
+    var box = h('div', null);
+    var d = S.data;
+    if (!d.orderActive) box.appendChild(h('div', { class: 'banner warn' }, t('ordersPaused')));
+    else if (!d.openNow) box.appendChild(h('div', { class: 'banner' }, t('closedNow')(d.config.openTime, d.config.closeTime)));
+    if (d.config.referral && d.customer.friendGift) box.appendChild(h('div', { class: 'banner' }, '🎁 ', t('welcomeGift')));
+    if (d.config.referral && d.customer.credits > 0) box.appendChild(h('div', { class: 'banner' }, '🎁 ', t('creditGift')(d.customer.credits)));
+    return box;
+  }
+
+  function chipFor(it, source) {
+    var map = { chef: ['today', t('chef')], arrived: ['arrived', t('arrived')], popular: ['popular', t('popularB')], today: ['today', t('todayB')], last: ['last', t('last')] };
+    var m = map[source]; return m ? h('span', { class: 'chip ' + m[0] }, m[1]) : null;
+  }
+
+  function todayView() {
+    var d = S.data.menu, box = h('div', null);
+    var picks = d.picks.map(function (p) { return { p: p, it: item(p.code) }; }).filter(function (x) { return x.it; });
+    if (picks.length) {
+      box.appendChild(h('div', { class: 'sec' },
+        h('div', { class: 'sec-h' }, h('h2', null, t('chefPicks')), h('small', null, dateLabel(S.data.now.slice(0, 10)))),
+        h('div', { class: 'carousel' }, picks.map(function (x) {
+          var it = x.it;
+          var ph = photo(it); var chip = chipFor(it, x.p.source); if (chip) { chip.classList.add('on'); ph.appendChild(chip); }
+          return h('div', { class: 'pcard' },
+            h('button', { type: 'button', class: 'linkish', 'aria-label': nm(it), onclick: function () { S.overlay = 'item:' + it.code; render(); } }, ph),
+            h('div', { class: 'pbody' }, h('span', { class: 'pname' }, nm(it)),
+              (x.p.comment || ds(it)) ? h('span', { class: 'pnote' }, x.p.comment || ds(it)) : null,
+              h('div', { class: 'prow' }, h('span', null, priceEl(it.price)), qtyControl(it.code, true))));
+        }))));
+    }
+    var arr = d.arrived.map(item).filter(Boolean);
+    if (arr.length) {
+      box.appendChild(h('div', { class: 'sec' },
+        h('div', { class: 'sec-h' }, h('h2', null, t('justArrived')), h('span', { class: 'chip arrived' }, t('arrivedNote'))),
+        arr.map(function (it) { return itemRow(it, false); })));
+    }
+    var pop = d.popular.map(item).filter(Boolean);
+    if (pop.length) {
+      box.appendChild(h('div', { class: 'sec' }, h('div', { class: 'sec-h' }, h('h2', null, t('popular'))),
+        pop.map(function (it, i) { return itemRow(it, i + 1); })));
+    }
+    if (S.data.config.referral) {
+      box.appendChild(h('div', { class: 'invite-card' }, h('div', null, h('b', null, '🎁 ' + t('inviteTitle')), t('inviteBody')),
+        h('button', { type: 'button', class: 'add sm', onclick: function () { S.overlay = 'invite'; render(); } }, t('share'))));
+    }
+    if (!picks.length && !arr.length && !pop.length) {
+      var first = S.data.menu.categories[0];
+      box.appendChild(h('div', { class: 'center', style: 'min-height:30vh' }, h('button', { type: 'button', class: 'big ghost', style: 'max-width:280px', onclick: function () { S.tab = first; render(); } }, t('seeMenu'))));
+    }
+    return box;
+  }
+
+  function itemRow(it, rank) {
+    var chips = (it.badges || []).map(function (b) { return chipFor(it, b); });
+    return h('div', { class: 'row' + (it.soldOut ? ' soldout' : '') },
+      rank ? h('span', { class: 'rank' }, String(rank)) : null,
+      h('button', { type: 'button', class: 'linkish', 'aria-label': nm(it), onclick: function () { S.overlay = 'item:' + it.code; render(); } }, photo(it)),
+      h('div', { class: 'rmain' },
+        h('div', { class: 'rtitle' }, h('b', null, nm(it)), chips),
+        h('span', { class: 'note' }, khr(it.price), ' ', h('span', { class: 'usd' }, usd(it.price)), it.unit ? ' · ' + it.unit : ''),
+        ds(it) ? h('span', { class: 'pnote' }, ds(it)) : null),
+      qtyControl(it.code, true));
+  }
+
+  function catView(cat) {
+    var list = S.data.menu.items.filter(function (it) { return it.cat === cat; });
+    return h('div', { class: 'sec' }, list.map(function (it) { return itemRow(it, false); }));
+  }
+
+  function cartBar() {
+    var n = cartCount();
+    if (!n || S.screen !== 'menu') return h('div', { id: 'cartbar' });
+    return h('div', { id: 'cartbar', class: 'cartbar' }, h('div', { class: 'inner' },
+      h('button', { type: 'button', class: 'big', onclick: function () { S.screen = 'cart'; render(); window.scrollTo(0, 0); } },
+        t('viewCart') + ' · ' + n + ' ' + (n > 1 ? t('items') : t('item')) + ' · ' + khr(subtotal()))));
+  }
+
+  function itemView(code) {
+    var it = item(code); if (!it) { S.overlay = null; return h('div'); }
+    var close = function () { S.overlay = null; render(); };
+    var ph = photo(it); ph.style.height = '260px';
+    var x = h('button', { type: 'button', class: 'close', 'aria-label': 'Close', onclick: close }); x.innerHTML = ICON_X;
+    x.setAttribute('style', 'position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:22px;border:0;background:rgba(255,255,255,.92);color:#111827;display:flex;align-items:center;justify-content:center;cursor:pointer');
+    return h('div', { class: 'overlay', onclick: function (e) { if (e.target === this) close(); } },
+      h('div', { class: 'sheet', role: 'dialog', 'aria-label': nm(it) },
+        h('div', { style: 'position:relative' }, ph, x),
+        h('div', { class: 'page' },
+          h('h1', null, nm(it)),
+          h('div', { class: 'rtitle' }, (it.badges || []).map(function (b) { return chipFor(it, b); })),
+          it.comment ? h('p', null, it.comment) : null,
+          ds(it) ? h('p', { class: 'note' }, ds(it)) : null,
+          h('div', { class: 'prow', style: 'padding-top:12px' }, h('span', null, priceEl(it.price), it.unit ? h('span', { class: 'usd' }, ' · ' + it.unit) : null), qtyControl(it.code, false)))));
+  }
+
+  function splashView() {
+    var p = S.data.menu.picks[0], it = p && item(p.code);
+    var close = function () { S.overlay = null; store('splash', todayKey()); render(); };
+    if (!it) { S.overlay = null; return h('div'); }
+    var ph = photo(it);
+    ph.appendChild(h('span', { class: 'tag' }, t('todayB') + ' · ' + dateLabel(S.data.now.slice(0, 10))));
+    if (it.stock !== null && it.stock !== undefined && it.stock > 0 && it.stock <= 20) ph.appendChild(h('span', { class: 'tag2' }, t('onlyLeft')(it.stock)));
+    var x = h('button', { type: 'button', class: 'close', 'aria-label': 'Close', onclick: close }); x.innerHTML = ICON_X;
+    var qtySpan = h('span', null, String(S.splashQty));
+    var addBtn = h('button', { type: 'button', class: 'big', onclick: function () {
+      setQty(it.code, (S.cart[it.code] || 0) + S.splashQty); S.splashQty = 1; close();
+    } }, t('addToCart') + ' · ' + khr(it.price * S.splashQty));
+    var upd = function (d) { S.splashQty = Math.max(1, Math.min(it.stock || 20, S.splashQty + d)); qtySpan.textContent = String(S.splashQty); addBtn.textContent = t('addToCart') + ' · ' + khr(it.price * S.splashQty); };
+    return h('div', { class: 'splash', role: 'dialog', 'aria-label': t('todayB') },
+      h('div', { class: 'inner' },
+        h('div', { style: 'position:relative' }, ph, x),
+        h('div', { class: 'body' },
+          h('h1', null, nm(it)),
+          h('span', { class: 'note' }, [it.cat, it.unit].filter(Boolean).join(' · ')),
+          (p.comment || ds(it)) ? h('p', { style: 'margin:0' }, p.comment || ds(it)) : null,
+          h('div', { class: 'prow' }, h('span', { style: 'font-size:22px' }, priceEl(it.price)),
+            h('div', { class: 'step' }, h('button', { type: 'button', 'aria-label': '−', onclick: function () { upd(-1); } }, '−'), qtySpan, h('button', { type: 'button', 'aria-label': '+', onclick: function () { upd(1); } }, '+')))),
+        h('div', { class: 'acts' }, addBtn,
+          h('button', { type: 'button', class: 'big ghost', onclick: close }, t('seeMenu')),
+          h('span', { class: 'note', style: 'text-align:center' }, t('shownOnce')))));
+  }
+
+  function inviteView() {
+    var c = S.data.customer;
+    var close = function () { S.overlay = null; render(); };
+    var input = h('input', { type: 'text', readonly: true, value: c.refLink, 'aria-label': 'Link' });
+    var copyBtn = h('button', { type: 'button', class: 'add sm', onclick: function () {
+      var done = function () { copyBtn.textContent = t('copied'); };
+      try { navigator.clipboard.writeText(c.refLink).then(done, function () { input.select(); document.execCommand('copy'); done(); }); }
+      catch (e) { input.select(); try { document.execCommand('copy'); done(); } catch (e2) {} }
+    } }, t('copy'));
+    var shareText = { en: 'SAKANAYA JAPON — fresh Japanese fish in Phnom Penh. Order with my link and get 1 free portion of tuna on your first order.',
+      km: 'SAKANAYA JAPON — ត្រីជប៉ុនស្រស់នៅភ្នំពេញ។ បញ្ជាទិញតាមតំណរបស់ខ្ញុំ ទទួលបានត្រីធូណា ១ ចំណែក ឥតគិតថ្លៃ នៅលើកដំបូង។',
+      ja: 'SAKANAYA JAPON（さかなや）— プノンペンで日本の鮮魚。このリンクから初めて注文すると、赤身のお刺身1人前がプレゼントされます。' }[S.lang];
+    var url = 'https://t.me/share/url?url=' + encodeURIComponent(c.refLink) + '&text=' + encodeURIComponent(shareText);
+    return h('div', { class: 'overlay', onclick: function (e) { if (e.target === this) close(); } },
+      h('div', { class: 'sheet', role: 'dialog', 'aria-label': t('inviteTitle') },
+        h('div', { class: 'page' },
+          h('h1', null, '🎁 ' + t('inviteTitle')),
+          h('p', null, t('inviteBody')),
+          h('div', { class: 'copyrow' }, input, copyBtn),
+          h('div', { style: 'height:12px' }),
+          h('button', { type: 'button', class: 'big', onclick: function () {
+            try { if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url, '_blank'); } catch (e) { window.open(url, '_blank'); }
+          } }, t('share')),
+          h('div', { style: 'height:8px' }),
+          h('button', { type: 'button', class: 'big ghost', onclick: close }, 'OK'))));
+  }
+
+  function totalsBox(showGifts) {
+    var sub = subtotal(), g = showGifts === false ? [] : gifts();
+    var box = h('div', { class: 'sum' }, h('div', null, h('span', null, t('subtotal')), h('span', null, khr(sub))));
+    g.forEach(function (x) { box.appendChild(h('div', null, h('span', null, '🎁 ' + x.label + ' ×' + x.qty), h('span', { class: 'gift' }, t('free')))); });
+    box.appendChild(h('div', { class: 'tot' }, h('span', null, t('total')), h('span', null, khr(sub), ' ', h('span', { class: 'usd' }, usd(sub)))));
+    var note = S.data.config.deliveryNote[S.lang] || S.data.config.deliveryNote.en;
+    if (note) box.appendChild(h('span', { class: 'note' }, '🛵 ' + note));
+    return box;
+  }
+
+  function cartView() {
+    var lines = cartLines();
+    var page = h('div', { class: 'page' }, h('h1', null, t('cart')));
+    if (!lines.length) {
+      page.appendChild(h('p', { class: 'muted' }, t('empty')));
+      page.appendChild(h('button', { type: 'button', class: 'big', onclick: function () { S.screen = 'menu'; render(); } }, t('keepShopping')));
+      return page;
+    }
+    lines.forEach(function (l) {
+      page.appendChild(h('div', { class: 'line' },
+        h('div', { class: 'lm' }, h('b', null, nm(l.it)), h('small', null, khr(l.it.price) + (l.it.unit ? ' · ' + l.it.unit : ''))),
+        qtyControl(l.it.code, true),
+        h('span', { class: 'amt' }, khr(l.amount))));
+    });
+    gifts().forEach(function (g) {
+      page.appendChild(h('div', { class: 'line' }, h('div', { class: 'lm' }, h('b', null, '🎁 ' + g.label + ' ×' + g.qty),
+        h('small', null, g.kind === 'friend' ? t('giftFriend') : t('giftCredit'))), h('span', { class: 'amt gift' }, t('free'))));
+    });
+    page.appendChild(totalsBox(false));
+    var min = S.data.config.minOrder || 0;
+    if (min > 0 && subtotal() < min) page.appendChild(h('div', { class: 'alert' }, t('minOrder') + ': ' + khr(min)));
+    page.appendChild(h('button', { type: 'button', class: 'big', disabled: !S.data.orderActive || (min > 0 && subtotal() < min), onclick: function () {
+      prefill(); S.screen = 'checkout'; S.alert = ''; S.errors = {}; render(); window.scrollTo(0, 0);
+    } }, t('checkout')));
+    page.appendChild(h('div', { style: 'height:8px' }));
+    page.appendChild(h('button', { type: 'button', class: 'big ghost', onclick: function () { S.screen = 'menu'; render(); } }, t('keepShopping')));
+    return page;
+  }
+
+  function prefill() {
+    var c = S.data.customer, f = S.form, saved = load('form') || {};
+    if (f.name === undefined) f.name = saved.name || c.name || [tgUser && tgUser.first_name, tgUser && tgUser.last_name].filter(Boolean).join(' ');
+    if (f.phone === undefined) f.phone = saved.phone || c.phone || '';
+    if (f.address === undefined) f.address = saved.address || c.address || '';
+    if (f.map === undefined) f.map = saved.map || c.map || '';
+    if (!f.type) f.type = 'Delivery';
+    if (!f.payment) f.payment = S.data.config.payments[0] || 'KHQR';
+    var dates = S.data.dates;
+    if (!f.date || !dates.some(function (d) { return d.key === f.date; })) f.date = dates.length ? dates[0].key : '';
+    var d = dates.filter(function (x) { return x.key === f.date; })[0];
+    if (!d || !d.slots.some(function (s) { return s.id === f.slot; })) f.slot = '';
+  }
+
+  function field(id, label, input, err, hint) {
+    return h('div', { class: 'field' + (err ? ' bad' : '') }, h('label', { for: id }, label), input,
+      err ? h('span', { class: 'err', id: id + '-err' }, err) : null, hint ? h('span', { class: 'note' }, hint) : null);
+  }
+
+  function checkoutView() {
+    var f = S.form, e = S.errors, c = S.data.config;
+    var page = h('div', { class: 'page' }, h('h1', null, t('details')));
+    if (S.alert) page.appendChild(h('div', { class: 'alert', role: 'alert' }, S.alert));
+    var bind = function (k) { return function (ev) { f[k] = ev.target.value; store('form', { name: f.name, phone: f.phone, address: f.address, map: f.map }); if (e[k]) { delete e[k]; ev.target.closest('.field').classList.remove('bad'); var er = ev.target.closest('.field').querySelector('.err'); if (er) er.remove(); } }; };
+    page.appendChild(field('f-name', t('name'), h('input', { id: 'f-name', type: 'text', autocomplete: 'name', maxlength: '60', value: f.name || '', oninput: bind('name') }), e.name));
+    page.appendChild(field('f-phone', t('phone'), h('input', { id: 'f-phone', type: 'tel', autocomplete: 'tel', inputmode: 'tel', maxlength: '20', placeholder: '012 345 678', value: f.phone || '', oninput: bind('phone') }), e.phone));
+    if (c.pickup) {
+      page.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl' }, t('how')), h('div', { class: 'seg' }, ['Delivery', 'Pick up'].map(function (v) {
+        return h('button', { type: 'button', 'aria-pressed': f.type === v ? 'true' : 'false', onclick: function () { f.type = v; render(); } }, v === 'Delivery' ? t('delivery') : t('pickup'));
+      }))));
+    }
+    if (f.type === 'Delivery') {
+      page.appendChild(field('f-addr', t('address'), h('textarea', { id: 'f-addr', maxlength: '300', placeholder: t('addressPh'), oninput: bind('address') }, f.address || ''), e.address));
+      page.appendChild(field('f-map', t('map'), h('input', { id: 'f-map', type: 'url', inputmode: 'url', maxlength: '300', placeholder: 'https://maps.app.goo.gl/…', value: f.map || '', oninput: bind('map') }), e.map));
+    } else if (c.pickupAddress) {
+      page.appendChild(h('p', { class: 'note' }, '📍 ' + c.pickupAddress));
+    }
+    var dates = S.data.dates;
+    if (!dates.length) page.appendChild(h('div', { class: 'alert' }, t('noDates')));
+    else {
+      var dsel = h('select', { id: 'f-date', onchange: function (ev) { f.date = ev.target.value; f.slot = ''; render(); } },
+        dates.map(function (d) { return h('option', { value: d.key, selected: d.key === f.date }, dateLabel(d.key)); }));
+      page.appendChild(field('f-date', t('date'), dsel));
+      var day = dates.filter(function (d) { return d.key === f.date; })[0] || dates[0];
+      page.appendChild(h('div', { class: 'field' + (e.slot ? ' bad' : '') }, h('span', { class: 'lbl' }, t('time')),
+        h('div', { class: 'seg' }, day.slots.map(function (s) {
+          return h('button', { type: 'button', 'aria-pressed': f.slot === s.id ? 'true' : 'false', onclick: function () { f.slot = s.id; delete e.slot; render(); } }, s.label);
+        })), e.slot ? h('span', { class: 'err' }, e.slot) : null));
+    }
+    page.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl' }, t('payment')), h('div', { class: 'seg' }, c.payments.map(function (p) {
+      return h('button', { type: 'button', 'aria-pressed': f.payment === p ? 'true' : 'false', onclick: function () { f.payment = p; render(); } }, p === 'KHQR' ? t('khqr') : t('cash'));
+    }))));
+    page.appendChild(field('f-note', t('note'), h('textarea', { id: 'f-note', maxlength: '300', oninput: bind('note') }, f.note || '')));
+    page.appendChild(totalsBox());
+    var btn = h('button', { type: 'button', class: 'big', disabled: S.submitting || !dates.length, onclick: submit }, S.submitting ? t('placing') : t('placeOrder') + ' · ' + khr(subtotal()));
+    page.appendChild(btn);
+    return page;
+  }
+
+  function validate() {
+    var f = S.form, e = {};
+    if (!String(f.name || '').trim()) e.name = t('required');
+    if (String(f.phone || '').replace(/\D/g, '').length < 8) e.phone = t('badPhone');
+    if (f.type === 'Delivery' && String(f.address || '').trim().length < 5) e.address = t('badAddress');
+    if (f.map && !/^https:\/\//i.test(String(f.map).trim())) e.map = 'https://…';
+    if (!f.slot) e.slot = t('chooseTime');
+    S.errors = e;
+    return !Object.keys(e).length;
+  }
+
+  function submit() {
+    if (S.submitting) return;
+    if (!validate()) { S.alert = ''; render(); var bad = document.querySelector('.field.bad input, .field.bad textarea, .field.bad'); if (bad && bad.focus) bad.focus(); if (bad && bad.scrollIntoView) bad.scrollIntoView({ block: 'center' }); return; }
+    S.submitting = true; S.alert = ''; render();
+    var go = function (writeAccess) {
+      var f = S.form;
+      var order = {
+        clientOrderId: S.clientOrderId,
+        cart: Object.keys(S.cart).map(function (c) { return { code: c, qty: S.cart[c] }; }),
+        name: String(f.name).trim(), phone: String(f.phone).trim(), type: f.type, address: String(f.address || '').trim(),
+        map: String(f.map || '').trim(), date: f.date, slot: f.slot, payment: f.payment, note: String(f.note || '').trim(),
+        useCredit: true, writeAccess: !!writeAccess, lang: S.lang
+      };
+      api({ a: 'order', order: order }, 45000).then(function (r) {
+        S.submitting = false;
+        if (r && r.ok) {
+          S.result = r; S.cart = {}; store('cart', { cart: {}, ts: Date.now() });
+          S.screen = 'done';
+          try { tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('success'); } catch (e) {}
+          render(); window.scrollTo(0, 0); return;
+        }
+        handleOrderError(r || { code: 'server' });
+      }, function () {
+        S.submitting = false; S.alert = te('network'); render(); window.scrollTo(0, 0);
+      });
+    };
+    try {
+      if (tg && tg.requestWriteAccess && tg.isVersionAtLeast && tg.isVersionAtLeast('6.9')) tg.requestWriteAccess(function (ok) { go(ok); });
+      else go(false);
+    } catch (e) { go(false); }
+  }
+
+  function handleOrderError(r) {
+    var code = r.code || 'server';
+    if (code === 'item_unavailable' && Array.isArray(r.detail)) {
+      r.detail.forEach(function (c) { delete S.cart[c]; var it = item(c); if (it) it.soldOut = true; });
+      store('cart', { cart: S.cart, ts: Date.now() });
+      S.alert = te('item_unavailable') + ' ' + r.detail.map(function (c) { var it = item(c); return it ? nm(it) : c; }).join(', ');
+      S.clientOrderId = newId();
+    } else if (code === 'slot') {
+      S.alert = te('slot'); S.form.slot = '';
+      S.clientOrderId = newId();
+      reloadDates();
+    } else if (code === 'name' || code === 'phone' || code === 'address') {
+      S.errors[code] = te(code); S.alert = '';
+    } else if (code === 'min_order') {
+      S.alert = te('min_order') + (r.detail ? ' (' + khr(r.detail) + ')' : '');
+    } else {
+      S.alert = te(code);
+      if (code === 'invalid') S.clientOrderId = newId();
+    }
+    try { tg && tg.HapticFeedback && tg.HapticFeedback.notificationOccurred('error'); } catch (e) {}
+    if (!cartCount()) { S.screen = 'cart'; }
+    render(); window.scrollTo(0, 0);
+  }
+
+  function reloadDates() {
+    api({ a: 'boot' }, 30000).then(function (r) { if (r && r.ok) { S.data.dates = r.dates; prefill(); render(); } }, function () {});
+  }
+
+  function doneView() {
+    var r = S.result, page = h('div', { class: 'page' });
+    page.appendChild(h('div', { class: 'center', style: 'min-height:auto;padding:24px 0 8px' }, h('div', { class: 'done-ok', 'aria-hidden': 'true' }, '✓'),
+      h('h1', { style: 'margin:0' }, t('orderReceived')), h('div', { class: 'muted' }, t('orderNo') + ' ' + r.orderNo)));
+    var sum = h('div', { class: 'sum' },
+      h('div', null, h('span', null, r.type === 'Delivery' ? t('when') : t('whenPickup')), h('span', null, dateLabel(r.date) + ', ' + r.slot)),
+      (r.gifts || []).map(function (g) { var it = item(g.code); return h('div', null, h('span', null, '🎁 ' + (it ? nm(it) : g.code) + ' ×' + g.qty), h('span', { class: 'gift' }, t('free'))); }),
+      h('div', { class: 'tot' }, h('span', null, t('total')), h('span', null, khr(r.total), ' ', h('span', { class: 'usd' }, usd(r.total)))));
+    page.appendChild(sum);
+    if (r.ref === 'not_new' || r.ref === 'self') page.appendChild(h('p', { class: 'note' }, 'ℹ️ ' + t('notNew')));
+    if (r.type === 'Delivery') page.appendChild(h('p', { class: 'note' }, '🛵 ' + (S.data.config.deliveryNote[S.lang] || S.data.config.deliveryNote.en)));
+    if (r.payment === 'KHQR') {
+      page.appendChild(h('p', null, t('payWithQr')));
+      if (r.paymentQr) page.appendChild(h('div', { class: 'center', style: 'min-height:auto;padding:0' }, h('img', { class: 'qr', src: r.paymentQr, alt: 'KHQR' })));
+      if (r.paymentAccount) page.appendChild(h('p', { class: 'note', style: 'text-align:center' }, t('account') + ': ' + r.paymentAccount));
+    } else page.appendChild(h('p', null, t('payCash')));
+    if (S.data.config.referral) {
+      if (r.refCode) S.data.customer.refLink = S.data.config.miniAppLink + '?startapp=ref_' + r.refCode;
+      page.appendChild(h('div', { class: 'invite-card', style: 'margin:16px 0' }, h('div', null, h('b', null, '🎁 ' + t('inviteTitle')), t('inviteBody')),
+        h('button', { type: 'button', class: 'add sm', onclick: function () { S.overlay = 'invite'; render(); } }, t('share'))));
+    }
+    page.appendChild(h('button', { type: 'button', class: 'big ghost', onclick: function () {
+      S.screen = 'menu'; S.result = null; S.clientOrderId = newId(); S.form.note = ''; S.tab = 'today';
+      if (S.data.customer.friendGift) S.data.customer.friendGift = false;
+      if (r.gifts && r.gifts.some(function (g) { return g.kind === 'credit'; })) S.data.customer.credits = Math.max(0, S.data.customer.credits - 1);
+      render(); window.scrollTo(0, 0);
+    } }, t('backToMenu')));
+    if (S.overlay === 'invite') page.appendChild(inviteView());
+    return page;
+  }
+
+  function errorView() {
+    var box = h('div', { class: 'center' }, h('div', { style: 'font-size:40px', 'aria-hidden': 'true' }, '🐟'), h('p', null, S.error));
+    if (!initData) box.appendChild(h('a', { class: 'big', href: BOT_LINK, style: 'display:flex;align-items:center;justify-content:center;text-decoration:none;max-width:280px' }, t('openTg')));
+    else box.appendChild(h('button', { type: 'button', class: 'big', style: 'max-width:280px', onclick: boot }, t('retry')));
+    return box;
+  }
+
+  /* ===================== 日付 ===================== */
+  function todayKey() { return (S.data && S.data.now) ? S.data.now.slice(0, 10) : new Date().toISOString().slice(0, 10); }
+  function dateLabel(key) {
+    var d = new Date(key + 'T12:00:00+07:00');
+    var tk = todayKey(); var tomorrow = new Date(new Date(tk + 'T12:00:00+07:00').getTime() + 86400000).toISOString().slice(0, 10);
+    var loc = S.lang === 'km' ? 'km-KH' : (S.lang === 'ja' ? 'ja-JP' : 'en-GB');
+    var s;
+    try { s = new Intl.DateTimeFormat(loc, { weekday: 'short', day: 'numeric', month: 'short', timeZone: TZ }).format(d); } catch (e) { s = key; }
+    if (key === tk) return t('todayLbl') + ' · ' + s;
+    if (key === tomorrow) return t('tomorrow') + ' · ' + s;
+    return s;
+  }
+
+  /* ===================== 通信 ===================== */
+  function api(body, timeoutMs) {
+    body.initData = initData;
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+      var timer = setTimeout(function () { if (done) return; done = true; try { ctrl && ctrl.abort(); } catch (e) {} reject(new Error('timeout')); }, timeoutMs || 30000);
+      fetch(API_URL, { method: 'POST', body: JSON.stringify(body), redirect: 'follow', signal: ctrl ? ctrl.signal : undefined })
+        .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+        .then(function (j) { if (done) return; done = true; clearTimeout(timer); resolve(j); },
+              function (e) { if (done) return; done = true; clearTimeout(timer); reject(e); });
+    });
+  }
+
+  function boot() {
+    S.screen = 'loading'; render();
+    if (!initData) { S.screen = 'error'; S.error = t('openInTg'); render(); return; }
+    api({ a: 'boot' }, 30000).then(function (r) {
+      if (!r || !r.ok) { S.screen = 'error'; S.error = te((r && r.code) || 'server'); render(); return; }
+      S.data = r;
+      var savedLang = load('lang'); S.lang = savedLang || r.lang || S.lang;
+      var saved = load('cart');
+      S.cart = {};
+      if (saved && saved.cart && Date.now() - (saved.ts || 0) < 2 * 86400000) {
+        Object.keys(saved.cart).forEach(function (c) { var it = item(c); if (it && !it.soldOut && saved.cart[c] > 0) S.cart[c] = Math.min(saved.cart[c], 50); });
+      }
+      S.screen = 'menu';
+      var p = r.menu.picks[0];
+      if (r.config.splash && p && item(p.code) && !item(p.code).soldOut && load('splash') !== todayKey()) S.overlay = 'splash';
+      render();
+    }, function () { S.screen = 'error'; S.error = te('network'); render(); });
+  }
+
+  /* ===================== 起動 ===================== */
+  try {
+    if (tg) {
+      tg.ready(); tg.expand();
+      if (tg.colorScheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      try { tg.setHeaderColor(tg.colorScheme === 'dark' ? '#111418' : '#ffffff'); tg.setBackgroundColor(tg.colorScheme === 'dark' ? '#111418' : '#ffffff'); } catch (e) {}
+      if (tg.BackButton) tg.BackButton.onClick(function () {
+        if (S.overlay) { if (S.overlay === 'splash') store('splash', todayKey()); S.overlay = null; }
+        else if (S.screen === 'checkout') S.screen = 'cart';
+        else if (S.screen === 'cart') S.screen = 'menu';
+        render();
+      });
+    }
+  } catch (e) {}
+  boot();
+})();
+</script>
+</body>
+</html>
