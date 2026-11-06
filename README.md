@@ -18,6 +18,7 @@
 | `assets/css/` | `common.css`（共通）/ `business.css`（法人ページ） |
 | `assets/js/` | `site-info.js`（営業時間・窓口の情報源）/ `common.js`（日英切替） |
 | `menu.html` | メニュー画像1枚 + 注文ボタン |
+| `tg/menu/index.html` | **Telegram 注文画面（Mini App）**。@sakanaya_order_bot の `t.me/sakanaya_order_bot/menu` から開く。Telegram の外で開くと「Telegram で開く」案内だけが出る（`noindex`）。商品・価格は GAS「SAKANAYA B2C Bot」から毎回読み込むので、このファイルに価格は書かない。`API_URL` は GAS のウェブアプリ URL（デプロイを「新しいバージョン」で更新すれば変わらない） |
 | `howto.html` | LINE での注文方法（動画 `howtouse.mp4`） |
 | `faq.html` | よくあるご質問 |
 | `q&a.html` | **旧URLからの案内ページ**（`faq.html` へ自動転送。中身はない） |
