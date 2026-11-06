@@ -179,6 +179,10 @@
       ordersPaused: 'Ordering is paused right now. You can still look at the menu.',
       openInTg: 'Please open this menu in Telegram.', openTg: 'Open in Telegram', retry: 'Try again',
       tomorrow: 'Tomorrow', todayLbl: 'Today', notNew: 'The welcome gift is for first-time customers only, so it was not added to this order.',
+      timeRecv: 'Time you want to receive it', leadHint: function (n) { return 'You can choose a time from ' + n + ' minutes after ordering.'; },
+      allergyQ: 'Food allergies', allergyNo: 'None', allergyYes: 'Yes', allergyPh: 'Please tell us what (e.g. shrimp, crab, shellfish)',
+      allergyErr: 'Please tell us if you have any food allergies.', allergyTextErr: 'Please write your allergies.',
+      choose: 'Choose', chooseOpt: 'Choose one', openMap: 'Open in Google Maps', pickupAt: 'Pick up at',
       err: {
         network: "We couldn't reach the shop. Check your connection and tap “Place order” again. You won't be charged twice.",
         auth: 'Your session expired. Please close and reopen the menu from Telegram.',
@@ -191,6 +195,7 @@
         item_unavailable: 'Some items just sold out and were removed from your cart:',
         min_order: 'Your order is below the minimum.',
         rate_limit: 'Too many orders in a short time. Please message us.',
+        allergy: 'Please tell us if you have any food allergies.',
         server: 'Something went wrong on our side. Please try again in a moment.'
       }
     },
@@ -216,6 +221,10 @@
       ordersPaused: 'ការបញ្ជាទិញត្រូវបានផ្អាក។ អ្នកនៅតែអាចមើលម៉ឺនុយបាន។',
       openInTg: 'សូមបើកម៉ឺនុយនេះក្នុង Telegram។', openTg: 'បើកក្នុង Telegram', retry: 'ព្យាយាមម្តងទៀត',
       tomorrow: 'ថ្ងៃស្អែក', todayLbl: 'ថ្ងៃនេះ', notNew: 'កាដូស្វាគមន៍សម្រាប់តែអតិថិជនថ្មីប៉ុណ្ណោះ ដូច្នេះមិនបានបន្ថែមក្នុងការបញ្ជាទិញនេះទេ។',
+      timeRecv: 'ម៉ោងដែលចង់ទទួល', leadHint: function (n) { return 'អាចជ្រើសម៉ោងចាប់ពី ' + n + ' នាទីក្រោយពេលបញ្ជាទិញ។'; },
+      allergyQ: 'អាឡែកហ្ស៊ីចំណីអាហារ', allergyNo: 'គ្មាន', allergyYes: 'មាន', allergyPh: 'សូមប្រាប់យើង (ឧ. បង្គា ក្តាម គ្រំ)',
+      allergyErr: 'សូមប្រាប់យើងថាតើអ្នកមានអាឡែកហ្ស៊ីចំណីអាហារឬទេ។', allergyTextErr: 'សូមសរសេរអាឡែកហ្ស៊ីរបស់អ្នក។',
+      choose: 'ជ្រើសរើស', chooseOpt: 'ជ្រើសរើសមួយ', openMap: 'បើកក្នុង Google Maps', pickupAt: 'មកយកនៅ',
       err: {
         network: 'មិនអាចភ្ជាប់ទៅហាងបានទេ។ សូមពិនិត្យអ៊ីនធឺណិត ហើយចុច “បញ្ជាទិញ” ម្តងទៀត។ អ្នកនឹងមិនត្រូវគិតប្រាក់ពីរដងទេ។',
         auth: 'សូមបិទ ហើយបើកម៉ឺនុយម្តងទៀតពី Telegram។',
@@ -228,6 +237,7 @@
         item_unavailable: 'ទំនិញខ្លះទើបអស់ស្តុក ហើយត្រូវបានដកចេញពីកន្ត្រក៖',
         min_order: 'ការបញ្ជាទិញរបស់អ្នកតិចជាងអប្បបរមា។',
         rate_limit: 'ការបញ្ជាទិញច្រើនពេកក្នុងរយៈពេលខ្លី។ សូមផ្ញើសារមកយើង។',
+        allergy: 'សូមប្រាប់យើងថាតើអ្នកមានអាឡែកហ្ស៊ីចំណីអាហារឬទេ។',
         server: 'មានបញ្ហានៅខាងយើង។ សូមព្យាយាមម្តងទៀតបន្តិចទៀត។'
       }
     },
@@ -253,6 +263,10 @@
       ordersPaused: 'ただいま注文の受付を停止しています。メニューはご覧いただけます。',
       openInTg: 'このメニューは Telegram で開いてください。', openTg: 'Telegram で開く', retry: 'もう一度試す',
       tomorrow: '明日', todayLbl: '今日', notNew: 'ご紹介特典は初めてのお客様が対象のため、今回のご注文には付きません。',
+      timeRecv: '受け取りたい時間', leadHint: function (n) { return 'ご注文から ' + n + ' 分後以降の時間を選べます。'; },
+      allergyQ: 'アレルギー', allergyNo: 'なし', allergyYes: 'あり', allergyPh: '内容を入れてください（例：エビ・カニ・貝類）',
+      allergyErr: 'アレルギーの有無を選んでください。', allergyTextErr: 'アレルギーの内容を書いてください。',
+      choose: '選ぶ', chooseOpt: 'お選びください', openMap: 'Google マップで開く', pickupAt: '受け取り場所',
       err: {
         network: 'お店につながりませんでした。通信状態を確認して、もう一度「注文を確定する」を押してください。二重に注文されることはありません。',
         auth: '有効期限が切れました。Telegram からメニューを開き直してください。',
@@ -265,6 +279,7 @@
         item_unavailable: '売り切れた商品があり、カートから外しました：',
         min_order: '最低注文金額に届いていません。',
         rate_limit: '短い時間に注文が多すぎます。メッセージでご連絡ください。',
+        allergy: 'アレルギーの有無を選んでください。',
         server: 'お店側で問題が起きました。少し待ってからもう一度お試しください。'
       }
     }
@@ -275,7 +290,7 @@
     lang: pickLang(tgUser && tgUser.language_code),
     screen: 'loading', data: null, error: '', tab: 'today',
     cart: {}, form: {}, errors: {}, alert: '', submitting: false, result: null,
-    clientOrderId: newId(), overlay: null, splashQty: 1
+    clientOrderId: newId(), overlay: null, splashQty: 1, optSel: {}
   };
   var root = document.getElementById('app');
 
@@ -340,10 +355,26 @@
   function item(code) { var a = S.data ? S.data.menu.items : []; for (var i = 0; i < a.length; i++) if (a[i].code === code) return a[i]; return null; }
   function nm(it) { return (it.name && (it.name[S.lang] || it.name.en)) || it.code; }
   function ds(it) { return (it.desc && (it.desc[S.lang] || it.desc.en)) || ''; }
+  /* カートのキー：選べる内容がある品は「コード~内容」（例 AO115~5 kinds）、無い品はコードだけ */
+  var SEP = '~';
+  function keyOf(code, opt) { return opt ? code + SEP + opt : code; }
+  function codeOf(k) { var i = k.indexOf(SEP); return i < 0 ? k : k.slice(0, i); }
+  function optOf(k) { var i = k.indexOf(SEP); return i < 0 ? '' : k.slice(i + 1); }
+  function hasOpts(it) { return !!(it && it.options && it.options.length); }
+  function codeQty(code) { var n = 0; Object.keys(S.cart).forEach(function (k) { if (codeOf(k) === code) n += S.cart[k]; }); return n; }
+  function validKey(k) {
+    var it = item(codeOf(k)); if (!it || it.soldOut) return false;
+    return hasOpts(it) ? it.options.indexOf(optOf(k)) >= 0 : !optOf(k);
+  }
   function cartCount() { var n = 0; Object.keys(S.cart).forEach(function (c) { n += S.cart[c]; }); return n; }
   function cartLines() {
-    return Object.keys(S.cart).map(function (c) { var it = item(c); return it ? { it: it, qty: S.cart[c], amount: it.price * S.cart[c] } : null; })
+    return Object.keys(S.cart).map(function (k) { var it = item(codeOf(k)); return it ? { key: k, opt: optOf(k), it: it, qty: S.cart[k], amount: it.price * S.cart[k] } : null; })
       .filter(Boolean);
+  }
+  function openItem(code) { S.overlay = 'item:' + code; render(); }
+  function openExternal(url) {
+    if (!/^https:\/\//i.test(url)) return;
+    try { if (tg && tg.openLink) tg.openLink(url); else window.open(url, '_blank', 'noopener'); } catch (e) { window.open(url, '_blank', 'noopener'); }
   }
   function gifts() {
     if (!S.data || !S.data.config.referral) return [];
@@ -354,12 +385,14 @@
     return g;
   }
   function subtotal() { return cartLines().reduce(function (s, l) { return s + l.amount; }, 0); }
-  function setQty(code, q) {
-    var it = item(code);
+  function setQty(key, q) {
+    var code = codeOf(key), it = item(code);
     if (!it || it.soldOut) return;
-    q = Math.max(0, Math.min(50, q));
-    if (it.stock !== null && it.stock !== undefined) q = Math.min(q, it.stock);
-    if (q) S.cart[code] = q; else delete S.cart[code];
+    if (hasOpts(it) && !optOf(key)) { openItem(code); return; } // 内容を選んでから
+    var others = codeQty(code) - (S.cart[key] || 0);
+    q = Math.max(0, Math.min(50 - others, q));
+    if (it.stock !== null && it.stock !== undefined) q = Math.min(q, Math.max(0, it.stock - others));
+    if (q) S.cart[key] = q; else delete S.cart[key];
     store('cart', { cart: S.cart, ts: Date.now() });
     try { tg && tg.HapticFeedback && tg.HapticFeedback.selectionChanged(); } catch (e) {}
     refreshQty();
@@ -373,9 +406,14 @@
   }
   function fillQty(box) {
     var code = box.getAttribute('data-code'), small = !!box.getAttribute('data-small');
-    var it = item(code), q = S.cart[code] || 0;
+    var it = item(codeOf(code)), q = S.cart[code] || 0;
     box.innerHTML = '';
     if (!it || it.soldOut) { box.appendChild(h('button', { type: 'button', class: 'add' + (small ? ' sm' : ''), disabled: true }, t('soldOut'))); return; }
+    if (hasOpts(it) && !optOf(code)) { // 一覧では「選ぶ」→ 商品の画面で内容を選ぶ
+      var n = codeQty(it.code);
+      box.appendChild(h('button', { type: 'button', class: 'add' + (small ? ' sm' : ''), 'aria-label': t('choose') + ' ' + nm(it), onclick: function () { openItem(it.code); } }, n ? '✓ ' + n + ' · ' + t('choose') : t('add')));
+      return;
+    }
     if (!q) { box.appendChild(h('button', { type: 'button', class: 'add' + (small ? ' sm' : ''), 'aria-label': t('add') + ' ' + nm(it), onclick: function () { setQty(code, 1); } }, t('add'))); return; }
     box.appendChild(h('div', { class: 'step' },
       h('button', { type: 'button', 'aria-label': '−', onclick: function () { setQty(code, q - 1); } }, '−'),
@@ -524,7 +562,25 @@
           h('div', { class: 'rtitle' }, (it.badges || []).map(function (b) { return chipFor(it, b); })),
           it.comment ? h('p', null, it.comment) : null,
           ds(it) ? h('p', { class: 'note' }, ds(it)) : null,
-          h('div', { class: 'prow', style: 'padding-top:12px' }, h('span', null, priceEl(it.price), it.unit ? h('span', { class: 'usd' }, ' · ' + it.unit) : null), qtyControl(it.code, false)))));
+          hasOpts(it) ? optPicker(it) : null,
+          h('div', { class: 'prow', style: 'padding-top:12px' }, h('span', null, priceEl(it.price), it.unit ? h('span', { class: 'usd' }, ' · ' + it.unit) : null),
+            qtyControl(hasOpts(it) ? keyOf(it.code, curOpt(it)) : it.code, false)))));
+  }
+  function curOpt(it) {
+    var o = S.optSel[it.code];
+    if (o && it.options.indexOf(o) >= 0) return o;
+    // カートに入っている内容があればそれ、無ければ最初の内容
+    var inCart = Object.keys(S.cart).filter(function (k) { return codeOf(k) === it.code; }).map(optOf)[0];
+    return inCart && it.options.indexOf(inCart) >= 0 ? inCart : it.options[0];
+  }
+  function optPicker(it) {
+    var sel = curOpt(it);
+    return h('div', { class: 'field', role: 'radiogroup', 'aria-label': t('chooseOpt') }, h('span', { class: 'lbl' }, t('chooseOpt')),
+      h('div', { class: 'seg' }, it.options.map(function (o) {
+        var q = S.cart[keyOf(it.code, o)] || 0;
+        return h('button', { type: 'button', role: 'radio', 'aria-checked': o === sel ? 'true' : 'false', 'aria-pressed': o === sel ? 'true' : 'false',
+          onclick: function () { S.optSel[it.code] = o; render(); } }, o + (q ? '（' + q + '）' : ''));
+      })));
   }
 
   function splashView() {
@@ -537,9 +593,10 @@
     var x = h('button', { type: 'button', class: 'close', 'aria-label': 'Close', onclick: close }); x.innerHTML = ICON_X;
     var qtySpan = h('span', null, String(S.splashQty));
     var addBtn = h('button', { type: 'button', class: 'big', onclick: function () {
+      if (hasOpts(it)) { store('splash', todayKey()); S.splashQty = 1; openItem(it.code); return; }
       setQty(it.code, (S.cart[it.code] || 0) + S.splashQty); S.splashQty = 1; close();
-    } }, t('addToCart') + ' · ' + khr(it.price * S.splashQty));
-    var upd = function (d) { S.splashQty = Math.max(1, Math.min(it.stock || 20, S.splashQty + d)); qtySpan.textContent = String(S.splashQty); addBtn.textContent = t('addToCart') + ' · ' + khr(it.price * S.splashQty); };
+    } }, hasOpts(it) ? t('choose') + ' · ' + khr(it.price) : t('addToCart') + ' · ' + khr(it.price * S.splashQty));
+    var upd = function (d) { if (hasOpts(it)) return; S.splashQty = Math.max(1, Math.min(it.stock || 20, S.splashQty + d)); qtySpan.textContent = String(S.splashQty); addBtn.textContent = t('addToCart') + ' · ' + khr(it.price * S.splashQty); };
     return h('div', { class: 'splash', role: 'dialog', 'aria-label': t('todayB') },
       h('div', { class: 'inner' },
         h('div', { style: 'position:relative' }, ph, x),
@@ -548,6 +605,7 @@
           h('span', { class: 'note' }, [it.cat, it.unit].filter(Boolean).join(' · ')),
           (p.comment || ds(it)) ? h('p', { style: 'margin:0' }, p.comment || ds(it)) : null,
           h('div', { class: 'prow' }, h('span', { style: 'font-size:22px' }, priceEl(it.price)),
+            hasOpts(it) ? h('span', { class: 'note' }, it.options.join(' / ')) :
             h('div', { class: 'step' }, h('button', { type: 'button', 'aria-label': '−', onclick: function () { upd(-1); } }, '−'), qtySpan, h('button', { type: 'button', 'aria-label': '+', onclick: function () { upd(1); } }, '+')))),
         h('div', { class: 'acts' }, addBtn,
           h('button', { type: 'button', class: 'big ghost', onclick: close }, t('seeMenu')),
@@ -601,8 +659,8 @@
     }
     lines.forEach(function (l) {
       page.appendChild(h('div', { class: 'line' },
-        h('div', { class: 'lm' }, h('b', null, nm(l.it)), h('small', null, khr(l.it.price) + (l.it.unit ? ' · ' + l.it.unit : ''))),
-        qtyControl(l.it.code, true),
+        h('div', { class: 'lm' }, h('b', null, nm(l.it)), l.opt ? h('small', null, '▸ ' + l.opt) : null, h('small', null, khr(l.it.price) + (l.it.unit ? ' · ' + l.it.unit : ''))),
+        qtyControl(l.key, true),
         h('span', { class: 'amt' }, khr(l.amount))));
     });
     gifts().forEach(function (g) {
@@ -636,7 +694,7 @@
 
   function field(id, label, input, err, hint) {
     return h('div', { class: 'field' + (err ? ' bad' : '') }, h('label', { for: id }, label), input,
-      err ? h('span', { class: 'err', id: id + '-err' }, err) : null, hint ? h('span', { class: 'note' }, hint) : null);
+      err ? h('span', { class: 'err', id: id + '-err' }, err) : null, hint ? h('span', { class: 'note', id: id + '-hint' }, hint) : null);
   }
 
   function checkoutView() {
@@ -654,8 +712,11 @@
     if (f.type === 'Delivery') {
       page.appendChild(field('f-addr', t('address'), h('textarea', { id: 'f-addr', maxlength: '300', placeholder: t('addressPh'), oninput: bind('address') }, f.address || ''), e.address));
       page.appendChild(field('f-map', t('map'), h('input', { id: 'f-map', type: 'url', inputmode: 'url', maxlength: '300', placeholder: 'https://maps.app.goo.gl/…', value: f.map || '', oninput: bind('map') }), e.map));
-    } else if (c.pickupAddress) {
-      page.appendChild(h('p', { class: 'note' }, '📍 ' + c.pickupAddress));
+    } else if (c.pickupAddress || c.pickupMap) {
+      var pbox = h('div', { class: 'field' }, h('span', { class: 'lbl' }, t('pickupAt')));
+      if (c.pickupAddress) pbox.appendChild(h('span', { class: 'note' }, '📍 ' + c.pickupAddress));
+      if (c.pickupMap) pbox.appendChild(h('button', { type: 'button', class: 'big ghost', onclick: function () { openExternal(c.pickupMap); } }, '🗺 ' + t('openMap')));
+      page.appendChild(pbox);
     }
     var dates = S.data.dates;
     if (!dates.length) page.appendChild(h('div', { class: 'alert' }, t('noDates')));
@@ -664,14 +725,31 @@
         dates.map(function (d) { return h('option', { value: d.key, selected: d.key === f.date }, dateLabel(d.key)); }));
       page.appendChild(field('f-date', t('date'), dsel));
       var day = dates.filter(function (d) { return d.key === f.date; })[0] || dates[0];
-      page.appendChild(h('div', { class: 'field' + (e.slot ? ' bad' : '') }, h('span', { class: 'lbl' }, t('time')),
-        h('div', { class: 'seg' }, day.slots.map(function (s) {
-          return h('button', { type: 'button', 'aria-pressed': f.slot === s.id ? 'true' : 'false', onclick: function () { f.slot = s.id; delete e.slot; render(); } }, s.label);
-        })), e.slot ? h('span', { class: 'err' }, e.slot) : null));
+      if (c.timeMode === 'time' || day.slots.length > 6) {
+        var tsel = h('select', { id: 'f-slot', 'aria-describedby': 'f-slot-hint', onchange: function (ev) { f.slot = ev.target.value; delete e.slot; ev.target.closest('.field').classList.remove('bad'); var er = ev.target.closest('.field').querySelector('.err'); if (er) er.remove(); } },
+          [h('option', { value: '', selected: !f.slot, disabled: true }, t('chooseTime'))].concat(day.slots.map(function (s) {
+            return h('option', { value: s.id, selected: f.slot === s.id }, s.label);
+          })));
+        page.appendChild(field('f-slot', c.timeMode === 'time' ? t('timeRecv') : t('time'), tsel, e.slot,
+          c.timeMode === 'time' && c.leadMinutes ? t('leadHint')(c.leadMinutes) : null));
+      } else {
+        page.appendChild(h('div', { class: 'field' + (e.slot ? ' bad' : '') }, h('span', { class: 'lbl' }, t('time')),
+          h('div', { class: 'seg' }, day.slots.map(function (s) {
+            return h('button', { type: 'button', 'aria-pressed': f.slot === s.id ? 'true' : 'false', onclick: function () { f.slot = s.id; delete e.slot; render(); } }, s.label);
+          })), e.slot ? h('span', { class: 'err' }, e.slot) : null));
+      }
     }
     page.appendChild(h('div', { class: 'field' }, h('span', { class: 'lbl' }, t('payment')), h('div', { class: 'seg' }, c.payments.map(function (p) {
       return h('button', { type: 'button', 'aria-pressed': f.payment === p ? 'true' : 'false', onclick: function () { f.payment = p; render(); } }, p === 'KHQR' ? t('khqr') : t('cash'));
     }))));
+    var abox = h('div', { class: 'field' + (e.allergy ? ' bad' : ''), id: 'f-allergy' }, h('span', { class: 'lbl' }, t('allergyQ') + (c.allergyRequired ? ' *' : '')),
+      h('div', { class: 'seg', role: 'radiogroup', 'aria-label': t('allergyQ') }, [['none', t('allergyNo')], ['yes', t('allergyYes')]].map(function (o) {
+        return h('button', { type: 'button', role: 'radio', 'aria-checked': f.allergy === o[0] ? 'true' : 'false', 'aria-pressed': f.allergy === o[0] ? 'true' : 'false',
+          onclick: function () { f.allergy = o[0]; delete e.allergy; render(); if (o[0] === 'yes') { var ta = document.getElementById('f-allergy-text'); if (ta) ta.focus(); } } }, o[1]);
+      })));
+    if (f.allergy === 'yes') abox.appendChild(h('textarea', { id: 'f-allergy-text', maxlength: '200', placeholder: t('allergyPh'), 'aria-label': t('allergyQ'), oninput: bind('allergyText') }, f.allergyText || ''));
+    if (e.allergy) abox.appendChild(h('span', { class: 'err' }, e.allergy));
+    page.appendChild(abox);
     page.appendChild(field('f-note', t('note'), h('textarea', { id: 'f-note', maxlength: '300', oninput: bind('note') }, f.note || '')));
     page.appendChild(totalsBox());
     var btn = h('button', { type: 'button', class: 'big', disabled: S.submitting || !dates.length, onclick: submit }, S.submitting ? t('placing') : t('placeOrder') + ' · ' + khr(subtotal()));
@@ -686,6 +764,8 @@
     if (f.type === 'Delivery' && String(f.address || '').trim().length < 5) e.address = t('badAddress');
     if (f.map && !/^https:\/\//i.test(String(f.map).trim())) e.map = 'https://…';
     if (!f.slot) e.slot = t('chooseTime');
+    if (f.allergy === 'yes' && String(f.allergyText || '').trim().length < 2) e.allergy = t('allergyTextErr');
+    else if (!f.allergy && S.data.config.allergyRequired) e.allergy = t('allergyErr');
     S.errors = e;
     return !Object.keys(e).length;
   }
@@ -698,9 +778,10 @@
       var f = S.form;
       var order = {
         clientOrderId: S.clientOrderId,
-        cart: Object.keys(S.cart).map(function (c) { return { code: c, qty: S.cart[c] }; }),
+        cart: Object.keys(S.cart).map(function (k) { var o = { code: codeOf(k), qty: S.cart[k] }; if (optOf(k)) o.opt = optOf(k); return o; }),
         name: String(f.name).trim(), phone: String(f.phone).trim(), type: f.type, address: String(f.address || '').trim(),
         map: String(f.map || '').trim(), date: f.date, slot: f.slot, payment: f.payment, note: String(f.note || '').trim(),
+        allergy: f.allergy || '', allergyText: f.allergy === 'yes' ? String(f.allergyText || '').trim() : '',
         useCredit: true, writeAccess: !!writeAccess, lang: S.lang
       };
       api({ a: 'order', order: order }, 45000).then(function (r) {
@@ -725,7 +806,8 @@
   function handleOrderError(r) {
     var code = r.code || 'server';
     if (code === 'item_unavailable' && Array.isArray(r.detail)) {
-      r.detail.forEach(function (c) { delete S.cart[c]; var it = item(c); if (it) it.soldOut = true; });
+      Object.keys(S.cart).forEach(function (k) { if (r.detail.indexOf(codeOf(k)) >= 0) delete S.cart[k]; });
+      r.detail.forEach(function (c) { var it = item(c); if (it) it.soldOut = true; });
       store('cart', { cart: S.cart, ts: Date.now() });
       S.alert = te('item_unavailable') + ' ' + r.detail.map(function (c) { var it = item(c); return it ? nm(it) : c; }).join(', ');
       S.clientOrderId = newId();
@@ -733,7 +815,7 @@
       S.alert = te('slot'); S.form.slot = '';
       S.clientOrderId = newId();
       reloadDates();
-    } else if (code === 'name' || code === 'phone' || code === 'address') {
+    } else if (code === 'name' || code === 'phone' || code === 'address' || code === 'allergy') {
       S.errors[code] = te(code); S.alert = '';
     } else if (code === 'min_order') {
       S.alert = te('min_order') + (r.detail ? ' (' + khr(r.detail) + ')' : '');
@@ -756,6 +838,7 @@
       h('h1', { style: 'margin:0' }, t('orderReceived')), h('div', { class: 'muted' }, t('orderNo') + ' ' + r.orderNo)));
     var sum = h('div', { class: 'sum' },
       h('div', null, h('span', null, r.type === 'Delivery' ? t('when') : t('whenPickup')), h('span', null, dateLabel(r.date) + ', ' + r.slot)),
+      r.allergy ? h('div', null, h('span', null, t('allergyQ')), h('span', null, r.allergy === 'none' ? t('allergyNo') : r.allergy)) : null,
       (r.gifts || []).map(function (g) { var it = item(g.code); return h('div', null, h('span', null, '🎁 ' + (it ? nm(it) : g.code) + ' ×' + g.qty), h('span', { class: 'gift' }, t('free'))); }),
       h('div', { class: 'tot' }, h('span', null, t('total')), h('span', null, khr(r.total), ' ', h('span', { class: 'usd' }, usd(r.total)))));
     page.appendChild(sum);
@@ -825,7 +908,7 @@
       var saved = load('cart');
       S.cart = {};
       if (saved && saved.cart && Date.now() - (saved.ts || 0) < 2 * 86400000) {
-        Object.keys(saved.cart).forEach(function (c) { var it = item(c); if (it && !it.soldOut && saved.cart[c] > 0) S.cart[c] = Math.min(saved.cart[c], 50); });
+        Object.keys(saved.cart).forEach(function (k) { if (validKey(k) && saved.cart[k] > 0) S.cart[k] = Math.min(saved.cart[k], 50); });
       }
       S.screen = 'menu';
       var p = r.menu.picks[0];
