@@ -43,41 +43,7 @@
       margin: 0;
     }
 
-    /* ── 画面右下に追従する注文ボタン（4ページ共通） ── */
-    .floating-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;  /* 縦に並べる（スマホで押しやすい） */
-      gap: 10px;
-      z-index: 9999;
-    }
-
-    .float-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 18px;
-      border-radius: 50px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: bold;
-      font-size: 13px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      transition: transform 0.2s ease;
-      min-width: 160px;
-    }
-
-    .float-btn:active { transform: scale(0.95); }
-    .float-btn span { margin-right: 8px; }
-
-    .btn-line { background-color: #00b900; }
-    .btn-tele { background-color: #0088cc; }
-
-    @media (max-width: 768px) {
-      .float-btn { padding: 8px 15px; font-size: 12px; min-width: 140px; }
-    }
+    /* 右下の注文ボタン（.floating-container / .float-btn）は common.css に集約済み（2026-11-07） */
   </style>
 </head>
 <body>
@@ -105,9 +71,9 @@
   <img class="responsive-img" src="assets/images/english-menu20260207.jpg" alt="SAKANAYA JAPON MENU">
 
   <p class="menu-note"
-     data-ja="※画像が拡大できない場合は、長押しして保存するか、LINE注文画面からご確認ください。"
-     data-en="If you cannot zoom in, please long-press to save the image, or check the menu in the LINE order screen.">
-    ※画像が拡大できない場合は、長押しして保存するか、LINE注文画面からご確認ください。
+     data-ja="※画像が拡大できない場合は、長押しして保存するか、LINE・Telegram の注文画面からご確認ください。"
+     data-en="If you cannot zoom in, please long-press to save the image, or check the menu in the LINE or Telegram order screen.">
+    ※画像が拡大できない場合は、長押しして保存するか、LINE・Telegram の注文画面からご確認ください。
   </p>
 </main>
 
@@ -127,12 +93,13 @@
   </div>
 </footer>
 
+<!-- 右下の注文ボタン（見た目は common.css）。日本語版は LINE が上、英語版は Telegram が上 -->
 <div class="floating-container">
-  <a href="https://t.me/+UZAm7-eLzD0yZTA1" data-info-href="order.telegramHome" class="float-btn btn-tele" target="_blank" rel="noopener noreferrer">
-    <span>✈</span> Order by Telegram
-  </a>
   <a href="https://miniapp.line.me/2006469733-lgZj9vJ4" data-info-href="order.lineMiniApp" class="float-btn btn-line" target="_blank" rel="noopener noreferrer">
-    <span>📲</span> Order by LINE
+    <span class="ic">📲</span><span data-ja="LINE で注文" data-en="Order by LINE">LINE で注文</span>
+  </a>
+  <a href="https://t.me/sakanaya_order_bot/menu" data-info-href="order.telegramOrderApp" class="float-btn btn-tele" target="_blank" rel="noopener noreferrer">
+    <span class="ic">✈</span><span data-ja="Telegram で注文" data-en="Order by Telegram">Telegram で注文</span>
   </a>
 </div>
 

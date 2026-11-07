@@ -277,6 +277,49 @@ p:last-child { margin-bottom: 0; }
 
 .footer-note { color: #8fa5b8; font-size: 12px; margin: 0; }
 
+/* ── 右下に追従する注文ボタン（menu / howto / faq / aboutus 共通） ──────
+   2026-11-07 に各ページの <style> からここへ集約。
+   LINE＝注文画面（LINE Mini App）／Telegram＝注文画面（@sakanaya_order_bot の Mini App）。
+   日本語版は LINE が上、英語版は Telegram が上（docs/contact-points.md §5）。
+   フッターのリンクが隠れないよう、ページ側の <footer> に .has-float を付けること。 */
+.floating-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;  /* 縦に並べる（スマホで押しやすい） */
+  gap: 10px;
+  z-index: 9999;
+}
+
+.float-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 50px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  font-size: 13px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+  min-width: 160px;
+}
+
+.float-btn:active { transform: scale(0.95); }
+.float-btn .ic { margin-right: 8px; }
+
+.float-btn.btn-line { background: #00b900; }
+.float-btn.btn-tele { background: #0088cc; }
+
+/* 英語版は Telegram を上に */
+html[lang="en"] .float-btn.btn-tele { order: -1; }
+
+@media (max-width: 768px) {
+  .float-btn { padding: 8px 15px; font-size: 12px; min-width: 140px; }
+}
+
 /* ── 言語別ブロックの表示制御 ─────────────────────────
    JS が無効でも日本語が読めるよう、既定では [data-lang="ja"] を表示する。
    common.js が html[lang] を設定すると、その言語だけが表示される。 */
