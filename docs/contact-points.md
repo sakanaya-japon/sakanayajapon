@@ -214,3 +214,50 @@ HTML に元の文字列を残しておけば、**JS が読み込めなかった�
 
 将来 #6 に寄せる場合は、`data-info-href` の値を `social.telegramChannel` → `order.lineMiniApp` に
 差し替えるだけで済みます（該当2箇所）。
+
+---
+
+## 5. 2026-11-07 個人向け Telegram の整理（注文 Bot 稼働に伴う）
+
+個人向けの Telegram 注文 Bot（`@sakanaya_order_bot`、注文画面 `t.me/sakanaya_order_bot/menu`）と
+Telegram Business 化した店アカウント（`@sakanayajapon`）が稼働したため、§2 で「4系統」と指摘していた
+個人向け Telegram を整理した。**「注文」と「相談」を分ける**のが基本方針。
+
+### 窓口（整理後）
+
+| 導線 | 注文（大きく出す） | 相談（人が返事をする） | SNS |
+|---|---|---|---|
+| 個人・日本語 | LINE 注文画面 `order.lineMiniApp`（主）／Telegram 注文画面 `order.telegramOrderApp`（副） | LINE 公式 `order.lineOfficial`／店アカウント `order.telegramShop` | Facebook |
+| 個人・英語 | Telegram 注文画面（主）／LINE 注文画面（副） | 店アカウント／LINE 公式 | Facebook |
+| 法人 | カタログ → `order.telegramBot` | `order.telegramBiz` | — |
+
+- 主・副の違いは**並び順だけ**（`html[lang]` で CSS の `order` を切り替える）。両方とも常に表示する。
+- 旧個人グループ `t.me/+UZAm7-eLzD0yZTA1`（`order.telegramHome`）は**サイトから外した**。グループは存続。
+- Telegram チャンネル `social.telegramChannel` は配信専用。注文の着地先には使わない
+  （英語版 FAQ・aboutus の CTA はチャンネル → 注文画面に差し替え）。
+- Facebook は注文窓口ではない（aboutus の「Order by Facebook」を外した）。
+
+### Telegram 側の役割分担（サイトの外側）
+
+| 場所 | 役割 |
+|---|---|
+| 店アカウント `@sakanayajapon` | 人と話す窓口。Bot の自動返信は「注文画面の入口を渡す案内係」 |
+| Bot `@sakanaya_order_bot` | 注文の受付と通知（確認・受付・出発・配達完了）。注文画面（Mini App）はここに属する |
+| チャンネル `@fishstoreJapon` | 一斉配信（毎朝のおすすめ）。投稿のボタンから注文画面へ |
+| 注文画面 `t.me/sakanaya_order_bot/menu` | すべての入口の合流点。サイト・チラシ・チャンネル・店アカウントの案内がここを指す |
+
+### 表示内容の整合（Bot と合わせた）
+
+| 項目 | サイトの値 | 根拠 |
+|---|---|---|
+| 営業時間 | 毎日 10:00〜19:30（変更なし） | Bot 側をサイトに合わせた |
+| 注文締切 `orderDeadline` | 受け取り・配送時間の1時間前まで（手巻き寿司セットは3時間前まで） | Bot の規則 |
+| 店舗 | 店頭受け取りあり。住所は `company.address`、地図 `pickup.mapUrl` | Bot の店頭受け取り |
+| 支払い | KHQR（QR コード決済）＋現金（お受け取り時） | Bot の支払い方法 |
+| 配送 | プノンペン市内。Grab の実費はお客様負担 | 従来どおり（Bot も同じ） |
+
+### 未対応・申し送り
+
+- クメール語の表示は見送り（注文画面は日・英・クメール語に対応）。
+- 注文画面（`tg/menu/index.html`）には店アカウントへの「相談する」リンクが無い。追加するなら画面の版（`APP_VERSION`）と GAS の `MINIAPP_VERSION` を上げる。
+- サイトからの流入を Orders で見分けたい場合は、注文画面のリンクに `?startapp=src_web` を付け、GAS 側で `start_param` を記録する（未実装）。

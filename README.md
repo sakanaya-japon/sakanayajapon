@@ -13,14 +13,14 @@
 
 | ファイル | 役割 |
 |---|---|
-| `index.html` | トップ。写真全面のヒーローに、ロゴ・店名・4項目のメニュー・Telegram/Facebook ボタン |
+| `index.html` | トップ。写真全面のヒーローに、ロゴ・店名・**注文ボタン2つ（LINE / Telegram）**・4項目のメニュー・相談ボタン（LINE 公式 / Telegram 店アカウント）・Facebook |
 | `business/index.html` | 法人向け入口（商品カタログ・取引の流れ・問い合わせ） |
 | `assets/css/` | `common.css`（共通）/ `business.css`（法人ページ） |
 | `assets/js/` | `site-info.js`（営業時間・窓口の情報源）/ `common.js`（日英切替） |
 | `menu.html` | メニュー画像1枚 + 注文ボタン |
 | `tg/menu/index.html` | **Telegram 注文画面（Mini App）**。@sakanaya_order_bot の `t.me/sakanaya_order_bot/menu` から開く。Telegram の外で開くと「Telegram で開く」案内だけが出る（`noindex`）。商品・価格は GAS「SAKANAYA B2C Bot」から毎回読み込むので、このファイルに価格は書かない。`API_URL` は GAS のウェブアプリ URL（デプロイを「新しいバージョン」で更新すれば変わらない） |
 | `tg/menu/khqr.jpg` | 店の KHQR（PPCBank・SAKANAYA JAPON・金額指定なし・リエル）。Telegram 注文でお客様に送る支払い用 QR。GAS のスクリプト プロパティ `PAYMENT_QR_URL` がこのファイルを指す。**差し替えるときは同じファイル名で上書き**（URL を変えないため） |
-| `howto.html` | LINE での注文方法（動画 `howtouse.mp4`） |
+| `howto.html` | ご注文方法。上に LINE / Telegram の注文ボタン、下にそれぞれの手順（LINE は動画 `howtouse.mp4` 付き）、ご注文の前に（営業時間・締切・配送・店頭受け取り・支払い）、相談窓口 |
 | `faq.html` | よくあるご質問 |
 | `q&a.html` | **旧URLからの案内ページ**（`faq.html` へ自動転送。中身はない） |
 | `aboutus.html` | 店舗情報・営業時間・アクセス |
@@ -42,6 +42,11 @@
   **案内ページは最低3か月は消さないでください**（顧客のブックマーク・外部リンクの切替期間）。
 - 営業時間・住所・電話・窓口URLは `assets/js/site-info.js` が唯一の情報源です。
   ページ側には `data-info` / `data-info-href` だけを書き、値を直接書かないでください。
+- 個人向けの窓口は**「注文」と「相談」で分けています**（2026-11-07）。
+  注文＝`order.lineMiniApp`（LINE 注文画面）/ `order.telegramOrderApp`（Telegram 注文画面）、
+  相談＝`order.lineOfficial`（LINE 公式）/ `order.telegramShop`（店アカウント @sakanayajapon）。
+  日本語版は LINE が先、英語版は Telegram が先に並びます（`html[lang]` で CSS の `order` を切り替え）。
+  旧 Telegram グループ（`order.telegramHome`）はサイトから外しました。
 
 ---
 
@@ -213,8 +218,8 @@ Phase 1 の時点では既存ページ（`menu.html` / `howto.html` / `q&a.html`
 
 | 箇所 | 現状 | 状態 |
 |---|---|---|
-| `faq.html` 英語版「How can I place an order?」 | Telegram チャンネル（`t.me/fishstoreJapon`）へ誘導 | ✅ **2026-09-23 確定: 現状維持**。日本語版=LINE / 英語版=Telegram は意図的な使い分け（`docs/contact-points.md` §4） |
-| `aboutus.html` 英語版の CTA ボタン | 同上（Telegram チャンネル） | ✅ 同上 |
+| `faq.html` 英語版「How can I place an order?」 | ~~Telegram チャンネル（`t.me/fishstoreJapon`）へ誘導~~ | ✅ **2026-11-07: Telegram 注文画面（`order.telegramOrderApp`）へ変更**。日本語版=LINE 主 / 英語版=Telegram 主の使い分けは維持（`docs/contact-points.md` §5） |
+| `aboutus.html` 英語版の CTA ボタン | 同上 | ✅ 同上 |
 | 各ページのフッターの住所 | 短縮形を直書き（5ページ） | ⬜ **要判断**。`site-info.js` の `company.address` は完全形。フッターを長くしてよいか |
 
 #### ヘッダー・フッターの統一（✅ 2026-09-14）
@@ -243,6 +248,7 @@ Phase 1 の時点では既存ページ（`menu.html` / `howto.html` / `q&a.html`
   内容が短いページでもフッターが画面下端まで下がる
 - 右下の追従ボタンがフッターのリンクに被らないよう、
   4ページのフッターには `.has-float`（下側に110pxの逃げ）を付けている
+  （追従ボタンの見た目 `.floating-container` / `.float-btn` は 2026-11-07 に `common.css` へ集約）
 - 読み込まれていない Font Awesome（`<i class="fa-brands">`）に依存していた
   Telegram アイコンを絵文字に置き換えた（アイコンが表示されていなかったため）
 
@@ -257,6 +263,25 @@ Phase 1 の時点では既存ページ（`menu.html` / `howto.html` / `q&a.html`
 - ヘッダーの実測値が4ページで一致（高さ60px / ロゴ40px丸 / 店名19px・weight800 / `position: sticky`）
 - 言語切替が日英どちらでも正しく動作（`aria-pressed`・本文の出し分け・`localStorage` への保存）
 - 内容が短いページでもフッターが画面下端に接すること
+
+### Phase 3（✅ 2026-11-07）注文導線の整理 — Telegram 注文画面を追加
+
+個人向けの Telegram 注文 Bot（`@sakanaya_order_bot`、注文画面 `t.me/sakanaya_order_bot/menu`）が稼働したのに合わせ、
+サイトの注文導線を整理しました。決定の経緯は `docs/contact-points.md` §5。
+
+| 論点 | 決定 |
+|---|---|
+| Telegram の着地先 | 「注文」＝注文画面（Mini App 直リンク）、「相談」＝店アカウント `@sakanayajapon`。旧個人グループはサイトから外す |
+| 日本語版の主窓口 | LINE のまま（Telegram は副）。英語版は Telegram が主（チャンネルから注文画面へ差し替え） |
+| `howto.html` | LINE 動画のみ → 上に2つの注文ボタン、下に LINE / Telegram それぞれの手順 |
+| 営業時間 | サイトの値（毎日 10:00〜19:30）を正とし、Bot 側を合わせた |
+| 注文締切・店舗・支払い | Bot に合わせた：締切＝受け取りの1時間前（手巻き寿司セットは3時間前）／店頭受け取りあり（地図 `pickup.mapUrl`）／KHQR＋現金 |
+| クメール語 | 今回は対応しない（注文画面は3言語対応） |
+
+変更したファイル：`assets/js/site-info.js`（キー追加・`orderDeadline` 更新・`telegramHome` 削除）、
+`assets/css/common.css`（追従ボタンを集約）、`index.html`、`howto.html`（作り替え）、
+`menu.html` / `faq.html` / `aboutus.html`（注文・相談の窓口、締切・店舗・支払いの記述、追従ボタン）。
+`business/`・`tg/menu/` は変更なし。
 
 ### 着手前に確定が必要な事項
 

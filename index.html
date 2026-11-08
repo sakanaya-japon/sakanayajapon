@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SAKANAYA JAPON｜海のある日常を、カンボジアの食卓に。</title>
   <link rel="icon" href="assets/images/logo.jpg">
-  <meta name="description" content="カンボジア・プノンペンの魚屋 SAKANAYA JAPON。日本の鮮度管理で、刺身・鮮魚・お惣菜をご家庭へ。LINE・Telegram・Facebook Messenger で注文できます。">
+  <meta name="description" content="カンボジア・プノンペンの魚屋 SAKANAYA JAPON。日本の鮮度管理で、刺身・鮮魚・お惣菜をご家庭へ。LINE・Telegram の注文画面からご注文いただけます。">
   <!-- OGP（FacebookやLINE等でシェアした際のプレビュー用）
        ※ 2026-09 の Organization 移管に合わせて差し替え済み（docs/github-inventory.md §3） -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="SAKANAYA JAPON｜海のある日常を、カンボジアの食卓に。">
-  <meta property="og:description" content="プノンペンの魚屋。日本の鮮度管理で刺身・鮮魚・お惣菜をお届け。LINE・Telegram・Facebook Messenger で注文OK。">
+  <meta property="og:description" content="プノンペンの魚屋。日本の鮮度管理で刺身・鮮魚・お惣菜をお届け。LINE・Telegram で注文OK。">
   <meta property="og:image" content="https://sakanaya-japon.github.io/sakanayajapon/assets/images/fish-photo.jpg">
   <meta property="og:url" content="https://sakanaya-japon.github.io/sakanayajapon/">
   <meta name="twitter:card" content="summary_large_image">
@@ -25,6 +25,7 @@
       --navy-deep: #12324f;
       --ink: #1c2430;
       --tg: #2a9bd6;          /* Telegram */
+      --line: #00b900;        /* LINE（common.css の .btn-line と同じ値） */
       --fb: #1877f2;          /* Facebook */
       --header-h: 60px;
     }
@@ -173,7 +174,7 @@
       font-size: 24px;
       font-weight: 700;
       line-height: 1.45;
-      margin: 0 0 40px;
+      margin: 0 0 30px;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55), 0 0 20px rgba(0, 0, 0, 0.35);
     }
     .tagline small {
@@ -183,6 +184,47 @@
       font-weight: 600;
       opacity: 0.95;
     }
+
+    /* ── 2.5 注文ボタン（2026-11-07 新設）：LINE / Telegram の注文画面を直接開く ──
+       日本語版は LINE が先、英語版は Telegram が先（html[lang] で並び順を切り替える）。
+       着地先は site-info.js の order.lineMiniApp / order.telegramOrderApp。 */
+    .order-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 640px;
+      margin: 0 auto 34px;
+    }
+    .order-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 18px;
+      color: #fff;
+      text-decoration: none;
+      text-align: left;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s, filter 0.2s;
+    }
+    .order-btn:hover { transform: translateY(-3px); filter: brightness(1.06); }
+    .order-btn:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
+    .order-btn.line { background: var(--line); }
+    .order-btn.telegram { background: var(--tg); }
+    .order-btn .ic {
+      flex: 0 0 auto;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .order-btn .ic svg { width: 26px; height: 26px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .order-btn .t { display: block; font-size: 21px; font-weight: 800; line-height: 1.2; }
+    .order-btn .s { display: block; font-size: 13px; font-weight: 500; margin-top: 3px; opacity: 0.95; }
+    html[lang="en"] .order-btn.telegram { order: -1; }   /* 英語版は Telegram を先に */
 
     /* ── 3. メニュー：白い丸アイコン＋白文字、2列×2行 ── */
     .menu {
@@ -222,35 +264,39 @@
     .item .t { display: block; font-size: 24px; font-weight: 800; line-height: 1.2; text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6); }
     .item .s { display: block; font-size: 14px; font-weight: 500; margin-top: 3px; opacity: 0.95; text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6); }
 
-    /* ── 4. 下段ピル：Telegram / Facebook ── */
+    /* ── 4. 下段ピル：相談（LINE 公式 / Telegram 店アカウント）＋ Facebook ──
+       注文ボタンより一段控えめにする（半透明の白縁）。英語版は Telegram を先に。 */
     .pills {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
-      max-width: 660px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 760px;
       margin: 0 auto;
     }
     .pill {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      min-height: 60px;
-      padding: 12px 22px;
+      gap: 10px;
+      min-height: 50px;
+      padding: 10px 16px;
       border-radius: 999px;
       color: #fff;
       text-decoration: none;
-      font-weight: 800;
-      font-size: 20px;
+      font-weight: 700;
+      font-size: 16px;
       line-height: 1.2;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      transition: transform 0.2s, filter 0.2s;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1.5px solid rgba(255, 255, 255, 0.55);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s, background 0.2s;
     }
-    .pill:hover { transform: translateY(-3px); filter: brightness(1.08); }
+    .pill:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.22); }
     .pill:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
-    .pill svg { width: 28px; height: 28px; flex: 0 0 auto; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .pill.telegram { background: var(--tg); }
-    .pill.facebook-like { background: var(--fb); }
+    .pill svg { width: 22px; height: 22px; flex: 0 0 auto; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .pill.facebook-like { background: var(--fb); border-color: var(--fb); }
+    .pill.facebook-like:hover { background: #2f86f5; }
+    html[lang="en"] .pill.telegram { order: -1; }       /* 英語版は Telegram を先に */
 
     /* ── 5. 言語別ブロック（common.js が html[lang] を切り替える。JS無効時は日本語） ── */
     [data-lang] { display: none; }
@@ -268,17 +314,21 @@
       .hero { padding: 28px 16px 36px; }
       .hero-logo { width: 92px; height: 92px; margin-bottom: 12px; }
       .site-title { font-size: 34px; }
-      .tagline { font-size: 18px; margin-bottom: 28px; }
+      .tagline { font-size: 18px; margin-bottom: 22px; }
       .tagline small { font-size: 14.5px; }
+      .order-buttons { grid-template-columns: 1fr; gap: 10px; margin-bottom: 26px; }
+      .order-btn { padding: 12px 16px; border-radius: 16px; }
+      .order-btn .ic { width: 42px; height: 42px; }
+      .order-btn .t { font-size: 18px; }
+      .order-btn .s { font-size: 12.5px; }
       .menu { gap: 18px 12px; margin-bottom: 26px; }
       .item { flex-direction: column; text-align: center; gap: 10px; }
       .item .circle { width: 60px; height: 60px; }
       .item .circle svg { width: 30px; height: 30px; }
       .item .t { font-size: 19px; }
       .item .s { font-size: 12.5px; }
-      .pills { grid-template-columns: 1fr; gap: 12px; }
-      .pill { font-size: 17px; min-height: 54px; }
-      .pill svg { width: 24px; height: 24px; }
+      .pills { grid-template-columns: 1fr; gap: 10px; }
+      .pill { font-size: 15px; min-height: 46px; }
     }
     @media (max-width: 380px) {
       .biz-link { display: none; }  /* 極小画面ではヘッダーに入らないため非表示 */
@@ -318,6 +368,25 @@
       <p class="tagline" data-lang="ja">海のある日常を、カンボジアの食卓に。<small>日本の鮮度管理で、刺身・鮮魚・お惣菜をご家庭へ</small></p>
       <p class="tagline" data-lang="en">A Taste of the Sea, For Every Cambodian Home<small>Fresh seafood from Japan, in Phnom Penh</small></p>
 
+      <!-- 注文ボタン：LINE / Telegram の注文画面が直接開く。
+           HTML の順は日本語版（LINE が先）。英語版は CSS で Telegram が先になる。 -->
+      <div class="order-buttons">
+        <a class="order-btn line" href="https://miniapp.line.me/2006469733-lgZj9vJ4" data-info-href="order.lineMiniApp">
+          <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+          <span>
+            <span class="t" data-ja="LINE で注文" data-en="Order on LINE">LINE で注文</span>
+            <span class="s" data-ja="注文画面を開く（動画ガイドあり）" data-en="Order screen · video guide">注文画面を開く（動画ガイドあり）</span>
+          </span>
+        </a>
+        <a class="order-btn telegram" href="https://t.me/sakanaya_order_bot/menu" data-info-href="order.telegramOrderApp">
+          <span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>
+          <span>
+            <span class="t" data-ja="Telegram で注文" data-en="Order on Telegram">Telegram で注文</span>
+            <span class="s" data-ja="注文画面を開く（今日のおすすめから）" data-en="Order screen · today's picks">注文画面を開く（今日のおすすめから）</span>
+          </span>
+        </a>
+      </div>
+
       <nav class="menu">
         <a class="item" href="menu.html">
           <span class="circle"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
@@ -330,7 +399,7 @@
           <span class="circle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg></span>
           <span>
             <span class="t" data-ja="ご注文方法" data-en="How to Order">ご注文方法</span>
-            <span class="s" data-ja="LINE でのご注文（動画ガイド）" data-en="Via LINE (video guide)">LINE でのご注文（動画ガイド）</span>
+            <span class="s" data-ja="LINE・Telegram の注文手順" data-en="LINE &amp; Telegram, step by step">LINE・Telegram の注文手順</span>
           </span>
         </a>
         <a class="item" href="faq.html">
@@ -349,10 +418,16 @@
         </a>
       </nav>
 
+      <!-- 相談窓口（人が返事をする）：LINE 公式アカウント / Telegram 店アカウント @sakanayajapon。
+           旧 Telegram グループ（order.telegramHome）は 2026-11-07 に外した。 -->
       <div class="pills">
-        <a href="https://t.me/+UZAm7-eLzD0yZTA1" class="pill telegram" data-info-href="order.telegramHome">
+        <a href="https://line.me/R/ti/p/@sakanayajapan" class="pill line-like" data-info-href="order.lineOfficial">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span data-ja="LINE で相談する" data-en="Ask us on LINE">LINE で相談する</span>
+        </a>
+        <a href="https://t.me/sakanayajapon" class="pill telegram" data-info-href="order.telegramShop">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-          <span data-ja="Telegram でチャット" data-en="Chat with us directly.">Telegram でチャット</span>
+          <span data-ja="Telegram で相談する" data-en="Chat with us on Telegram">Telegram で相談する</span>
         </a>
         <a href="https://www.facebook.com/fishstorejapan" class="pill facebook-like" data-info-href="social.facebook">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
