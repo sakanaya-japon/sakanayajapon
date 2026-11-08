@@ -154,13 +154,22 @@
   // GAS のウェブアプリ URL（デプロイ後に差し替える）
   var API_URL = window.TGB_API_URL || 'https://script.google.com/macros/s/AKfycbxQ5XQIdVgGYteb5fXKgEObboVsGomrDpepqSr7oYz96y-YZRw7jYwLZUpd5zEI1K0J/exec';
   var BOT_LINK = 'https://t.me/sakanaya_order_bot/menu';
-  var APP_VERSION = 9; // GAS の MINIAPP_VERSION がこれより大きいと、開いたときに1回だけ読み直す（Telegram の中の古い画面対策）
+  var APP_VERSION = 10; // GAS の MINIAPP_VERSION がこれより大きいと、開いたときに1回だけ読み直す（Telegram の中の古い画面対策）
   var TZ = 'Asia/Phnom_Penh';
 
   var tg = (window.Telegram && window.Telegram.WebApp) || null;
   var initData = tg && tg.initData ? tg.initData : '';
   var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || null;
   var uid = tgUser ? String(tgUser.id) : 'guest';
+  /* Bot が送る「カートを開く」リンク：startapp=c_AO100-3_AC986O-2（店アカウント・チャンネル）か ?cart=AO100-3（Bot との個別チャット） */
+  var CART_PARAM = (function () {
+    var p = '';
+    try { p = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || ''; } catch (e) {}
+    var m = /^c_([A-Za-z0-9_-]{1,400})$/.exec(p);
+    if (m) return m[1];
+    try { var q = new URLSearchParams(location.search).get('cart'); if (q && /^[A-Za-z0-9_-]{1,400}$/.test(q)) return q; } catch (e) {}
+    return '';
+  })();
 
   /* ===================== 文言 ===================== */
   var L = {
@@ -421,6 +430,22 @@
     return g;
   }
   function subtotal() { return cartLines().reduce(function (s, l) { return s + l.amount; }, 0); }
+  /* リンクの品をカートに入れる（数はリンクの数に置き換え）。売り切れ・知らないコードは無視。内容を選ぶ品は商品の画面を開く */
+  function applyCartParam(p) {
+    var res = { added: 0, needOpt: '' };
+    p.split('_').slice(0, 10).forEach(function (part) {
+      var mm = /^([A-Za-z0-9]{2,12})-(\d{1,2})$/.exec(part);
+      if (!mm) return;
+      var it = item(mm[1]) || item(mm[1].toUpperCase());
+      if (!it || it.soldOut) return;
+      if (hasOpts(it)) { if (!res.needOpt) res.needOpt = it.code; return; }
+      var q = Math.max(1, Math.min(50, Number(mm[2]) || 1));
+      if (it.stock !== null && it.stock !== undefined) q = Math.min(q, Math.max(0, it.stock));
+      if (q > 0) { S.cart[it.code] = q; res.added++; }
+    });
+    store('cart', { cart: S.cart, ts: Date.now() });
+    return res;
+  }
   function setQty(key, q) {
     var code = codeOf(key), it = item(code);
     if (!it || it.soldOut) return;
@@ -955,7 +980,7 @@
       if (want > APP_VERSION) {
         var flag = 'tgb_reload_' + want, tried = false;
         try { tried = sessionStorage.getItem(flag) === '1'; sessionStorage.setItem(flag, '1'); } catch (e) { tried = true; }
-        if (!tried) { location.replace(location.pathname + '?v=' + want + location.hash); return; }
+        if (!tried) { location.replace(location.pathname + '?v=' + want + (CART_PARAM && !/^c_/.test((tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || '') ? '&cart=' + CART_PARAM : '') + location.hash); return; }
       }
       S.data = r; S.bootAt = Date.now();
       var savedLang = load('lang'); S.lang = savedLang || r.lang || S.lang;
@@ -965,8 +990,11 @@
         Object.keys(saved.cart).forEach(function (k) { if (validKey(k) && saved.cart[k] > 0) S.cart[k] = Math.min(saved.cart[k], 50); });
       }
       S.screen = 'menu';
+      var cp = CART_PARAM ? applyCartParam(CART_PARAM) : null;
+      if (cp && cp.needOpt) S.overlay = 'item:' + cp.needOpt; // 内容を選んでからカートへ
+      else if (cp && cp.added) S.screen = 'cart';             // リンクの品が入ったカートをすぐ見せる
       var p = r.menu.picks[0];
-      if (r.config.splash && p && item(p.code) && !item(p.code).soldOut && load('splash') !== todayKey()) S.overlay = 'splash';
+      if (!cp && r.config.splash && p && item(p.code) && !item(p.code).soldOut && load('splash') !== todayKey()) S.overlay = 'splash';
       render();
     }, function () { S.screen = 'error'; S.error = te('network'); render(); });
   }
