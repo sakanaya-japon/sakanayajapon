@@ -154,14 +154,15 @@
   // GAS のウェブアプリ URL（デプロイ後に差し替える）
   var API_URL = window.TGB_API_URL || 'https://script.google.com/macros/s/AKfycbxQ5XQIdVgGYteb5fXKgEObboVsGomrDpepqSr7oYz96y-YZRw7jYwLZUpd5zEI1K0J/exec';
   var BOT_LINK = 'https://t.me/sakanaya_order_bot/menu';
-  var APP_VERSION = 10; // GAS の MINIAPP_VERSION がこれより大きいと、開いたときに1回だけ読み直す（Telegram の中の古い画面対策）
+  var APP_VERSION = 11; // GAS の MINIAPP_VERSION がこれより大きいと、開いたときに1回だけ読み直す（Telegram の中の古い画面対策）
   var TZ = 'Asia/Phnom_Penh';
 
   var tg = (window.Telegram && window.Telegram.WebApp) || null;
   var initData = tg && tg.initData ? tg.initData : '';
   var tgUser = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || null;
   var uid = tgUser ? String(tgUser.id) : 'guest';
-  /* Bot が送る「カートを開く」リンク：startapp=c_AO100-3_AC986O-2（店アカウント・チャンネル）か ?cart=AO100-3（Bot との個別チャット） */
+  /* Bot が送る「カートを開く」リンク：startapp=c_AO100-3_AC986O-2（店アカウント・チャンネル）か ?cart=AO100-3（Bot との個別チャット）。
+     AO115-2-2 の3つ目の数＝選んだ内容の順番（v11〜。Bot が「5種盛り・3種盛りのどちら？」と聞いた答え） */
   var CART_PARAM = (function () {
     var p = '';
     try { p = (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) || ''; } catch (e) {}
@@ -383,6 +384,8 @@
   function codeOf(k) { var i = k.indexOf(SEP); return i < 0 ? k : k.slice(0, i); }
   function optOf(k) { var i = k.indexOf(SEP); return i < 0 ? '' : k.slice(i + 1); }
   function hasOpts(it) { return !!(it && it.options && it.options.length); }
+  /* 内容の表示名（日本語は「5 kinds」→「5種盛り」）。カート・注文に入るのは元の文字のまま */
+  function optLabel(o) { var m = /^(\d+)\s*kinds?$/i.exec(String(o || '')); return m && S.lang === 'ja' ? m[1] + '種盛り' : String(o || ''); }
   function codeQty(code) { var n = 0; Object.keys(S.cart).forEach(function (k) { if (codeOf(k) === code) n += S.cart[k]; }); return n; }
   function validKey(k) {
     var it = item(codeOf(k)); if (!it || it.soldOut) return false;
@@ -434,14 +437,21 @@
   function applyCartParam(p) {
     var res = { added: 0, needOpt: '' };
     p.split('_').slice(0, 10).forEach(function (part) {
-      var mm = /^([A-Za-z0-9]{2,12})-(\d{1,2})$/.exec(part);
+      var mm = /^([A-Za-z0-9]{2,12})-(\d{1,2})(?:-([1-9]))?$/.exec(part);
       if (!mm) return;
       var it = item(mm[1]) || item(mm[1].toUpperCase());
       if (!it || it.soldOut) return;
-      if (hasOpts(it)) { if (!res.needOpt) res.needOpt = it.code; return; }
+      var key = it.code;
+      if (hasOpts(it)) {
+        var opt = mm[3] ? it.options[Number(mm[3]) - 1] : '';
+        if (!opt) { if (!res.needOpt) res.needOpt = it.code; return; } // 内容が無い・番号が合わない → 商品の画面で選ぶ
+        key = keyOf(it.code, opt);
+      }
       var q = Math.max(1, Math.min(50, Number(mm[2]) || 1));
-      if (it.stock !== null && it.stock !== undefined) q = Math.min(q, Math.max(0, it.stock));
-      if (q > 0) { S.cart[it.code] = q; res.added++; }
+      var others = codeQty(it.code) - (S.cart[key] || 0); // 同じ品の別の内容も在庫に数える
+      q = Math.min(q, 50 - others);
+      if (it.stock !== null && it.stock !== undefined) q = Math.min(q, Math.max(0, it.stock - others));
+      if (q > 0) { S.cart[key] = q; res.added++; }
     });
     store('cart', { cart: S.cart, ts: Date.now() });
     return res;
@@ -646,7 +656,7 @@
       h('div', { class: 'seg' }, it.options.map(function (o) {
         var q = S.cart[keyOf(it.code, o)] || 0;
         return h('button', { type: 'button', role: 'radio', 'aria-checked': o === sel ? 'true' : 'false', 'aria-pressed': o === sel ? 'true' : 'false',
-          onclick: function () { S.optSel[it.code] = o; render(); } }, o + (q ? '（' + q + '）' : ''));
+          onclick: function () { S.optSel[it.code] = o; render(); } }, optLabel(o) + (q ? '（' + q + '）' : ''));
       })));
   }
 
@@ -672,7 +682,7 @@
           h('span', { class: 'note' }, [it.cat, it.unit].filter(Boolean).join(' · ')),
           (p.comment || ds(it)) ? h('p', { style: 'margin:0' }, p.comment || ds(it)) : null,
           h('div', { class: 'prow' }, h('span', { style: 'font-size:22px' }, priceEl(it.price)),
-            hasOpts(it) ? h('span', { class: 'note' }, it.options.join(' / ')) :
+            hasOpts(it) ? h('span', { class: 'note' }, it.options.map(optLabel).join(' / ')) :
             h('div', { class: 'step' }, h('button', { type: 'button', 'aria-label': '−', onclick: function () { upd(-1); } }, '−'), qtySpan, h('button', { type: 'button', 'aria-label': '+', onclick: function () { upd(1); } }, '+')))),
         h('div', { class: 'acts' }, addBtn,
           h('button', { type: 'button', class: 'big ghost', onclick: close }, t('seeMenu')),
@@ -726,7 +736,7 @@
     }
     lines.forEach(function (l) {
       page.appendChild(h('div', { class: 'line' },
-        h('div', { class: 'lm' }, h('b', null, nm(l.it)), l.opt ? h('small', null, '▸ ' + l.opt) : null, h('small', null, khr(l.it.price) + (l.it.unit ? ' · ' + l.it.unit : ''))),
+        h('div', { class: 'lm' }, h('b', null, nm(l.it)), h('small', null, (l.opt ? '▸ ' + optLabel(l.opt) + ' · ' : '') + khr(l.it.price) + (l.it.unit ? ' · ' + l.it.unit : ''))),
         qtyControl(l.key, true),
         h('span', { class: 'amt' }, khr(l.amount))));
     });
