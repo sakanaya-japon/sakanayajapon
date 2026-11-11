@@ -154,7 +154,7 @@
   // GAS のウェブアプリ URL（デプロイ後に差し替える）
   var API_URL = window.TGB_API_URL || 'https://script.google.com/macros/s/AKfycbxQ5XQIdVgGYteb5fXKgEObboVsGomrDpepqSr7oYz96y-YZRw7jYwLZUpd5zEI1K0J/exec';
   var BOT_LINK = 'https://t.me/sakanaya_order_bot/menu';
-  var APP_VERSION = 11; // GAS の MINIAPP_VERSION がこれより大きいと、開いたときに1回だけ読み直す（Telegram の中の古い画面対策）
+  var APP_VERSION = 12; // GAS の MINIAPP_VERSION がこれより大きいと、開いたときに1回だけ読み直す（Telegram の中の古い画面対策）
   var TZ = 'Asia/Phnom_Penh';
 
   var tg = (window.Telegram && window.Telegram.WebApp) || null;
@@ -201,6 +201,7 @@
       allergyErr: 'Please tell us if you have any food allergies.', allergyTextErr: 'Please write your allergies.',
       choose: 'Choose', chooseOpt: 'Choose one', openMap: 'Open in Google Maps', pickupAt: 'Pick up at',
       orderAhead: function (h) { return 'Order ' + h + 'h ahead'; },
+      minQ: function (n) { return 'Min. ' + n; },
       leadNote: function (names, h) { return names + ': please order at least ' + h + ' hours before you receive it. Earlier times are not shown.'; },
       err: {
         network: "We couldn't reach the shop. Check your connection and tap “Place order” again. You won't be charged twice.",
@@ -213,6 +214,7 @@
         slot: 'That time is no longer available. Please choose another time.',
         item_unavailable: 'Some items just sold out and were removed from your cart:',
         min_order: 'Your order is below the minimum.',
+        min_qty: 'Some items have a minimum quantity:',
         rate_limit: 'Too many orders in a short time. Please message us.',
         allergy: 'Please tell us if you have any food allergies.',
         server: 'Something went wrong on our side. Please try again in a moment.'
@@ -245,6 +247,7 @@
       allergyErr: 'សូមប្រាប់យើងថាតើអ្នកមានអាឡែកហ្ស៊ីចំណីអាហារឬទេ។', allergyTextErr: 'សូមសរសេរអាឡែកហ្ស៊ីរបស់អ្នក។',
       choose: 'ជ្រើសរើស', chooseOpt: 'ជ្រើសរើសមួយ', openMap: 'បើកក្នុង Google Maps', pickupAt: 'មកយកនៅ',
       orderAhead: function (h) { return 'បញ្ជាទិញមុន ' + h + ' ម៉ោង'; },
+      minQ: function (n) { return 'យ៉ាងតិច ' + n; },
       leadNote: function (names, h) { return names + '៖ សូមបញ្ជាទិញយ៉ាងហោចណាស់ ' + h + ' ម៉ោងមុនពេលទទួល។'; },
       err: {
         network: 'មិនអាចភ្ជាប់ទៅហាងបានទេ។ សូមពិនិត្យអ៊ីនធឺណិត ហើយចុច “បញ្ជាទិញ” ម្តងទៀត។ អ្នកនឹងមិនត្រូវគិតប្រាក់ពីរដងទេ។',
@@ -257,6 +260,7 @@
         slot: 'ម៉ោងនោះមិនទំនេរទៀតទេ។ សូមជ្រើសម៉ោងផ្សេង។',
         item_unavailable: 'ទំនិញខ្លះទើបអស់ស្តុក ហើយត្រូវបានដកចេញពីកន្ត្រក៖',
         min_order: 'ការបញ្ជាទិញរបស់អ្នកតិចជាងអប្បបរមា។',
+        min_qty: 'ទំនិញខ្លះមានចំនួនអប្បបរមា៖',
         rate_limit: 'ការបញ្ជាទិញច្រើនពេកក្នុងរយៈពេលខ្លី។ សូមផ្ញើសារមកយើង។',
         allergy: 'សូមប្រាប់យើងថាតើអ្នកមានអាឡែកហ្ស៊ីចំណីអាហារឬទេ។',
         server: 'មានបញ្ហានៅខាងយើង។ សូមព្យាយាមម្តងទៀតបន្តិចទៀត។'
@@ -289,6 +293,7 @@
       allergyErr: 'アレルギーの有無を選んでください。', allergyTextErr: 'アレルギーの内容を書いてください。',
       choose: '選ぶ', chooseOpt: 'お選びください', openMap: 'Google マップで開く', pickupAt: '受け取り場所',
       orderAhead: function (h) { return h + '時間前までに注文'; },
+      minQ: function (n) { return n + 'つから'; },
       leadNote: function (names, h) { return names + ' は受け取りの ' + h + ' 時間前までのご注文が必要です（それより早い時間は出していません）。'; },
       err: {
         network: 'お店につながりませんでした。通信状態を確認して、もう一度「注文を確定する」を押してください。二重に注文されることはありません。',
@@ -301,6 +306,7 @@
         slot: 'その時間帯は選べなくなりました。別の時間帯を選んでください。',
         item_unavailable: '売り切れた商品があり、カートから外しました：',
         min_order: '最低注文金額に届いていません。',
+        min_qty: '最低の数が決まっている商品があります：',
         rate_limit: '短い時間に注文が多すぎます。メッセージでご連絡ください。',
         allergy: 'アレルギーの有無を選んでください。',
         server: 'お店側で問題が起きました。少し待ってからもう一度お試しください。'
@@ -384,6 +390,16 @@
   function codeOf(k) { var i = k.indexOf(SEP); return i < 0 ? k : k.slice(0, i); }
   function optOf(k) { var i = k.indexOf(SEP); return i < 0 ? '' : k.slice(i + 1); }
   function hasOpts(it) { return !!(it && it.options && it.options.length); }
+  /* 最低の数（TGB_MENU の Min qty。例 おまかせは2つから）。内容が選べる品は内容の合計で数える */
+  function minOf(it) { return Math.max(1, Math.min(50, Math.floor(Number(it && it.min) || 1))); }
+  function minTag(it) { var m = minOf(it); return m > 1 ? h('span', { class: 'ahead' }, t('minQ')(m)) : null; }
+  function belowMin() { // 最低の数に届いていない品
+    var seen = {};
+    return Object.keys(S.cart).map(codeOf).filter(function (c) {
+      if (seen[c]) return false; seen[c] = 1;
+      var it = item(c); return it && codeQty(c) > 0 && codeQty(c) < minOf(it);
+    }).map(item);
+  }
   /* 内容の表示名（日本語は「5 kinds」→「5種盛り」）。カート・注文に入るのは元の文字のまま */
   function optLabel(o) { var m = /^(\d+)\s*kinds?$/i.exec(String(o || '')); return m && S.lang === 'ja' ? m[1] + '種盛り' : String(o || ''); }
   function codeQty(code) { var n = 0; Object.keys(S.cart).forEach(function (k) { if (codeOf(k) === code) n += S.cart[k]; }); return n; }
@@ -449,9 +465,10 @@
       }
       var q = Math.max(1, Math.min(50, Number(mm[2]) || 1));
       var others = codeQty(it.code) - (S.cart[key] || 0); // 同じ品の別の内容も在庫に数える
+      q = Math.max(q, minOf(it) - others);                  // 最低の数まで増やす
       q = Math.min(q, 50 - others);
       if (it.stock !== null && it.stock !== undefined) q = Math.min(q, Math.max(0, it.stock - others));
-      if (q > 0) { S.cart[key] = q; res.added++; }
+      if (q > 0 && others + q >= minOf(it)) { S.cart[key] = q; res.added++; }
     });
     store('cart', { cart: S.cart, ts: Date.now() });
     return res;
@@ -460,9 +477,12 @@
     var code = codeOf(key), it = item(code);
     if (!it || it.soldOut) return;
     if (hasOpts(it) && !optOf(key)) { openItem(code); return; } // 内容を選んでから
-    var others = codeQty(code) - (S.cart[key] || 0);
+    var cur = S.cart[key] || 0, others = codeQty(code) - cur, min = minOf(it);
+    // 最低の数（例 2つから）：増やすときは最低の数まで、減らして下回るときはカートから外す
+    if (q > 0 && others + q < min) q = q > cur ? min - others : 0;
     q = Math.max(0, Math.min(50 - others, q));
     if (it.stock !== null && it.stock !== undefined) q = Math.min(q, Math.max(0, it.stock - others));
+    if (q > 0 && others + q < min) q = 0; // 在庫が最低の数に足りない
     if (q) S.cart[key] = q; else delete S.cart[key];
     store('cart', { cart: S.cart, ts: Date.now() });
     try { tg && tg.HapticFeedback && tg.HapticFeedback.selectionChanged(); } catch (e) {}
@@ -602,7 +622,7 @@
       h('div', { class: 'rmain' },
         h('div', { class: 'rtitle' }, h('b', null, nm(it)), chips),
         h('span', { class: 'note' }, khr(it.price), ' ', h('span', { class: 'usd' }, usd(it.price)), it.unit ? ' · ' + it.unit : ''),
-        aheadTag(it),
+        aheadTag(it), minTag(it),
         ds(it) ? h('span', { class: 'pnote' }, ds(it)) : null),
       qtyControl(it.code, true));
   }
@@ -634,7 +654,7 @@
           h('div', { class: 'rtitle' }, (it.badges || []).map(function (b) { return chipFor(it, b); })),
           it.comment ? h('p', null, it.comment) : null,
           ds(it) ? h('p', { class: 'note' }, ds(it)) : null,
-          aheadTag(it),
+          aheadTag(it), minTag(it),
           hasOpts(it) ? optPicker(it) : null,
           h('div', { class: 'prow', style: 'padding-top:12px' }, h('span', null, priceEl(it.price), it.unit ? h('span', { class: 'usd' }, ' · ' + it.unit) : null),
             qtyControl(hasOpts(it) ? keyOf(it.code, curOpt(it)) : it.code, false)))));
@@ -668,18 +688,19 @@
     ph.appendChild(h('span', { class: 'tag' }, t('todayB') + ' · ' + dateLabel(S.data.now.slice(0, 10))));
     if (it.stock !== null && it.stock !== undefined && it.stock > 0 && it.stock <= 20) ph.appendChild(h('span', { class: 'tag2' }, t('onlyLeft')(it.stock)));
     var x = h('button', { type: 'button', class: 'close', 'aria-label': 'Close', onclick: close }); x.innerHTML = ICON_X;
+    if (S.splashQty < minOf(it)) S.splashQty = minOf(it);
     var qtySpan = h('span', null, String(S.splashQty));
     var addBtn = h('button', { type: 'button', class: 'big', onclick: function () {
       if (hasOpts(it)) { store('splash', todayKey()); S.splashQty = 1; openItem(it.code); return; }
       setQty(it.code, (S.cart[it.code] || 0) + S.splashQty); S.splashQty = 1; close();
     } }, hasOpts(it) ? t('choose') + ' · ' + khr(it.price) : t('addToCart') + ' · ' + khr(it.price * S.splashQty));
-    var upd = function (d) { if (hasOpts(it)) return; S.splashQty = Math.max(1, Math.min(it.stock || 20, S.splashQty + d)); qtySpan.textContent = String(S.splashQty); addBtn.textContent = t('addToCart') + ' · ' + khr(it.price * S.splashQty); };
+    var upd = function (d) { if (hasOpts(it)) return; S.splashQty = Math.max(minOf(it), Math.min(it.stock || 20, S.splashQty + d)); qtySpan.textContent = String(S.splashQty); addBtn.textContent = t('addToCart') + ' · ' + khr(it.price * S.splashQty); };
     return h('div', { class: 'splash', role: 'dialog', 'aria-label': t('todayB') },
       h('div', { class: 'inner' },
         h('div', { style: 'position:relative' }, ph, x),
         h('div', { class: 'body' },
           h('h1', null, nm(it)),
-          h('span', { class: 'note' }, [it.cat, it.unit].filter(Boolean).join(' · ')),
+          h('span', { class: 'note' }, [it.cat, it.unit, minOf(it) > 1 ? t('minQ')(minOf(it)) : ''].filter(Boolean).join(' · ')),
           (p.comment || ds(it)) ? h('p', { style: 'margin:0' }, p.comment || ds(it)) : null,
           h('div', { class: 'prow' }, h('span', { style: 'font-size:22px' }, priceEl(it.price)),
             hasOpts(it) ? h('span', { class: 'note' }, it.options.map(optLabel).join(' / ')) :
@@ -736,7 +757,7 @@
     }
     lines.forEach(function (l) {
       page.appendChild(h('div', { class: 'line' },
-        h('div', { class: 'lm' }, h('b', null, nm(l.it)), h('small', null, (l.opt ? '▸ ' + optLabel(l.opt) + ' · ' : '') + khr(l.it.price) + (l.it.unit ? ' · ' + l.it.unit : ''))),
+        h('div', { class: 'lm' }, h('b', null, nm(l.it)), h('small', null, (l.opt ? '▸ ' + optLabel(l.opt) + ' · ' : '') + khr(l.it.price) + (l.it.unit ? ' · ' + l.it.unit : '') + (minOf(l.it) > 1 ? ' · ' + t('minQ')(minOf(l.it)) : ''))),
         qtyControl(l.key, true),
         h('span', { class: 'amt' }, khr(l.amount))));
     });
@@ -747,7 +768,9 @@
     page.appendChild(totalsBox(false));
     var min = S.data.config.minOrder || 0;
     if (min > 0 && subtotal() < min) page.appendChild(h('div', { class: 'alert' }, t('minOrder') + ': ' + khr(min)));
-    page.appendChild(h('button', { type: 'button', class: 'big', disabled: !S.data.orderActive || (min > 0 && subtotal() < min), onclick: function () {
+    var low = belowMin();
+    if (low.length) page.appendChild(h('div', { class: 'alert' }, te('min_qty') + ' ' + low.map(function (it) { return nm(it) + '（' + t('minQ')(minOf(it)) + '）'; }).join(', ')));
+    page.appendChild(h('button', { type: 'button', class: 'big', disabled: !S.data.orderActive || (min > 0 && subtotal() < min) || low.length > 0, onclick: function () {
       prefill(); S.screen = 'checkout'; S.alert = ''; S.errors = {}; render(); window.scrollTo(0, 0);
     } }, t('checkout')));
     page.appendChild(h('div', { style: 'height:8px' }));
@@ -900,6 +923,10 @@
       S.errors[code] = te(code); S.alert = '';
     } else if (code === 'min_order') {
       S.alert = te('min_order') + (r.detail ? ' (' + khr(r.detail) + ')' : '');
+    } else if (code === 'min_qty' && Array.isArray(r.detail)) {
+      r.detail.forEach(function (d) { var it = item(d.code); if (it) it.min = d.min; }); // 画面の最低の数を店の設定に合わせる
+      S.alert = te('min_qty') + ' ' + r.detail.map(function (d) { var it = item(d.code); return (it ? nm(it) : d.code) + '（' + t('minQ')(d.min) + '）'; }).join(', ');
+      S.screen = 'cart';
     } else {
       S.alert = te(code);
       if (code === 'invalid') S.clientOrderId = newId();
