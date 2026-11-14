@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAKANAYA JAPON — Customer chats</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!--
+  スタッフ用：お客様との会話の一覧（閲覧のみ）。Telegram の Mini App として開く（t.me/sakanaya_order_bot/chats）。
+  データは SAKANAYA B2C Bot（GAS）の API：staff_chats（一覧）・staff_chat（1人のやり取り）。
+  本人確認は initData の署名 ＋ スタッフグループのメンバー（GAS 側で確認）。
+  見た目・作りは tg/menu/index.html（注文画面）に合わせている。
+-->
+<style>
+  :root {
+    --bg: #ffffff; --card: #ffffff; --soft: #f4f6f8; --text: #111827; --muted: #6b7280; --line: #e5e7eb;
+    --accent: #0f4c81; --accent-text: #ffffff; --accent-soft: #eef4fa;
+    --danger: #b91c1c; --ok: #15803d; --warn-soft: #fef3c7; --warn-ink: #92400e;
+    --cust: #e8f0f9; --cust-ink: #0b2a4a; --staff: #dcfce7; --staff-ink: #14532d; --bot: #f1f3f5; --bot-ink: #374151; --shop: #fde8d7; --shop-ink: #7c2d12;
+    --radius: 12px;
+  }
+  html[data-theme="dark"] {
+    --bg: #111418; --card: #1a1f25; --soft: #20262d; --text: #f3f4f6; --muted: #9ca3af; --line: #2c333b;
+    --accent: #5aa0e6; --accent-text: #0b1520; --accent-soft: #16283a;
+    --warn-soft: #3a2c0d; --warn-ink: #fcd34d;
+    --cust: #1b2f45; --cust-ink: #dbeafe; --staff: #143322; --staff-ink: #bbf7d0; --bot: #242a31; --bot-ink: #d1d5db; --shop: #3a2416; --shop-ink: #fed7aa;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Khmer", "Noto Sans JP", "Hiragino Sans", sans-serif; font-size: 15px; line-height: 1.45; -webkit-text-size-adjust: 100%; }
+  button { font: inherit; color: inherit; }
+  a { color: var(--accent); }
+  .wrap { max-width: 640px; margin: 0 auto; min-height: 100vh; padding-bottom: 40px; }
+  .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 14px 8px; position: sticky; top: 0; background: var(--bg); z-index: 5; border-bottom: 1px solid var(--line); }
+  .brand { display: flex; flex-direction: column; min-width: 0; }
+  .brand b { font-size: 15px; letter-spacing: .03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .brand span { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hbtns { display: flex; gap: 6px; flex: none; }
+  .ibtn { min-width: 40px; height: 40px; border-radius: 20px; border: 1px solid var(--line); background: var(--card); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0 10px; font-size: 13px; font-weight: 600; }
+  .ibtn svg { width: 18px; height: 18px; }
+  .ibtn[disabled] { opacity: .5; }
+  .search { padding: 10px 14px 4px; display: flex; gap: 8px; }
+  .search input { flex: 1; height: 40px; border-radius: 20px; border: 1px solid var(--line); background: var(--soft); color: var(--text); padding: 0 14px; font: inherit; outline: none; }
+  .search input:focus { border-color: var(--accent); }
+  .chips { display: flex; gap: 6px; padding: 6px 14px 8px; overflow-x: auto; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex: none; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); font-size: 13px; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  .list { padding: 0 10px; }
+  .row { display: flex; gap: 10px; align-items: flex-start; padding: 11px 8px; border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 8px; }
+  .row:active { background: var(--soft); }
+  .av { flex: none; width: 40px; height: 40px; border-radius: 20px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; }
+  .rb { flex: 1; min-width: 0; }
+  .rt { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .rt b { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rt small { color: var(--muted); font-size: 12px; flex: none; }
+  .rl { font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+  .rm { display: flex; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
+  .tag { font-size: 11px; padding: 2px 7px; border-radius: 999px; background: var(--soft); color: var(--muted); }
+  .tag.warn { background: var(--warn-soft); color: var(--warn-ink); font-weight: 700; }
+  .tag.ok { background: var(--staff); color: var(--staff-ink); }
+  .empty { text-align: center; color: var(--muted); padding: 40px 20px; }
+  .center { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center; }
+  .spin { width: 28px; height: 28px; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .9s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .big { width: 100%; min-height: 46px; border-radius: var(--radius); border: 0; background: var(--accent); color: var(--accent-text); font-weight: 700; cursor: pointer; }
+  .big.ghost { background: var(--card); color: var(--accent); border: 1px solid var(--line); }
+  /* ---- 1人のやり取り ---- */
+  .ccard { margin: 10px 14px 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); }
+  .ccard h2 { margin: 0 0 2px; font-size: 17px; }
+  .ccard .meta { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .ccard .meta a { text-decoration: none; }
+  .orders { display: flex; gap: 6px; overflow-x: auto; margin-top: 8px; scrollbar-width: none; }
+  .orders::-webkit-scrollbar { display: none; }
+  .ocard { flex: none; padding: 6px 10px; border-radius: 10px; background: var(--soft); font-size: 12px; line-height: 1.35; }
+  .ocard b { font-size: 13px; }
+  .tl { padding: 8px 12px 0; display: flex; flex-direction: column; gap: 8px; }
+  .day { text-align: center; font-size: 12px; color: var(--muted); margin: 10px 0 2px; }
+  .msg { max-width: 86%; display: flex; flex-direction: column; gap: 2px; }
+  .msg.left { align-self: flex-start; }
+  .msg.right { align-self: flex-end; align-items: flex-end; }
+  .who { font-size: 11px; color: var(--muted); padding: 0 6px; }
+  .bub { padding: 8px 12px; border-radius: 14px; white-space: pre-wrap; word-break: break-word; font-size: 14.5px; }
+  .left .bub { border-bottom-left-radius: 4px; background: var(--cust); color: var(--cust-ink); }
+  .right .bub { border-bottom-right-radius: 4px; }
+  .bub.staff { background: var(--staff); color: var(--staff-ink); }
+  .bub.bot { background: var(--bot); color: var(--bot-ink); }
+  .bub.shop { background: var(--shop); color: var(--shop-ink); }
+  .bub.media { font-style: italic; opacity: .9; }
+  .sub { font-size: 11px; color: var(--muted); padding: 0 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .sub .r { padding: 1px 6px; border-radius: 999px; background: var(--soft); }
+  .sub .r.warn { background: var(--warn-soft); color: var(--warn-ink); }
+  .ev { align-self: center; max-width: 92%; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--card); font-size: 13px; }
+  .ev b { font-size: 14px; }
+  .ev .st { margin-left: 6px; font-size: 12px; color: var(--muted); }
+  .more { margin: 12px 14px 0; }
+  .foot { text-align: center; font-size: 12px; color: var(--muted); padding: 18px 20px 0; }
+  .alert { margin: 10px 14px 0; padding: 10px 12px; border-radius: var(--radius); background: #fee2e2; color: #991b1b; font-size: 13px; }
+  html[data-theme="dark"] .alert { background: #3a1616; color: #fecaca; }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+(function () {
+  'use strict';
+  var API_URL = window.TGB_API_URL || 'https://script.google.com/macros/s/AKfycbxQ5XQIdVgGYteb5fXKgEObboVsGomrDpepqSr7oYz96y-YZRw7jYwLZUpd5zEI1K0J/exec';
+  var APP_VERSION = 1;
+  var tg = window.Telegram && window.Telegram.WebApp;
+  var initData = (tg && tg.initData) || '';
+  var tgUser = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
+
+  /* ---------------- 文言（英・日） ---------------- */
+  var TXT = {
+    en: {
+      title: 'Customer chats', sub: 'Read-only · reply in the staff group', search: 'Search name, phone, @username, ID',
+      all: 'All', unanswered: 'Unanswered', withOrders: 'With orders', loading: 'Loading…', empty: 'No customers yet', noMatch: 'No match',
+      msgs: 'msgs', orders: 'orders', lastOrder: 'last order', openInTg: 'Please open this screen from Telegram (the /chats button in the staff group).',
+      staffOnly: 'Only members of the staff group can open this screen.', auth: 'Could not verify your Telegram sign-in. Close and open again from the staff group.',
+      network: 'Could not reach the server. Check the connection and tap ↻.', server: 'Server error. Try again in a moment.', closed: 'The bot is stopped.',
+      back: 'Back', refresh: 'Refresh', older: 'Load older messages', olderNone: 'No older messages', thread: 'messages',
+      cust: 'Customer → Bot', custBiz: 'Customer → Shop account', shop: 'Shop account', staff: 'Staff', bot: 'Bot', botShop: 'Bot (as shop account)',
+      recent: 'Recent orders', noOrders: 'No orders yet', showing: function (d) { return 'Showing the last ' + d + ' days'; },
+      rFaq: 'answered by FAQ', rStaff: 'sent to staff', rCart: 'cart link sent', rAi: 'photo read by AI', rMenu: 'menu card sent', rNone: 'no auto-reply', rRepeat: 'repeated, sent to staff',
+      rReplied: 'delivered', rFailed: 'NOT delivered', rLog: 'recorded', rHuman: 'shop is replying', buttons: 'buttons: ', viaShop: 'via shop account',
+      delivery: 'Delivery', pickup: 'Pick up', lang: 'Language', phone: 'Phone', address: 'Address', map: 'Map', id: 'ID',
+      status: { NEW: '🆕 New', ACCEPTED: '✅ Accepted', OUT_FOR_DELIVERY: '🛵 On the way', DELIVERED: '📦 Delivered', CANCELLED: '✖ Cancelled' }
+    },
+    ja: {
+      title: 'お客様との会話', sub: '閲覧のみ・返信はスタッフグループで', search: '名前・電話・@ユーザー名・ID で探す',
+      all: 'すべて', unanswered: '未返信', withOrders: '注文あり', loading: '読み込み中…', empty: 'お客様はまだいません', noMatch: '該当なし',
+      msgs: '件', orders: '注文', lastOrder: '最後の注文', openInTg: 'この画面は Telegram から開いてください（スタッフグループの /chats のボタン）。',
+      staffOnly: 'この画面はスタッフグループのメンバーだけが開けます。', auth: 'Telegram の本人確認ができませんでした。閉じて、スタッフグループから開き直してください。',
+      network: 'サーバーにつながりません。通信を確認して ↻ を押してください。', server: 'サーバーのエラーです。少し待ってからもう一度。', closed: 'Bot は停止中です。',
+      back: '戻る', refresh: '更新', older: 'さらに前を読む', olderNone: 'これより前はありません', thread: '件',
+      cust: 'お客様 → Bot', custBiz: 'お客様 → 店アカウント', shop: '店アカウント', staff: 'スタッフ', bot: 'Bot', botShop: 'Bot（店アカウント名義）',
+      recent: '直近の注文', noOrders: '注文はまだありません', showing: function (d) { return '直近 ' + d + ' 日分を表示'; },
+      rFaq: 'FAQ で回答', rStaff: 'スタッフへ', rCart: 'カートのリンクを送信', rAi: 'AI が写真を読み取り', rMenu: '案内カードを送信', rNone: '自動返信なし', rRepeat: '繰り返し→スタッフへ',
+      rReplied: '届いた', rFailed: '届かなかった', rLog: '記録のみ', rHuman: '店が対応中', buttons: 'ボタン: ', viaShop: '店アカウント名義',
+      delivery: '配達', pickup: '店頭受け取り', lang: '言語', phone: '電話', address: '住所', map: '地図', id: 'ID',
+      status: { NEW: '🆕 新規', ACCEPTED: '✅ 受付', OUT_FOR_DELIVERY: '🛵 出発', DELIVERED: '📦 配達完了', CANCELLED: '✖ キャンセル' }
+    }
+  };
+  function pickLang(c) { c = String(c || '').toLowerCase(); return c.indexOf('ja') === 0 ? 'ja' : 'en'; }
+  var S = { lang: pickLang(tgUser && tgUser.language_code), screen: 'loading', error: '', list: [], meta: null, q: '', filter: 'all', chat: null, chatLoading: false, olderLoading: false };
+  try { var saved = localStorage.getItem('tgb_chats_lang'); if (saved === 'ja' || saved === 'en') S.lang = saved; } catch (e) {}
+  function t(k) { var v = TXT[S.lang][k]; return v === undefined ? (TXT.en[k] === undefined ? k : TXT.en[k]) : v; }
+
+  /* ---------------- 小さな部品 ---------------- */
+  function h(tag, attrs) {
+    var el = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      var v = attrs[k];
+      if (v === null || v === undefined || v === false) return;
+      if (k === 'class') el.className = v;
+      else if (k === 'style') el.setAttribute('style', v);
+      else if (k.indexOf('on') === 0 && typeof v === 'function') el.addEventListener(k.slice(2), v);
+      else el.setAttribute(k, v);
+    });
+    for (var i = 2; i < arguments.length; i++) append(el, arguments[i]);
+    return el;
+  }
+  function append(el, c) {
+    if (c === null || c === undefined || c === false) return;
+    if (Array.isArray(c)) { c.forEach(function (x) { append(el, x); }); return; }
+    el.appendChild(typeof c === 'string' || typeof c === 'number' ? document.createTextNode(String(c)) : c);
+  }
+  function khr(n) { return String(Math.round(Number(n) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '៛'; }
+  function initial(name) { var s = String(name || '').trim(); return s ? s.charAt(0).toUpperCase() : '?'; }
+  function statusText(st) { return (TXT[S.lang].status[st]) || st || ''; }
+  function resultLabel(kind, result) {
+    var r = String(result || '');
+    if (kind === 'dm' || kind === 'biz') {
+      if (/faq\+staff/.test(r)) return [t('rFaq'), t('rStaff')];
+      if (/^faq$/.test(r)) return [t('rFaq')];
+      if (/staff/.test(r)) return [t('rStaff')];
+      if (/cart|add-which/.test(r)) return [t('rCart')];
+      if (/^menu$/.test(r)) return [t('rMenu')];
+      if (/repeat/.test(r)) return [t('rRepeat')];
+      if (/human-active/.test(r)) return [t('rHuman')];
+      if (/^none$/.test(r)) return [t('rNone')];
+      if (/^log$/.test(r)) return [t('rLog')];
+      return r ? [r] : [];
+    }
+    if (kind === 'staff') return /replied/.test(r) ? [t('rReplied')] : (/fail/.test(r) ? [t('rFailed')] : (r ? [r] : []));
+    return [];
+  }
+
+  /* ---------------- API ---------------- */
+  function api(body, timeoutMs) {
+    body.initData = initData;
+    return new Promise(function (resolve, reject) {
+      var done = false;
+      var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+      var timer = setTimeout(function () { if (done) return; done = true; try { ctrl && ctrl.abort(); } catch (e) {} reject(new Error('timeout')); }, timeoutMs || 30000);
+      fetch(API_URL, { method: 'POST', body: JSON.stringify(body), redirect: 'follow', signal: ctrl ? ctrl.signal : undefined })
+        .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+        .then(function (j) { if (done) return; done = true; clearTimeout(timer); resolve(j); },
+              function (e) { if (done) return; done = true; clearTimeout(timer); reject(e); });
+    });
+  }
+  function errText(code) { return t(({ staff: 'staffOnly', auth: 'auth', closed: 'closed', server: 'server', network: 'network', invalid: 'server' })[code] || 'server'); }
+
+  function loadList(silent) {
+    if (!silent) { S.screen = 'loading'; render(); }
+    return api({ a: 'staff_chats' }, 30000).then(function (r) {
+      if (!r || !r.ok) { S.screen = 'error'; S.error = errText(r && r.code); render(); return; }
+      S.list = r.list || []; S.meta = r; S.screen = 'list'; render();
+    }, function () { S.screen = 'error'; S.error = errText('network'); render(); });
+  }
+  function openChat(uid) {
+    S.screen = 'chat'; S.chat = { uid: uid, loading: true, items: [], customer: null, recentOrders: [], hasMore: false, nextBefore: 0, error: '' };
+    render(); window.scrollTo(0, 0);
+    api({ a: 'staff_chat', uid: uid }, 30000).then(function (r) {
+      if (!S.chat || S.chat.uid !== uid) return;
+      if (!r || !r.ok) { S.chat.loading = false; S.chat.error = errText(r && r.code); render(); return; }
+      S.chat = Object.assign(S.chat, { loading: false, items: r.items || [], customer: r.customer, recentOrders: r.recentOrders || [], hasMore: !!r.hasMore, nextBefore: r.nextBefore, days: r.days, since: r.since });
+      render();
+      // 最新が下なので、いちばん下へ
+      setTimeout(function () { window.scrollTo(0, document.body.scrollHeight); }, 30);
+    }, function () { if (S.chat && S.chat.uid === uid) { S.chat.loading = false; S.chat.error = errText('network'); render(); } });
+  }
+  function loadOlder() {
+    var c = S.chat; if (!c || !c.hasMore || S.olderLoading) return;
+    S.olderLoading = true; render();
+    var uid = c.uid;
+    api({ a: 'staff_chat', uid: uid, before: c.nextBefore }, 30000).then(function (r) {
+      S.olderLoading = false;
+      if (!S.chat || S.chat.uid !== uid) return;
+      if (!r || !r.ok) { S.chat.error = errText(r && r.code); render(); return; }
+      var before = document.body.scrollHeight;
+      S.chat.items = (r.items || []).concat(S.chat.items);
+      S.chat.hasMore = !!r.hasMore; S.chat.nextBefore = r.nextBefore; S.chat.since = r.since;
+      render();
+      window.scrollTo(0, document.body.scrollHeight - before); // 読んでいた位置を保つ
+    }, function () { S.olderLoading = false; if (S.chat) { S.chat.error = errText('network'); render(); } });
+  }
+
+  /* ---------------- 画面 ---------------- */
+  function head(backable) {
+    var btns = [];
+    if (backable) btns.push(h('button', { type: 'button', class: 'ibtn', 'aria-label': t('back'), onclick: goBack }, '‹ ' + t('back')));
+    btns.push(h('button', { type: 'button', class: 'ibtn', 'aria-label': t('refresh'), onclick: function () { if (S.screen === 'chat' && S.chat) openChat(S.chat.uid); else loadList(); } }, '↻'));
+    btns.push(h('button', { type: 'button', class: 'ibtn', onclick: function () { S.lang = S.lang === 'ja' ? 'en' : 'ja'; try { localStorage.setItem('tgb_chats_lang', S.lang); } catch (e) {} render(); } }, S.lang === 'ja' ? 'EN' : '日本語'));
+    return h('div', { class: 'head' }, h('div', { class: 'brand' }, h('b', null, '💬 ' + t('title')), h('span', null, t('sub'))), h('div', { class: 'hbtns' }, btns));
+  }
+  function goBack() { if (S.screen === 'chat') { S.screen = 'list'; S.chat = null; render(); window.scrollTo(0, 0); loadList(true); } }
+
+  function filtered() {
+    var q = S.q.trim().toLowerCase();
+    return S.list.filter(function (c) {
+      if (S.filter === 'unanswered' && !c.unanswered) return false;
+      if (S.filter === 'orders' && !(c.orders > 0)) return false;
+      if (!q) return true;
+      return [c.name, c.phone, c.username, c.uid, c.lastText].some(function (v) { return String(v || '').toLowerCase().indexOf(q) >= 0; });
+    });
+  }
+  function listView() {
+    var rows = filtered();
+    var chips = [['all', t('all')], ['unanswered', t('unanswered') + (S.list.filter(function (c) { return c.unanswered; }).length ? ' ' + S.list.filter(function (c) { return c.unanswered; }).length : '')], ['orders', t('withOrders')]];
+    return [
+      head(false),
+      h('div', { class: 'search' }, h('input', { type: 'search', placeholder: t('search'), value: S.q, oninput: function (e) { S.q = e.target.value; renderList(); } })),
+      h('div', { class: 'chips' }, chips.map(function (c) { return h('button', { type: 'button', class: 'chip', 'aria-pressed': S.filter === c[0] ? 'true' : 'false', onclick: function () { S.filter = c[0]; render(); } }, c[1]); })),
+      h('div', { class: 'list', id: 'list' }, rowsView(rows)),
+      S.meta ? h('div', { class: 'foot' }, (S.list.length) + ' · ' + S.meta.now) : null
+    ];
+  }
+  function rowsView(rows) {
+    if (!S.list.length) return h('div', { class: 'empty' }, t('empty'));
+    if (!rows.length) return h('div', { class: 'empty' }, t('noMatch'));
+    return rows.map(function (c) {
+      var chLabel = ({ dm: t('cust'), biz: t('custBiz'), shop: t('shop'), staff: t('staff'), bot: t('bot'), order: '🐟' })[c.lastChannel] || c.lastChannel;
+      return h('div', { class: 'row', role: 'button', tabindex: '0', onclick: function () { openChat(c.uid); }, onkeydown: function (e) { if (e.key === 'Enter') openChat(c.uid); } },
+        h('div', { class: 'av' }, initial(c.name || c.username)),
+        h('div', { class: 'rb' },
+          h('div', { class: 'rt' }, h('b', null, c.name || (c.username ? '@' + c.username : c.uid)), h('small', null, c.last)),
+          h('div', { class: 'rl' }, (c.lastChannel && c.lastChannel !== 'order' ? chLabel + ': ' : '') + (c.lastText || '')),
+          h('div', { class: 'rm' },
+            c.unanswered ? h('span', { class: 'tag warn' }, '⚠ ' + t('unanswered')) : null,
+            c.orders ? h('span', { class: 'tag ok' }, '🐟 ' + c.orders + ' ' + t('orders') + (c.lastOrder ? ' · ' + c.lastOrder + ' ' + statusText(c.lastOrderStatus) : '')) : null,
+            h('span', { class: 'tag' }, c.msgs + ' ' + t('msgs')),
+            c.phone ? h('span', { class: 'tag' }, c.phone) : null,
+            c.lang ? h('span', { class: 'tag' }, c.lang.toUpperCase()) : null)));
+    });
+  }
+  function renderList() { var el = document.getElementById('list'); if (!el) return; while (el.firstChild) el.removeChild(el.firstChild); append(el, rowsView(filtered())); }
+
+  function chatView() {
+    var c = S.chat;
+    var parts = [head(true)];
+    if (c.error) parts.push(h('div', { class: 'alert' }, c.error));
+    if (c.loading) { parts.push(h('div', { class: 'center' }, h('div', { class: 'spin' }), h('div', { class: 'muted' }, t('loading')))); return parts; }
+    var cu = c.customer || {};
+    parts.push(h('div', { class: 'ccard' },
+      h('h2', null, cu.name || (cu.username ? '@' + cu.username : cu.uid)),
+      h('div', { class: 'meta' },
+        cu.username ? h('a', { href: 'https://t.me/' + cu.username, target: '_blank', rel: 'noopener' }, '@' + cu.username) : null,
+        cu.phone ? h('a', { href: 'tel:' + cu.phone.replace(/[^\d+]/g, '') }, '📞 ' + cu.phone) : null,
+        cu.lang ? h('span', null, t('lang') + ': ' + cu.lang.toUpperCase()) : null,
+        h('span', null, t('id') + ': ' + cu.uid),
+        cu.address ? h('span', null, '📍 ' + cu.address) : null,
+        cu.map ? h('a', { href: cu.map, target: '_blank', rel: 'noopener' }, '🗺 ' + t('map')) : null),
+      h('div', { class: 'orders' }, c.recentOrders.length ? c.recentOrders.map(function (o) {
+        return h('div', { class: 'ocard' }, h('b', null, o.orderNo), ' · ' + khr(o.total), h('br'), (o.type === 'Delivery' ? t('delivery') : t('pickup')) + ' ' + o.date + ' ' + o.slot, h('br'), statusText(o.status));
+      }) : h('div', { class: 'ocard' }, t('noOrders')))));
+    parts.push(h('div', { class: 'more' }, c.hasMore
+      ? h('button', { type: 'button', class: 'big ghost', disabled: S.olderLoading, onclick: loadOlder }, S.olderLoading ? t('loading') : t('older'))
+      : h('div', { class: 'foot', style: 'padding-top:0' }, t('olderNone'))));
+    parts.push(h('div', { class: 'tl' }, timeline(c.items)));
+    parts.push(h('div', { class: 'foot' }, (c.days ? t('showing')(c.days) + ' · ' : '') + c.items.length + ' ' + t('thread')));
+    return parts;
+  }
+  function timeline(items) {
+    var out = [], lastDay = '';
+    items.forEach(function (it) {
+      var day = String(it.at || '').slice(0, 10);
+      if (day !== lastDay) { out.push(h('div', { class: 'day' }, day)); lastDay = day; }
+      var time = String(it.at || '').slice(11, 16);
+      if (it.kind === 'order') {
+        var o = it.order || {};
+        out.push(h('div', { class: 'ev' }, '🐟 ', h('b', null, o.orderNo || ''), ' · ' + khr(o.total), h('span', { class: 'st' }, statusText(o.status)), h('br'),
+          (o.type === 'Delivery' ? t('delivery') : t('pickup')) + ' ' + (o.date || '') + ' ' + (o.slot || '') + (o.payment ? ' · ' + o.payment : ''),
+          (o.lines && o.lines.length) ? h('div', { class: 'sub', style: 'padding:4px 0 0' }, o.lines.map(function (l) { return (l[0] || '') + ' ×' + (l[1] || 0); }).join(', ')) : null,
+          h('div', { class: 'sub', style: 'padding:2px 0 0' }, time)));
+        return;
+      }
+      var left = it.kind === 'dm' || it.kind === 'biz';
+      var who = ({ dm: t('cust'), biz: t('custBiz'), shop: t('shop') + (it.note ? ' · ' + it.note : ''), staff: t('staff'), bot: /via shop account/.test(it.note || '') ? t('botShop') : t('bot') })[it.kind] || it.kind;
+      var text = String(it.text || '');
+      var media = /^\[(photo|file|copy|sticker|voice|video|location|contact|document)\]/i.test(text) || /^\(photo \/ file\)/.test(text);
+      var labels = resultLabel(it.kind, it.result);
+      var extra = [];
+      if (it.kind === 'bot' && /buttons: /.test(it.note || '')) extra.push(t('buttons') + it.note.replace(/^.*buttons: /, ''));
+      if (it.faq && it.kind !== 'bot' && !/^(ai|cart|add-order|add-which)$/.test(it.faq)) extra.push('FAQ ' + it.faq);
+      out.push(h('div', { class: 'msg ' + (left ? 'left' : 'right') },
+        h('div', { class: 'who' }, who + ' · ' + time),
+        h('div', { class: 'bub ' + (left ? '' : it.kind) + (media ? ' media' : '') }, text || '…'),
+        (labels.length || extra.length) ? h('div', { class: 'sub' },
+          labels.map(function (l) { return h('span', { class: 'r' + (/NOT|届かなかった/.test(l) ? ' warn' : '') }, l); }),
+          extra.map(function (l) { return h('span', null, l); })) : null));
+    });
+    return out;
+  }
+
+  function render() {
+    var app = document.getElementById('app');
+    while (app.firstChild) app.removeChild(app.firstChild);
+    document.title = (S.lang === 'ja' ? 'お客様との会話' : 'Customer chats') + ' — SAKANAYA JAPON';
+    document.documentElement.lang = S.lang;
+    if (S.screen === 'loading') append(app, [head(false), h('div', { class: 'center' }, h('div', { class: 'spin' }), h('div', null, t('loading')))]);
+    else if (S.screen === 'error') append(app, [head(false), h('div', { class: 'center' }, h('div', { style: 'font-size:40px' }, '🔒'), h('div', null, S.error), h('button', { type: 'button', class: 'big', style: 'max-width:240px', onclick: function () { loadList(); } }, '↻ ' + t('refresh')))]);
+    else if (S.screen === 'chat') append(app, chatView());
+    else append(app, listView());
+    try { if (tg && tg.BackButton) { if (S.screen === 'chat') tg.BackButton.show(); else tg.BackButton.hide(); } } catch (e) {}
+  }
+
+  /* ---------------- 起動 ---------------- */
+  try {
+    if (tg) {
+      tg.ready(); tg.expand();
+      if (tg.colorScheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      try { tg.setHeaderColor(tg.colorScheme === 'dark' ? '#111418' : '#ffffff'); tg.setBackgroundColor(tg.colorScheme === 'dark' ? '#111418' : '#ffffff'); } catch (e) {}
+      if (tg.BackButton) tg.BackButton.onClick(goBack);
+    }
+  } catch (e) {}
+  if (!initData) { S.screen = 'error'; S.error = t('openInTg'); render(); }
+  else loadList();
+  window.__tgbChats = { state: S, render: render, version: APP_VERSION }; // テスト用
+})();
+</script>
+</body>
+</html>
