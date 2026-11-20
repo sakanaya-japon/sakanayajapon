@@ -41,9 +41,11 @@ const SITE_INFO = {
     lineOfficial:     'https://line.me/R/ti/p/@sakanayajapan',       // 個人向け 相談（LINE 公式アカウント）
     telegramOrderApp: 'https://t.me/sakanaya_order_bot/menu',        // 個人向け 注文（Telegram 注文画面 = @sakanaya_order_bot の Mini App）
     telegramShop:     'https://t.me/sakanayajapon',                  // 個人向け 相談（店アカウント。Telegram Business）
-    // 法人向け 注文ボット（https://t.me/sakanaya_bot）は、このサイトのどのページからも使っていなかったので 2026-11-20 にキーを外した。
-    // リンクは法人カタログ（sakanaya-productlist）側が持っている。
-    telegramBiz:      'https://t.me/sakanayaorder',                  // 法人向け 問い合わせ
+    // 法人向け 問い合わせ（business/ の「Telegram で問い合わせる」）。
+    // 2026-11-21 に @sakanayaorder（空輸専門の窓口）から、1本化した法人向け Bot @sakanaya_bot に変更。
+    // 未登録の人には「❓ 質問する」と電話番号の共有ボタンが出て、質問は OFFICE TEAM ORDER の「🏢 法人の質問」に届く。
+    // カタログからの登録リンク（t.me/sakanaya_bot?start=電話番号）は sakanaya-productlist 側が持つ。
+    telegramBiz:      'https://t.me/sakanaya_bot',                   // 法人向け 問い合わせ（@sakanaya_bot）
     // 旧 個人向けグループ（telegramHome: https://t.me/+UZAm7-eLzD0yZTA1）は 2026-11-07 にサイトから外した。
     // グループ自体は存続。参照を復活させる場合はキーを戻し、docs/contact-points.md §5 を更新すること。
   },
