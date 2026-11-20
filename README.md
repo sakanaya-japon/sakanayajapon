@@ -295,6 +295,6 @@ Phase 1 の時点では既存ページ（`menu.html` / `howto.html` / `q&a.html`
 | Facebook | `facebook.com/fishstorejapan` に統一 |
 | LINE ID | `@sakanayajapan` のまま（変更すると友だち追加リンクが切れるため） |
 | LINE 公式アカウント | 個人のお客様向け問い合わせ窓口として残す |
-| 法人向け Telegram | 旧グループは廃止。現行は `@sakanayaorder` |
+| 法人向け Telegram | 旧グループは廃止。問い合わせは法人向け Bot `@sakanaya_bot`（2026-11-21 に `@sakanayaorder` から変更。`docs/contact-points.md` §6） |
 
 Phase 1 に着手できる状態です。

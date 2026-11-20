@@ -229,7 +229,7 @@ Telegram Business 化した店アカウント（`@sakanayajapon`）が稼働し�
 |---|---|---|---|
 | 個人・日本語 | LINE 注文画面 `order.lineMiniApp`（主）／Telegram 注文画面 `order.telegramOrderApp`（副） | LINE 公式 `order.lineOfficial`／店アカウント `order.telegramShop` | Facebook |
 | 個人・英語 | Telegram 注文画面（主）／LINE 注文画面（副） | 店アカウント／LINE 公式 | Facebook |
-| 法人 | カタログ → 法人向け Bot（@sakanaya_bot。リンクはカタログ側が持つ。未使用だった `order.telegramBot` は 2026-11-20 に削除） | `order.telegramBiz` | — |
+| 法人 | カタログ → 法人向け Bot（@sakanaya_bot。リンクはカタログ側が持つ。未使用だった `order.telegramBot` は 2026-11-20 に削除） | `order.telegramBiz`（2026-11-21 から `@sakanaya_bot`。§6） | — |
 
 - 主・副の違いは**並び順だけ**（`html[lang]` で CSS の `order` を切り替える）。両方とも常に表示する。
 - 旧個人グループ `t.me/+UZAm7-eLzD0yZTA1`（`order.telegramHome`）は**サイトから外した**。グループは存続。
@@ -261,3 +261,20 @@ Telegram Business 化した店アカウント（`@sakanayajapon`）が稼働し�
 - クメール語の表示は見送り（注文画面は日・英・クメール語に対応）。
 - 注文画面（`tg/menu/index.html`）には店アカウントへの「相談する」リンクが無い。追加するなら画面の版（`APP_VERSION`）と GAS の `MINIAPP_VERSION` を上げる。
 - サイトからの流入を Orders で見分けたい場合は、注文画面のリンクに `?startapp=src_web` を付け、GAS 側で `start_param` を記録する（未実装）。
+
+## 6. 2026-11-21 法人ページの問い合わせ先を法人向け Bot に変更
+
+- `order.telegramBiz` を `t.me/sakanayaorder` → **`t.me/sakanaya_bot`** に変更（`business/` の「Telegram で問い合わせる」）。
+- 理由：`@sakanayaorder` は 2026-11-15 に**空輸専門の窓口**と整理した（表示名「Order 注文用 株式会社METIS 東京営業所」）。
+  プノンペンの飲食店・小売店の問い合わせが空輸窓口に入り、P-AIR 前提の自動返答が返るのを避ける。
+- `@sakanaya_bot`（表示名 SAKANAYA JAPON WholeSale）は 2026-11-20 に法人向け Bot を1本化したもの。
+  未登録の人には「❓ 質問する」と電話番号の共有ボタンが出て、質問は OFFICE TEAM ORDER の「🏢 法人の質問」に届く。
+  電話番号の共有で登録すると、同じトピックに「🆕 新しい登録」が届き、取引先コードの発行ボタンが出る。
+- 問い合わせの説明文に「メニューの『❓ 質問する』からお送りください」を追記（日英）。
+- §2 の一覧（#9 `@sakanayaorder` を法人窓口とした記述）は 2026-09 時点の記録としてそのまま残す。
+
+### 未対応・申し送り
+
+- 店アカウント `@sakanayajapon` のプロフィール文（Bio）が、2026-11-07 にサイトから外した旧個人グループ
+  `t.me/+UZAm7-eLzD0yZTA1` を案内したまま（Telegram アプリ側で修正。サイトの変更ではない）。
+- `social.facebook`（`facebook.com/fishstorejapan`）が 2026-11-21 時点で「このコンテンツは現在利用できません」。正しい URL の確認待ち。
