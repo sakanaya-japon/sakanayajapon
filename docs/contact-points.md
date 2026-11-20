@@ -229,7 +229,7 @@ Telegram Business 化した店アカウント（`@sakanayajapon`）が稼働し�
 |---|---|---|---|
 | 個人・日本語 | LINE 注文画面 `order.lineMiniApp`（主）／Telegram 注文画面 `order.telegramOrderApp`（副） | LINE 公式 `order.lineOfficial`／店アカウント `order.telegramShop` | Facebook |
 | 個人・英語 | Telegram 注文画面（主）／LINE 注文画面（副） | 店アカウント／LINE 公式 | Facebook |
-| 法人 | カタログ → `order.telegramBot` | `order.telegramBiz` | — |
+| 法人 | カタログ → 法人向け Bot（@sakanaya_bot。リンクはカタログ側が持つ。未使用だった `order.telegramBot` は 2026-11-20 に削除） | `order.telegramBiz` | — |
 
 - 主・副の違いは**並び順だけ**（`html[lang]` で CSS の `order` を切り替える）。両方とも常に表示する。
 - 旧個人グループ `t.me/+UZAm7-eLzD0yZTA1`（`order.telegramHome`）は**サイトから外した**。グループは存続。
