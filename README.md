@@ -24,6 +24,7 @@
 | `faq.html` | よくあるご質問 |
 | `q&a.html` | **旧URLからの案内ページ**（`faq.html` へ自動転送。中身はない） |
 | `aboutus.html` | 店舗情報・営業時間・アクセス |
+| `privacy.html` | **プライバシーポリシー（日英）**。2026-11-21 新設。Facebook ページの Privacy Policy link にこの URL を登録。各ページのフッターからリンク（トップはフッターが無いので未掲載）。注文の項目・共有先・AI の読み取りなど**仕組みを変えたら内容と最終更新日を直す** |
 | `assets/images/logo.jpg` | ロゴ（favicon / OGP 兼用） |
 | `assets/images/fish-photo.jpg` | トップ背景スライドショー用 |
 | `assets/images/english-menu20260207.jpg` | `menu.html` に表示するメニュー画像 |
