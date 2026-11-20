@@ -52,7 +52,8 @@ const SITE_INFO = {
 
   // ── SNS ──
   social: {
-    facebook: 'https://www.facebook.com/fishstorejapan',
+    // 2026-11-21：fishstorejapan（存在しない）→ fishstorejapon に修正。メールアドレスは fishstorejapan@gmail.com のままで正しい。
+    facebook: 'https://www.facebook.com/fishstorejapon',
     telegramChannel: 'https://t.me/fishstoreJapon',
   },
 
