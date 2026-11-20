@@ -277,4 +277,7 @@ Telegram Business 化した店アカウント（`@sakanayajapon`）が稼働し�
 
 - 店アカウント `@sakanayajapon` のプロフィール文（Bio）が、2026-11-07 にサイトから外した旧個人グループ
   `t.me/+UZAm7-eLzD0yZTA1` を案内したまま（Telegram アプリ側で修正。サイトの変更ではない）。
-- `social.facebook`（`facebook.com/fishstorejapan`）が 2026-11-21 時点で「このコンテンツは現在利用できません」。正しい URL の確認待ち。
+- ~~`social.facebook` が開けない~~ → **2026-11-21 解決**。`facebook.com/fishstorejapan` は存在せず「このコンテンツは現在利用できません」になっていた。
+  正しいページは **`facebook.com/fishstorejapon`**（ហាងត្រីជប៉ុន Sakanaya JAPAN。ユーザーの共有リンク `facebook.com/share/1DWzmWcyPz/` の転送先で確認）。
+  `site-info.js` と各ページの予備リンク（index 1・faq 4・aboutus 2）を修正。共有リンクは追跡用の転送を挟むため使わない。
+  §2〜§4 の `fishstorejapan` の記述は 2026-09 時点の記録としてそのまま残す。メールアドレス `fishstorejapan@gmail.com` は別物で正しい。

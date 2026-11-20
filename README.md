@@ -292,7 +292,7 @@ Phase 1 の時点では既存ページ（`menu.html` / `howto.html` / `q&a.html`
 | 項目 | 確定値 |
 |---|---|
 | 営業時間 | 毎日 10:00〜19:30（国民の休日を除く）。定休日なし |
-| Facebook | `facebook.com/fishstorejapan` に統一 |
+| Facebook | `facebook.com/fishstorejapon`（2026-11-21 に japan → japon へ修正。`docs/contact-points.md` §6） |
 | LINE ID | `@sakanayajapan` のまま（変更すると友だち追加リンクが切れるため） |
 | LINE 公式アカウント | 個人のお客様向け問い合わせ窓口として残す |
 | 法人向け Telegram | 旧グループは廃止。問い合わせは法人向け Bot `@sakanaya_bot`（2026-11-21 に `@sakanayaorder` から変更。`docs/contact-points.md` §6） |
