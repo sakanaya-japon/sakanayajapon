@@ -154,7 +154,7 @@
   // GAS のウェブアプリ URL（デプロイ後に差し替える）
   var API_URL = window.TGB_API_URL || 'https://script.google.com/macros/s/AKfycbxQ5XQIdVgGYteb5fXKgEObboVsGomrDpepqSr7oYz96y-YZRw7jYwLZUpd5zEI1K0J/exec';
   var BOT_LINK = 'https://t.me/sakanaya_order_bot/menu';
-  var APP_VERSION = 12; // GAS の MINIAPP_VERSION がこれより大きいと、開いたときに1回だけ読み直す（Telegram の中の古い画面対策）
+  var APP_VERSION = 13; // GAS の MINIAPP_VERSION がこれより大きいと、開いたときに1回だけ読み直す（Telegram の中の古い画面対策）
   var TZ = 'Asia/Phnom_Penh';
 
   var tg = (window.Telegram && window.Telegram.WebApp) || null;
@@ -545,7 +545,7 @@
     return h('div', { class: 'head' },
       h('div', { class: 'brand' }, h('b', null, 'SAKANAYA JAPON'),
         h('span', null, t('sub')),
-        h('span', null, (c ? t('hours') + ' ' + (c.firstTime || c.openTime) + '–' + c.closeTime + ' · ' : '') + 'v' + APP_VERSION)),
+        h('span', null, (c ? t('hours') + ' ' + (c.firstTime || c.openTime) + '–' + (c.lastTime || c.closeTime) + ' · ' : '') + 'v' + APP_VERSION)),
       h('div', { class: 'hbtns' },
         h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Language', onclick: function () {
           S.lang = langs[(langs.indexOf(S.lang) + 1) % langs.length]; store('lang', S.lang); render();
